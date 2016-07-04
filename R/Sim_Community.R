@@ -156,7 +156,7 @@ Sim.Thomas.Community <- function(S, N,
 
    max.dim <- ifelse(xmax>=ymax, xmax ,ymax)
 
-   sim1 <- SAD.log.normal(S,N,cv.abund)
+   sim1 <- SAD.lognorm(S,N,cv.abund)
    abund.vec <- sim1$abund
    cum.abund <- cumsum(abund.vec)
 
@@ -225,7 +225,7 @@ Sim.Thomas.Community <- function(S, N,
 }
 
 
-
+# old version using spatstat function - should do the same but less efficient
 # # ----------------------------------------------------------------------------------
 # # Simulate community with log-normal SAD and Thomas process clustering
 # # when sigma > 2*(max(xmax,ymax)) a Poisson distribution is simulated which is more efficient

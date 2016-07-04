@@ -28,13 +28,14 @@ A dataframe with three columns
 \description{
 Simulate community with log-normal SAD and random spatial positions
 }
-\author{
-Felix May
-
-#' @examples
+\examples{
 community1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
 
 spec.cols <- rainbow(length(levels(community1$SpecID)))
 plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
+
+}
+\author{
+Felix May
 }
 

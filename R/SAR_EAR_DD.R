@@ -98,7 +98,7 @@ abund.rect <- function(x0,y0,xsize,ysize,community)
 # calculates number of species and endemic species in randomly located squares or rectangles
 # the area is provided as proportion of the total
 # maximum coordinates of the landscape are defined in xext and yext (min and max)
-nSpec.nEnd.rand.rect <- function(prop.A=0.25,community,nrect=100,xext=c(0,1),yext=c(0,1))
+nSpec.nEnd.rand.rect <- function(prop.A=0.25, community, nrect=100, xext=c(0,1), yext=c(0,1))
 {
    x <- community[,1]
    y <- community[,2]
@@ -191,21 +191,23 @@ SAR.EAR.rand <- function(community,prop.A=seq(0.1,1,by=0.1),nsamples=100,xext=c(
 
 # -----------------------------------------------------------
 # Distance decay
-distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yext=c(0,1),method="jaccard")
+distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yext=c(0,1), method="jaccard")
 {
+   require(vegan)
+
    dx.plot <- xext[2] - xext[1]
    dy.plot <- yext[2] - yext[1]
 
    area <- dx.plot*dy.plot*prop.A
    square.size <- sqrt(area)
 
-   xpos <- runif(nsamples,min=0,max=xext[2]-square.size)
-   ypos <- runif(nsamples,min=0,max=yext[2]-square.size)
+   xpos <- runif(nsamples,min=0, max=xext[2]-square.size)
+   ypos <- runif(nsamples,min=0, max=yext[2]-square.size)
 
    d <- dist(cbind(xpos,ypos))
 
-   com.tab <- mapply(abund.rect,xpos,ypos,
-                     MoreArgs=list(xsize=square.size,ysize=square.size,community=community))
+   com.tab <- mapply(abund.rect, xpos, ypos,
+                     MoreArgs=list(xsize=square.size, ysize=square.size, community=community))
 
    jaccard <- 1 - vegdist(t(com.tab),method=method,binary=T)
    dat.out <- data.frame(distance = as.numeric(d), similarity = as.numeric(jaccard))
