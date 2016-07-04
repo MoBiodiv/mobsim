@@ -22,3 +22,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
+URL: http://github.com/FelixMay/MoBspatial
