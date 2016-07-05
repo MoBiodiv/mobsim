@@ -101,78 +101,78 @@ sSAC.all.rcpp <- function(data)
 }
 
 
-# -----------------------------------------------------------
-# calculates PIE in sub-samples of a community
-PIE.sample <- function(abund.count, sample.size, nsample)
-{
-   require(vegan)
-   pie <- numeric(nsample)
-   spec.id <- 1:length(abund.count)
-   rel.abund <- abund.count/sum(abund.count)
-   for (i in 1:nsample){
-      abund.sample <- table(sample(spec.id,size=sample.size,replace=T,prob=rel.abund))
-      pie[i] <- diversity(abund.sample,index="simpson")
-   }
-   return(mean(pie))
-}
-
-# -----------------------------------------------------------
-# calculates PIE of a species ID vector in a point pattern
-PIE.ppp <- function(pp1)
-{
-   require(vegan)
-   abund <- table(marks(pp1))
-   return(diversity(abund,index="simpson"))
-}
-
-# -----------------------------------------------------------
-# calculates spatially-explicit PIE in non-noverlapping squares
-PIE.spatial <- function(community, square.size = 0.1)
-{
-   require(vegan)
-   require(spatstat)
-
-   x <- community[,1]
-   y <- community[,2]
-
-   xmin <- floor(min(x)); xmax <- ceiling(max(x))
-   ymin <- floor(min(y)); ymax <- ceiling(max(y))
-
-   pp1 <- ppp(x, y, marks=community[,3], window=owin(c(xmin,xmax),c(ymin,ymax)))
-   grid1 <- tess(xgrid=seq(xmin,xmax,by=(xmax-xmin)*square.size),
-                 ygrid=seq(ymin,ymax,by=(ymax-ymin)*square.size))
-   pp.grid <- split(pp1,grid1)
-
-   pie.local <- sapply(pp.grid,PIE.ppp)
-
-   return(mean(pie.local))
-}
-
-# -----------------------------------------------------------
-# calculates number of species and PIE in subsquares of a plot
-diversity.square <- function(community, square.size=0.1)
-{
-   require(vegan)
-   require(spatstat)
-
-   x <- community[,1]
-   y <- community[,2]
-
-   xmin <- floor(min(x)); xmax <- ceiling(max(x))
-   ymin <- floor(min(y)); ymax <- ceiling(max(y))
-
-   pp1 <- ppp(x,y,marks=community[,3],window=owin(c(xmin,xmax),c(ymin,ymax)))
-   grid1 <- tess(xgrid=seq(xmin, xmax, by=(xmax-xmin)*square.size),
-                 ygrid=seq(ymin, ymax, by=(ymax-ymin)*square.size))
-   pp.grid <- split(pp1,grid1)
-
-   abund.local <- lapply(pp.grid,function(pp){table(marks(pp))})
-
-   pie.local <- sapply(abund.local,diversity,index="simpson")
-   sr.local <- sapply(abund.local,specnumber)
-
-   return(c(PIE=mean(pie.local),SR.local=mean(sr.local)))
-}
+# # -----------------------------------------------------------
+# # calculates PIE in sub-samples of a community
+# PIE.sample <- function(abund.count, sample.size, nsample)
+# {
+#    require(vegan)
+#    pie <- numeric(nsample)
+#    spec.id <- 1:length(abund.count)
+#    rel.abund <- abund.count/sum(abund.count)
+#    for (i in 1:nsample){
+#       abund.sample <- table(sample(spec.id,size=sample.size,replace=T,prob=rel.abund))
+#       pie[i] <- diversity(abund.sample,index="simpson")
+#    }
+#    return(mean(pie))
+# }
+#
+# # -----------------------------------------------------------
+# # calculates PIE of a species ID vector in a point pattern
+# PIE.ppp <- function(pp1)
+# {
+#    require(vegan)
+#    abund <- table(marks(pp1))
+#    return(diversity(abund,index="simpson"))
+# }
+#
+# # -----------------------------------------------------------
+# # calculates spatially-explicit PIE in non-noverlapping squares
+# PIE.spatial <- function(community, square.size = 0.1)
+# {
+#    require(vegan)
+#    require(spatstat)
+#
+#    x <- community[,1]
+#    y <- community[,2]
+#
+#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
+#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
+#
+#    pp1 <- ppp(x, y, marks=community[,3], window=owin(c(xmin,xmax),c(ymin,ymax)))
+#    grid1 <- tess(xgrid=seq(xmin,xmax,by=(xmax-xmin)*square.size),
+#                  ygrid=seq(ymin,ymax,by=(ymax-ymin)*square.size))
+#    pp.grid <- split(pp1,grid1)
+#
+#    pie.local <- sapply(pp.grid,PIE.ppp)
+#
+#    return(mean(pie.local))
+# }
+#
+# # -----------------------------------------------------------
+# # calculates number of species and PIE in subsquares of a plot
+# diversity.square <- function(community, square.size=0.1)
+# {
+#    require(vegan)
+#    require(spatstat)
+#
+#    x <- community[,1]
+#    y <- community[,2]
+#
+#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
+#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
+#
+#    pp1 <- ppp(x,y,marks=community[,3],window=owin(c(xmin,xmax),c(ymin,ymax)))
+#    grid1 <- tess(xgrid=seq(xmin, xmax, by=(xmax-xmin)*square.size),
+#                  ygrid=seq(ymin, ymax, by=(ymax-ymin)*square.size))
+#    pp.grid <- split(pp1,grid1)
+#
+#    abund.local <- lapply(pp.grid,function(pp){table(marks(pp))})
+#
+#    pie.local <- sapply(abund.local,diversity,index="simpson")
+#    sr.local <- sapply(abund.local,specnumber)
+#
+#    return(c(PIE=mean(pie.local),SR.local=mean(sr.local)))
+# }
 
 #--------------------------------------------------------------------------------------------
 # #example data set all trees >= 10 cm dbh in BCI 2010
