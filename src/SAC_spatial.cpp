@@ -1,10 +1,7 @@
-
-
 #include <algorithm>
 #include <map>
 #include <Rcpp.h>
 using namespace Rcpp;
-using namespace std;
 
 class CNeighbourDist
 {
@@ -29,7 +26,7 @@ double DistXY(double x1, double y1, double x2, double y2)
 }
 
 // [[Rcpp::export]]
-NumericVector sSAC1_C(NumericVector x, 
+NumericVector sSAC1_C(NumericVector x,
                       NumericVector y,
                       IntegerVector id_spec
                       )
@@ -39,15 +36,15 @@ NumericVector sSAC1_C(NumericVector x,
 
    CNeighbourDist* NeighDistVec = new CNeighbourDist[N];
 
-   map<int,int> SpecAbund;
-   
+   std::map<int,int> SpecAbund;
+
    for (int i=0; i < N; i++){
       // get distance for each neighbour
       for (int j=0; j < N; j++){
          NeighDistVec[j].distance = DistXY(x[i],y[i],x[j],y[j]);
          NeighDistVec[j].ID_spec  = id_spec[j];
       }
-      sort(NeighDistVec,NeighDistVec+N);
+      std::sort(NeighDistVec,NeighDistVec+N);
 
       SpecAbund.clear();
       for (int k=0; k < N; k++){
@@ -58,6 +55,6 @@ NumericVector sSAC1_C(NumericVector x,
 
    for (int i=0; i<N; i++)
       sSAC[i] = (double) sSAC[i]/N;
-   
+
    return(sSAC);
 }

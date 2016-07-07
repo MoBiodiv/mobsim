@@ -15,7 +15,7 @@
 #' @param n Integer of length 1 - sample size
 #' @param abund.vec Integer vector - species abundance distribution of the community
 #'
-#' @return Expectec number of species in n individuals
+#' @return Expected number of species in n individuals
 #'
 S.single.scale <- function(n, abund.vec)
 {
@@ -173,32 +173,6 @@ sSAC.all.rcpp <- function(data)
 #
 #    return(c(PIE=mean(pie.local),SR.local=mean(sr.local)))
 # }
-
-#--------------------------------------------------------------------------------------------
-# #example data set all trees >= 10 cm dbh in BCI 2010
-#
-#
-# bci1 <- read.table("bci2010_10cm_20140212.txt",header=T)
-# head(bci1)
-# dim(bci1)
-#
-# bci2 <- subset(bci1,select=c(gx,gy,sp))
-# rm(bci1)
-
-# SAC1 <- SAC.coleman(table(bci2$sp))
-#
-# #system.time(sSAC1 <- near_neigh_ind(bci2)) # ca. 10 seconds
-#
-# system.time(sSAC2 <- sSAC.avg(bci2,nsamples=20)) # ca. 200 seconds
-# #system.time(sSAC3 <- sSAC.all(bci2)) # ca.  ca. 46 seconds
-#
-# system.time(sSAC4 <- sSAC.all.rcpp(bci2)) # ca. 44 seconds
-#
-# plot(SAC1,type="l",col=1,xlab="# Individuals",ylab="# Species")
-# lines(sSAC1$N,sSAC1$S,col=2)
-# lines(1:length(sSAC2),sSAC2,col=3)
-# lines(1:length(sSAC3),sSAC3,col=4)
-# lines(1:length(sSAC4),sSAC4,col=5,lty=2)
 
 
 

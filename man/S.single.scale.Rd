@@ -12,7 +12,7 @@ S.single.scale(n, abund.vec)
 \item{abund.vec}{Integer vector - species abundance distribution of the community}
 }
 \value{
-Expectec number of species in n individuals
+Expected number of species in n individuals
 }
 \description{
 Expected species richness in a random sample of fixed size

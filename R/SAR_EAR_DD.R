@@ -7,59 +7,10 @@
 #####################################################################
 
 
-# # -----------------------------------------------------------
-# # calculates number of endemic species in subsquares of a plot
-# endemics.tess <- function(prop.loss=0.125,community)
-# {
-#    require(spatstat)
-#
-#    x <- community[,1]
-#    y <- community[,2]
-#
-#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
-#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
-#
-#    dx <- xmax - xmin
-#    dy <- ymax - ymin
-#
-#    pp1 <- ppp(x,y,marks=community[,3],window=owin(c(xmin,xmax),c(ymin,ymax)))
-#
-#    area.loss <- dx*dy*prop.loss
-#    square.size <- sqrt(area.loss)
-#
-#    if (square.size <= min(c(dx,dy))){
-#       grid1 <- tess(xgrid=seq(xmin,xmax,by=square.size),
-#                     ygrid=seq(ymin,ymax,by=square.size))
-#    } else
-#    {
-#       if (dx>=dy){
-#          grid1 <- tess(xgrid=seq(xmin,xmax,by=prop.loss*dx),
-#                        ygrid=seq(ymin,ymax,by=dy))
-#       } else {
-#          grid1 <- tess(xgrid=seq(xmin,xmax,by=dx),
-#                        ygrid=seq(ymin,ymax,by=prop.loss*dy))
-#       }
-#    }
-#
-#    pp.grid <- split(pp1,grid1)
-#
-#    # generate species x sites presence absence matrix
-#    pa.mat <- sapply(pp.grid,function(pp){table(marks(pp))>0})
-#    if (ncol(pa.mat) > 1){
-#       nEndemics <- colSums(pa.mat[rowSums(pa.mat)==1,])
-#    } else
-#    {
-#       nEndemics <- sum(pa.mat)
-#    }
-#
-#    return(c(meanEnd=mean(nEndemics),sdEnd=sd(nEndemics)))
-# }
-
-
 # -----------------------------------------------------------
 # get the number of species and endemics in a rectangle with upper left corner in x0,y0
 # size of the rectangle: xsize*ysize
-nSpec.nEnd.rect <- function(x0,y0,xsize,ysize,community)
+nSpec.nEnd.rect <- function(x0, y0, xsize, ysize, community)
 {
    x <- community[,1]
    y <- community[,2]
@@ -98,7 +49,7 @@ abund.rect <- function(x0,y0,xsize,ysize,community)
 # calculates number of species and endemic species in randomly located squares or rectangles
 # the area is provided as proportion of the total
 # maximum coordinates of the landscape are defined in xext and yext (min and max)
-nSpec.nEnd.rand.rect <- function(prop.A=0.25, community, nrect=100, xext=c(0,1), yext=c(0,1))
+nSpec.nEnd.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(0,1), yext=c(0,1))
 {
    x <- community[,1]
    y <- community[,2]
@@ -106,16 +57,10 @@ nSpec.nEnd.rand.rect <- function(prop.A=0.25, community, nrect=100, xext=c(0,1),
    dx.plot <- xext[2] - xext[1]
    dy.plot <- yext[2] - yext[1]
 
-#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
-#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
-#
-#    dx.plot <- xmax - xmin
-#    dy.plot <- ymax - ymin
-
    area <- dx.plot*dy.plot*prop.A
    square.size <- sqrt(area)
 
-   if (square.size <= min(c(dx.plot,dy.plot))){
+   if (square.size <= min(c(dx.plot, dy.plot))){
       dx.rect <- square.size
       dy.rect <- square.size
    } else
@@ -129,11 +74,11 @@ nSpec.nEnd.rand.rect <- function(prop.A=0.25, community, nrect=100, xext=c(0,1),
       }
    }
 
-   xpos <- runif(nrect,min=0,max=xext[2]-dx.rect)
-   ypos <- runif(nrect,min=0,max=yext[2]-dy.rect)
+   xpos <- runif(nrect, min=xext[1], max=xext[2]-dx.rect)
+   ypos <- runif(nrect, min=xext[2], max=yext[2]-dy.rect)
 
-   system.time(nSpec.End <- mapply(nSpec.nEnd.rect,xpos,ypos,
-                                   MoreArgs=list(xsize=dx.rect,ysize=dy.rect,community=community)))
+   system.time(nSpec.End <- mapply(nSpec.nEnd.rect, xpos, ypos,
+                                   MoreArgs=list(xsize = dx.rect, ysize = dy.rect, community=community)))
    #
    #    system.time({
    #    Endemics <- numeric(nrect)
