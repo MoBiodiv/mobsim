@@ -47,7 +47,7 @@ diversity.rect <- function(x0, y0, xsize, ysize, community)
 }
 
 # # -----------------------------------------------------------
-# # get the abundance dsitribution in a rectangle with upper left corner in x0,y0
+# # get the abundance distribution in a rectangle with upper left corner in x0,y0
 # # size of the rectangle: xsize*ysize
 # abund.rect <- function(x0, y0, xsize, ysize, community)
 # {
@@ -117,37 +117,34 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
 }
 
 
-# -----------------------------------------------------------
-# estimates SAR amd EAR based on random squares or rectangles
-SAR.EAR.rand <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(0,1),yext=c(0,1))
+
+#' Estimate diversity-area relationships
+#'
+#' @param prop.A Proport
+#' @param community Dataframe with three columns: x, y, species identity
+#' @param nrect Number of randomly located subplots
+#' @param xext Minimum and maximum x-coordinates of the community
+#' @param yext Minimum and maximum y-coordinates of the community
+#'
+#' @return Vector with mean and standard deviation of the following diversity
+#' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
+#' (4) Simpson diversity
+DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(0,1), yext=c(0,1))
 {
    nscales <- length(prop.A)
-   SAR.EAR <- data.frame(Area = prop.A,
-                         nspec.mean = numeric(nscales),
-                         nspec.sd = numeric(nscales),
-                         nend.mean = numeric(nscales),
-                         nend.sd = numeric(nscales))
+   xrange <- xext[2] - xext[1]
+   yrange <- yext[2] - yext[1]
 
-   sar.ear1 <- sapply(prop.A[-length(prop.A)],
-                      nSpec.nEnd.rand.rect,
+   div.area <- sapply(prop.A,
+                      diversity.rand.rect,
                       community=community,
                       nrect=nsamples,
                       xext=xext,
                       yext=yext)
+   div.dat <- as.data.frame(t(div.area))
+   div.dat <- cbind(propArea = prop.A, div.dat)
 
-   SAR.EAR$nspec.mean[1:(nscales-1)] <- sar.ear1["meanSpec",]
-   SAR.EAR$nspec.sd[1:(nscales-1)] <- sar.ear1["sdSpec",]
 
-   SAR.EAR$nend.mean[1:(nscales-1)] <- sar.ear1["meanEnd",]
-   SAR.EAR$nend.sd[1:(nscales-1)] <- sar.ear1["sdEnd",]
-
-   SAR.EAR$nspec.mean[nscales] <- length(unique(community[,3]))
-   SAR.EAR$nspec.sd[nscales] <- 0
-
-   SAR.EAR$nend.mean[nscales] <- length(unique(community[,3]))
-   SAR.EAR$nend.sd[nscales] <- 0
-
-   return(SAR.EAR)
 }
 
 # # -----------------------------------------------------------
