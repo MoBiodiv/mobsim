@@ -4,19 +4,24 @@
 \alias{SAD.lognorm}
 \title{Simulate log-normal species abundance distributions}
 \usage{
-SAD.lognorm(S, N, cv = 1)
+SAD.lognorm(S.pool, N.local, mean.abund = 100, cv.abund = 1,
+  fix.S.local = F)
 }
 \arguments{
-\item{S}{scalar integer - number of species}
+\item{S.pool}{single integer - number of species in the pool}
 
-\item{N}{scalar integer - number of individuals}
+\item{N.local}{single integer - number of individuals in the local community}
 
-\item{cv}{scalar numeric - coefficient of variation ( = sd/mean) in abundance}
+\item{cv.abund}{single numeric - coefficient of variation ( = sd/mean) in abundance}
+
+\item{fix.S.local}{- logical - should the simulation constrain the number of
+species in the local community. This can result in deviations from
+mean and sd of local abundances from the theoretical distributions}
 }
 \value{
 List with five named items:
 \enumerate{
-   \item abund - simulated abundance vector
+   \item abund - simulated abundance vector in the local community
    \item mean.theor - theoretical mean of the distribution
    \item sd.theor - theoretical standard deviation
    \item mean.sim - simulated mean
@@ -24,23 +29,24 @@ List with five named items:
 }
 }
 \description{
-Simulate log-normal abundance data with fixed number of individuals (N),
-number of species (S) and fixed coefficient of variation in abundance (cv)
+Simulate log-normal abundance data in a local community with fixed number of
+individuals (N.local), number of species in the pool (S.pool) and
+coefficient of variation in abundance (cv)
 }
 \details{
-The function precisely controls for the number of species and
+The function can precisely control for the number of species and
 the number of individuals in the simulated community. These constraints
 can result in biases from the theoretical parameters. Therefore the simulated
 distribution parameters are provided as model output.
 }
 \examples{
-SAD.lognorm(S = 100, N = 10000, cv = 1)
+SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)
 
 ## Create preston SAD plot with log2 abundance classes
 
 require(untb)
 
-abund.vec <- SAD.lognorm(S = 100, N = 10000, cv = 1)$abund
+abund.vec <- SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)$abund
 names(abund.vec) <- paste("spec", 1:length(abund.vec),sep="")
 sad1 <- preston(census(abund.vec))
 barplot(height = as.numeric(sad1), names.arg = names(sad1),

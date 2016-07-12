@@ -9,10 +9,10 @@ using namespace Rcpp;
 DataFrame rThomas_rcpp(int nPoints,
                        double sigma,
                        double mu,     //mean number of points per cluster,
-                       double xmin=0,
-                       double xmax=1,
-                       double ymin=0,
-                       double ymax=1
+                       double xmin = 0,
+                       double xmax = 1,
+                       double ymin = 0,
+                       double ymax = 1
 )
 {
    //simulate mother points
