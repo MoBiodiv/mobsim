@@ -5,7 +5,7 @@
 \title{Simulate community with log-normal SAD and Thomas process clustering}
 \usage{
 Sim.Thomas.Community(S, N, cv.abund = 1, sigma = 0.02, xmax = 1,
-  ymax = 1, points.cluster = NULL)
+  ymax = 1, points.cluster = NULL, fix.S = F)
 }
 \arguments{
 \item{S}{scalar integer - number of species}

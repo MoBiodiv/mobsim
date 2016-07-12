@@ -4,7 +4,7 @@
 \alias{Sim.Poisson.Community}
 \title{Simulate community with log-normal SAD and random spatial positions}
 \usage{
-Sim.Poisson.Community(S, N, cv.abund, xmax = 1, ymax = 1)
+Sim.Poisson.Community(S, N, cv.abund = 1, xmax = 1, ymax = 1, fix.S = F)
 }
 \arguments{
 \item{S}{scalar integer - number of species}

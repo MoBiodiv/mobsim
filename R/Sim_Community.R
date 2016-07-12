@@ -40,7 +40,7 @@
 #' barplot(height = as.numeric(sad1), names.arg = names(sad1),
 #'         xlab = "Abundance class", ylab ="No. of species")
 
-SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund=1, fix.S.local = F)
+SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund = 1, fix.S.local = F)
 {
    if (fix.S.local == T)
       mean.abund <- N.local/S.pool
@@ -68,12 +68,14 @@ SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund=1, fix.S.loc
       }
 
       abund.local <- sort(abund.local, decreasing = T)
+      names(abund.local) <- paste("species", 1:length(abund.local), sep = "")
 
    } else {
 
       abund.pool <- rlnorm(S.pool, meanlog=mu1, sdlog=sigma1)
       relabund.pool <- sort(abund.pool/sum(abund.pool), decreasing = T)
       abund.local <- table(sample(1:S.pool, N.local, replace = T, prob = relabund.pool))
+      names(abund.local) <- paste("species", names(abund.local), sep = "")
 
    }
 
@@ -109,17 +111,15 @@ SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund=1, fix.S.loc
 #' spec.cols <- rainbow(length(levels(community1$SpecID)))
 #' plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
 #'
-Sim.Poisson.Community <- function(S, N, cv.abund, xmax=1, ymax=1)
+Sim.Poisson.Community <- function(S, N, cv.abund = 1, xmax = 1, ymax = 1, fix.S = F)
 {
-   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund)
+   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund, fix.S.local = fix.S)
    abund.vec <- sim1$abund
 
    x <- runif(N, 0, xmax)
    y <- runif(N, 0, ymax)
 
-   S.local <- length(abund.vec)
-
-   id.spec <- factor(rep.int(1:S.local,times=abund.vec))
+   id.spec <- factor(rep(names(abund.vec), times=abund.vec))
 
    dat1 <- data.frame(X=x, Y=y, SpecID=id.spec)
    return(dat1)
@@ -167,15 +167,16 @@ Sim.Poisson.Community <- function(S, N, cv.abund, xmax=1, ymax=1)
 Sim.Thomas.Community <- function(S, N,
                                  cv.abund = 1,
                                  sigma = 0.02,
-                                 xmax=1,
-                                 ymax=1,
-                                 points.cluster=NULL)
+                                 xmax = 1,
+                                 ymax = 1,
+                                 points.cluster = NULL,
+                                 fix.S = F)
 {
    #require(spatstat)
 
-   max.dim <- ifelse(xmax>=ymax, xmax ,ymax)
+   max.dim <- ifelse(xmax >= ymax, xmax ,ymax)
 
-   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund)
+   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund, fix.S.local = fix.S)
    abund.vec <- sim1$abund
    cum.abund <- cumsum(abund.vec)
 
@@ -212,8 +213,7 @@ Sim.Thomas.Community <- function(S, N,
    }
 
    sim.dat <- data.frame(X = numeric(N),
-                         Y = numeric(N),
-                         SpecID = numeric(N))
+                         Y = numeric(N))
 
    # create map for first species
    if (!is.numeric(points.cluster)){
@@ -240,7 +240,7 @@ Sim.Thomas.Community <- function(S, N,
       sim.dat$Y[irange] <- dat1$y
    }
 
-   sim.dat$SpecID <- factor(rep(1:S.local, abund.vec))
+   sim.dat$SpecID <- factor(rep(names(abund.vec), abund.vec))
    names(sim.dat) <- c("X","Y","SpecID")
    return(sim.dat)
 }
