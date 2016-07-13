@@ -40,21 +40,21 @@ DataFrame rThomas_rcpp(int nPoints,
 
    if (nMotherPoints > 0){
 
-      xmother = runif(nMotherPoints,xmin2,xmax2);
-      ymother = runif(nMotherPoints,ymin2,ymax2);
+      xmother = runif(nMotherPoints, xmin2, xmax2);
+      ymother = runif(nMotherPoints, ymin2, ymax2);
 
       double xnew, ynew;
       int imother;
 
       NumericVector dxy(2);
 
-      for (int ipoint=0; ipoint<nPoints; ++ipoint){
+      for (int ipoint = 0; ipoint < nPoints; ++ipoint){
 
          do {
 
-            imother = as<int>(runif(1,0,nMotherPoints));
+            imother = as<int>(runif(1, 0, nMotherPoints));
 
-            dxy = rnorm(2,0.0,sigma);
+            dxy = rnorm(2, 0.0, sigma);
             xnew = xmother[imother] + dxy[0];
             ynew = ymother[imother] + dxy[1];
 
@@ -66,8 +66,8 @@ DataFrame rThomas_rcpp(int nPoints,
    } // end if nMotherPoints > 0
 
    else {
-      xpoints = runif(nPoints,xmin,xmax);
-      ypoints = runif(nPoints,ymin,ymax);
+      xpoints = runif(nPoints, xmin, xmax);
+      ypoints = runif(nPoints, ymin, ymax);
    }
 
    DataFrame xydat = DataFrame::create(_["x"] = xpoints,

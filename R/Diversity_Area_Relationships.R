@@ -20,6 +20,7 @@
 
 diversity.rect <- function(x0, y0, xsize, ysize, community)
 {
+
    x <- community[,1]
    y <- community[,2]
    id.spec <- community[,3]
@@ -38,7 +39,12 @@ diversity.rect <- function(x0, y0, xsize, ysize, community)
    rel.abund <- abund/sum(abund)
 
    shannon <- - sum(rel.abund * log(rel.abund))
-   simpson     <- 1 - sum(rel.abund^2)
+
+   n <- sum(abund)
+   if (n > 1)
+      simpson <- (n/(n-1)) * (1 - sum(rel.abund^2))
+   else
+      simpson <- NA
 
    return(c(nSpecies = nSpecies,
             nEndemics = nEndemics,
@@ -111,8 +117,8 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
             sdEnd       = sd(div.plots["nEndemics",]),
             meanShannon = mean(div.plots["shannon",]),
             sdShannon   = sd(div.plots["shannon",]),
-            meanSimpson = mean(div.plots["simpson",]),
-            sdSimpson   = sd(div.plots["simpson",]))
+            meanSimpson = mean(div.plots["simpson",], na.rm = T),
+            sdSimpson   = sd(div.plots["simpson",], na.rm = T))
           )
 }
 
@@ -144,7 +150,7 @@ DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(
    div.dat <- as.data.frame(t(div.area))
    div.dat <- cbind(propArea = prop.A, div.dat)
 
-
+   return(div.dat)
 }
 
 # # -----------------------------------------------------------
