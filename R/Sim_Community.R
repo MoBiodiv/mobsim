@@ -231,8 +231,8 @@ Sim.Thomas.Coords <- function(abund.vec,
    else {
 
       if (sigma > 2 * max.dim){
-         x <- runif(N, 0, xmax)
-         y <- runif(N, 0, ymax)
+         x <- runif(N, xext[1], xext[2])
+         y <- runif(N, yext[1], yext[2])
          id.spec <- rep.int(1:S.local, times = abund.vec)
 
          dat1 <- data.frame(X = x, Y = y, SpecID = id.spec)

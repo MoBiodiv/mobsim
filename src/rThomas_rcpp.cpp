@@ -18,15 +18,15 @@ DataFrame rThomas_rcpp(int nPoints,
    //simulate mother points
    double kappa = nPoints/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
 
-   double expand = 4.0*sigma;
-
-   double xmin2 = xmin - expand;
-   double xmax2 = xmax + expand;
-
-   double ymin2 = ymin - expand;
-   double ymax2 = ymax + expand;
-
-   double lambda_mother = kappa * (xmax2 - xmin2) * (ymax2 - ymin2);
+   // double expand = 4.0*sigma;
+   //
+   // double xmin2 = xmin - expand;
+   // double xmax2 = xmax + expand;
+   //
+   // double ymin2 = ymin - expand;
+   // double ymax2 = ymax + expand;
+   //
+   // double lambda_mother = kappa * (xmax2 - xmin2) * (ymax2 - ymin2);
 
    NumericVector xpoints(nPoints);
    NumericVector ypoints(nPoints);
@@ -36,12 +36,15 @@ DataFrame rThomas_rcpp(int nPoints,
 
    RNGScope scope;
 
-   int nMotherPoints = as<int>(rpois(1, lambda_mother));
+   //int nMotherPoints = as<int>(rpois(1, lambda_mother));
+   int nMotherPoints = as<int>(rpois(1, kappa));
 
    if (nMotherPoints > 0){
 
-      xmother = runif(nMotherPoints, xmin2, xmax2);
-      ymother = runif(nMotherPoints, ymin2, ymax2);
+      // xmother = runif(nMotherPoints, xmin2, xmax2);
+      // ymother = runif(nMotherPoints, ymin2, ymax2);
+      xmother = runif(nMotherPoints, xmin, xmax);
+      ymother = runif(nMotherPoints, ymin, ymax);
 
       double xnew, ynew;
       int imother;
@@ -58,7 +61,7 @@ DataFrame rThomas_rcpp(int nPoints,
             xnew = xmother[imother] + dxy[0];
             ynew = ymother[imother] + dxy[1];
 
-         } while (!(xnew > xmin && xnew < xmax && ynew > 0 && ynew < ymax));
+         } while (!(xnew > xmin && xnew < xmax && ynew > ymin && ynew < ymax));
 
          xpoints[ipoint] = xnew;
          ypoints[ipoint] = ynew;
