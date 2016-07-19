@@ -111,48 +111,29 @@ SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund = 1, fix.S.l
 #' spec.cols <- rainbow(length(levels(community1$SpecID)))
 #' plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
 #'
-Sim.Poisson.Community <- function(S, N, cv.abund = 1, xmax = 1, ymax = 1, fix.S = F)
+Sim.Poisson.Coords <- function(abund.vec,
+                               xext = c(0,1),
+                               yext = c(0,1)
+                               )
 {
-   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund, fix.S.local = fix.S)
-   abund.vec <- sim1$abund
-
-   x <- runif(N, 0, xmax)
-   y <- runif(N, 0, ymax)
+   N <- sum(abund.vec)
+   x <- runif(N, xext[1], xext[2])
+   y <- runif(N, yext[1], yext[2])
 
    id.spec <- factor(rep(names(abund.vec), times=abund.vec))
 
-   dat1 <- data.frame(X=x, Y=y, SpecID=id.spec)
-   return(dat1)
+   sim.dat1 <- data.frame(X=x, Y=y, SpecID=id.spec)
+   return(sim.dat1)
 }
 
-# -----------------------------------------------------------------------------------------------
-#' Simulate community with log-normal SAD and Thomas process clustering
+# ----------------------------------------------------------------------------------
+#' Simulate community with log-normal SAD and random spatial positions
 #'
-
 #' @param S scalar integer - number of species
 #' @param N scalar integer - number of individuals
 #' @param cv scalar numeric - coefficient of variation ( = sd/mean) in abundance
-#' @param sigma numeric vector of length = 1 or length = 2. Standard deviation of
-#'        random displacement (along each coordinate axis) of a point from
-#'        its cluster centre. Therefore sigma correlates with cluster radius.
-#'        When length(sigma) == 1 all species have the same cluster radius.
-#'        When length(sigma) == 2 a linear relationship between species-specific sigma values
-#'        and log(relative abundance) is simulated. Thereby sigma[1] is the cluster parameter
-#'        for the least abundant species and sigma[2] the cluster parameter for the most
-#'        abundant species.
-#'        When length(sigma) == 1 and sigma is more than twice as large as the largest
-#'        plot dimension, than a random Poisson distribution is simulated, which is more
-#'        efficient than a Thomas cluster process.
-#'
 #' @param xmax scalar numeric - size of the simulated area in x-direction
 #' @param ymax scalar numeric - size of the simulated area in y-direction
-
-#' @param points.cluster scalar integer - numbers of individuals per cluster.
-#'        If it is defined as sqrt(species abundance), i.e. there will be on average the number
-#'        of clusters will equal the number of individuals per cluster.
-#'
-#' @details To generate a Thomas cluster process of a single species this function uses a C++
-#'          re-implementation if the function \code{rThomas()} in the package \code{spatstat}.
 #'
 #' @return A dataframe with three columns
 #' \enumerate{
@@ -160,207 +141,32 @@ Sim.Poisson.Community <- function(S, N, cv.abund = 1, xmax = 1, ymax = 1, fix.S 
 #'    \item Y : y-coordinate of individual
 #'    \item SpecID : factor with species identity label (from 1 to number of species)
 #' }
-#'
+
 #' @author Felix May
 #'
-#' @seealso \code{spatstat::rThomas()}
+#' @examples
+#' community1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
 #'
-Sim.Thomas.Community <- function(S, N,
-                                 cv.abund = 1,
-                                 sigma = 0.02,
-                                 xmax = 1,
-                                 ymax = 1,
-                                 points.cluster = NULL,
-                                 fix.S = F)
+#' spec.cols <- rainbow(length(levels(community1$SpecID)))
+#' plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
+#'
+Sim.Poisson.Community <- function(S,
+                                  N,
+                                  cv.abund = 1,
+                                  xext = c(0,1),
+                                  yext = c(0,1),
+                                  fix.S = F)
 {
-   #require(spatstat)
-
-   max.dim <- ifelse(xmax >= ymax, xmax ,ymax)
-
    sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund, fix.S.local = fix.S)
    abund.vec <- sim1$abund
-   cum.abund <- cumsum(abund.vec)
 
-   S.local <- length(abund.vec)
-
-   if (length(sigma) == 2){
-      # linear relationship between sigma and log(relabund)
-      # sigma = a1 + b1 * log(relabund)
-      log.relabund <- log(abund.vec/sum(abund.vec))
-      range.abund <- max(log.relabund) - min(log.relabund)
-
-      # # linear relationship between sigma and relabund
-      # relabund <- abund.vec/sum(abund.vec)
-      # range.abund <- max(relabund) - min(relabund)
-
-      if (range.abund != 0) b1 <- (sigma[2] - sigma[1])/range.abund
-      else b1 <- 0
-
-      a1 <- sigma[2] - b1*max(log.relabund)
-      sigma.vec <- a1 + b1*log.relabund
-
-      # a1 <- sigma[2] - b1*max(relabund)
-      # sigma.vec <- a1 + b1*relabund
-   }
-   else {
-
-      if (sigma > 2 * max.dim){
-         x <- runif(N, 0, xmax)
-         y <- runif(N, 0, ymax)
-         id.spec <- rep.int(1:S.local, times = abund.vec)
-
-         dat1 <- data.frame(X = x, Y = y, SpecID = id.spec)
-         return(dat1)
-      }
-
-      sigma.vec <- rep(sigma[1], times = S.local)
-   }
-
-   sim.dat <- data.frame(X = numeric(N),
-                         Y = numeric(N))
-
-   # create map for first species
-   if (!is.numeric(points.cluster)){
-      n.mother.points <- points.per.cluster <- sqrt(abund.vec) # assumption : similar numbers of cluster and of
-      #individuals per cluster
-   }
-   else {
-      points.per.cluster <- rep(points.cluster, S.local)
-      n.mother.points <- abund.vec/points.per.cluster
-      n.mother.points <- ifelse(n.mother.points < 0.1, 0.1, n.mother.points)
-   }
-
-   dat1 <- rThomas_rcpp(abund.vec[1], sigma=sigma.vec[1], mu=points.per.cluster[1])
-
-   irange <- 1:cum.abund[1]
-   sim.dat$X[irange] <- dat1$x
-   sim.dat$Y[irange] <- dat1$y
-
-   for (ispec in 2:S.local){
-      dat1 <- rThomas_rcpp(abund.vec[ispec], sigma = sigma.vec[ispec], mu = points.per.cluster[ispec])
-
-      irange <- (cum.abund[ispec-1] + 1):cum.abund[ispec]
-      sim.dat$X[irange] <- dat1$x
-      sim.dat$Y[irange] <- dat1$y
-   }
-
-   sim.dat$SpecID <- factor(rep(names(abund.vec), abund.vec))
-   names(sim.dat) <- c("X","Y","SpecID")
+   sim.dat <- Sim.Poisson.Coords(abund.vec = abund.vec, xext = xext, yext = yext)
    return(sim.dat)
-
-   #spec.dat <- data.frame(ID = names(abund.vec), abund = as.numeric(abund.vec), sigma = as.numeric(sigma.vec))
-   #return(list(individuals = sim.dat, species = spec.dat))
 }
-
-
-# old version using spatstat function - should do the same but less efficient
-# # ----------------------------------------------------------------------------------
-# # Simulate community with log-normal SAD and Thomas process clustering
-# # when sigma > 2*(max(xmax,ymax)) a Poisson distribution is simulated which is more efficient
-# Sim.Thomas.Community <- function(S,N,
-#                                  cv.abund=1,
-#                                  sigma=0.02, #single value for all species or
-#                                              #min and max for least and most abundant species
-#                                  xmax=1,
-#                                  ymax=1,
-#                                  points.cluster=NULL)
-# {
-#    require(spatstat)
-#
-#    max.dim <- ifelse(xmax>=ymax,xmax,ymax)
-#
-#    sim1 <- SAD.log.normal(S,N,cv.abund)
-#    abund.vec <- sim1$abund
-#
-#    if (length(sigma)==2){
-#       # linear relationship between sigma and log(relabund)
-#       # sigma = a1 + b1 * log(relabund)
-#       log.relabund <- log(abund.vec/sum(abund.vec))
-#       range.abund <- max(log.relabund)-min(log.relabund)
-#
-#       if (range.abund != 0) b1 <- (sigma[2]-sigma[1])/range.abund
-#       else b1 <- 0
-#       a1 <- sigma[2] - b1*max(log.relabund)
-#       sigma.vec <- a1 + b1*log.relabund
-#
-#    #    plot(sigma.vec~log.relabund)
-#    #    abline(a1,b1,col="red")
-#    #    abline(h=c(sigma[1],sigma[2]),col=1:2)
-#    #    abline(v=c(min(log.relabund),max(log.relabund)))
-#    }
-#    else {
-#
-#       if (sigma > 2*max.dim){
-#          x <- runif(N,0,xmax)
-#          y <- runif(N,0,ymax)
-#          id.spec <- rep.int(1:S,times=abund.vec)
-#
-#          dat1 <- data.frame(X=x,Y=y,SpecID=id.spec)
-#          return(dat1)
-#       }
-#
-#       sigma.vec <- rep(sigma[1],times=S)
-#    }
-#
-#    print("Test")
-#
-#    # create map for first species
-#    if (!is.numeric(points.cluster)){
-#       n.mother.points <- points.per.cluster <- sqrt(abund.vec) # assumption : similar numbers of cluster and of
-#                                                                #individuals per cluster
-#    }
-#    else {
-#       points.per.cluster <- rep(points.cluster,S)
-#       n.mother.points <- abund.vec/points.per.cluster
-#       n.mother.points <- ifelse(n.mother.points<0.1,0.1,n.mother.points)
-#    }
-#
-#    n <- 0
-#    #n.trials <- 0
-#    while (n<abund.vec[1]){
-#       pp1 <- rThomas(kappa=n.mother.points[1]/(xmax*ymax),
-#                      scale=sigma.vec[1],
-#                      mu=points.per.cluster[1],
-#                      win=owin(c(0,xmax),c(0,ymax)))
-#       n <- pp1$n
-#       #n.trials <- n.trials +1
-#    }
-#    dat1 <- as.data.frame(pp1)
-#    dat1 <- dat1[sample(1:nrow(dat1),abund.vec[1]),]
-#    dat1$SpecID <- rep(1,abund.vec[1])
-#
-#    #plot(y~x,dat1,pch=19,xlim=c(0,1),ylim=c(0,1))
-#    #n.trials
-#
-#    for (ispec in 2:S){
-#       n <- 0
-#       while (n<abund.vec[ispec]){
-#          pp1 <- rThomas(kappa=n.mother.points[ispec]/(xmax*ymax),
-#                         scale=sigma.vec[ispec],
-#                         mu=points.per.cluster[ispec],
-#                         win=owin(c(0,xmax),c(0,ymax)))
-#          n <- pp1$n
-#       }
-#       dat2 <- as.data.frame(pp1)
-#       dat2 <- dat2[sample(1:nrow(dat2),abund.vec[ispec]),]
-#       dat2$SpecID <- rep(ispec,abund.vec[ispec])
-#       dat1 <- rbind(dat1,dat2)
-#    }
-#
-#    dat3 <- dat1
-#    dat3$SpecID <- factor(dat1$SpecID)
-#
-# #    require(ggplot2)
-# #    ggplot(data=dat3,aes(x=x,y=y,color=SpecID)) + geom_point(size=4)
-#
-#    names(dat3) <- c("X","Y","SpecID")
-#    return(dat3)
-# }
 
 # -----------------------------------------------------------------------------------------------
 #' Simulate community with log-normal SAD and Thomas process clustering
 #'
-
 #' @param abund.vec integer vector - species abundances
 #' @param sigma numeric vector of length = 1 or length = 2. Standard deviation of
 #'        random displacement (along each coordinate axis) of a point from
@@ -468,10 +274,174 @@ Sim.Thomas.Coords <- function(abund.vec,
    names(sim.dat) <- c("X","Y","SpecID")
 
    #spec.dat <- data.frame(ID = names(abund.vec), abund = as.numeric(abund.vec), sigma = as.numeric(sigma.vec))
+   #return(list(individuals = sim.dat, species = spec.dat))
 
    return(sim.dat)
 }
 
+
+
+
+# -----------------------------------------------------------------------------------------------
+#' Simulate community with log-normal SAD and Thomas process clustering
+#'
+#' @param S scalar integer - number of species
+#' @param N scalar integer - number of individuals
+#' @param cv scalar numeric - coefficient of variation ( = sd/mean) in abundance
+#' @param sigma numeric vector of length = 1 or length = 2. Standard deviation of
+#'        random displacement (along each coordinate axis) of a point from
+#'        its cluster centre. Therefore sigma correlates with cluster radius.
+#'        When length(sigma) == 1 all species have the same cluster radius.
+#'        When length(sigma) == 2 a linear relationship between species-specific sigma values
+#'        and log(relative abundance) is simulated. Thereby sigma[1] is the cluster parameter
+#'        for the least abundant species and sigma[2] the cluster parameter for the most
+#'        abundant species.
+#'        When length(sigma) == 1 and sigma is more than twice as large as the largest
+#'        plot dimension, than a random Poisson distribution is simulated, which is more
+#'        efficient than a Thomas cluster process.
+#'
+#' @param xmax scalar numeric - size of the simulated area in x-direction
+#' @param ymax scalar numeric - size of the simulated area in y-direction
+
+#' @param points.cluster scalar integer - numbers of individuals per cluster.
+#'        If it is defined as sqrt(species abundance), i.e. there will be on average the number
+#'        of clusters will equal the number of individuals per cluster.
+#'
+#' @details To generate a Thomas cluster process of a single species this function uses a C++
+#'          re-implementation if the function \code{rThomas()} in the package \code{spatstat}.
+#'
+#' @return A dataframe with three columns
+#' \enumerate{
+#'    \item X : x-coordinate of individual
+#'    \item Y : y-coordinate of individual
+#'    \item SpecID : factor with species identity label (from 1 to number of species)
+#' }
+#'
+#' @author Felix May
+#'
+#' @seealso \code{spatstat::rThomas()}
+#'
+Sim.Thomas.Community <- function(S, N,
+                                 cv.abund = 1,
+                                 sigma = 0.02,
+                                 xext = c(0,1),
+                                 yext = c(0,1),
+                                 points.cluster = NULL,
+                                 fix.S = F)
+{
+   sim1 <- SAD.lognorm(S.pool = S, N.local = N, cv.abund = cv.abund, fix.S.local = fix.S)
+   abund.vec <- sim1$abund
+
+   sim.dat <- Sim.Thomas.Coords(abund.vec = abund.vec, xext = xext, yext = yext, sigma = sigma,
+                                points.cluster = points.cluster)
+
+   return(sim.dat)
+}
+
+
+# old version using spatstat function - should do the same but less efficient
+# # ----------------------------------------------------------------------------------
+# # Simulate community with log-normal SAD and Thomas process clustering
+# # when sigma > 2*(max(xmax,ymax)) a Poisson distribution is simulated which is more efficient
+# Sim.Thomas.Community <- function(S,N,
+#                                  cv.abund=1,
+#                                  sigma=0.02, #single value for all species or
+#                                              #min and max for least and most abundant species
+#                                  xmax=1,
+#                                  ymax=1,
+#                                  points.cluster=NULL)
+# {
+#    require(spatstat)
+#
+#    max.dim <- ifelse(xmax>=ymax,xmax,ymax)
+#
+#    sim1 <- SAD.log.normal(S,N,cv.abund)
+#    abund.vec <- sim1$abund
+#
+#    if (length(sigma)==2){
+#       # linear relationship between sigma and log(relabund)
+#       # sigma = a1 + b1 * log(relabund)
+#       log.relabund <- log(abund.vec/sum(abund.vec))
+#       range.abund <- max(log.relabund)-min(log.relabund)
+#
+#       if (range.abund != 0) b1 <- (sigma[2]-sigma[1])/range.abund
+#       else b1 <- 0
+#       a1 <- sigma[2] - b1*max(log.relabund)
+#       sigma.vec <- a1 + b1*log.relabund
+#
+#    #    plot(sigma.vec~log.relabund)
+#    #    abline(a1,b1,col="red")
+#    #    abline(h=c(sigma[1],sigma[2]),col=1:2)
+#    #    abline(v=c(min(log.relabund),max(log.relabund)))
+#    }
+#    else {
+#
+#       if (sigma > 2*max.dim){
+#          x <- runif(N,0,xmax)
+#          y <- runif(N,0,ymax)
+#          id.spec <- rep.int(1:S,times=abund.vec)
+#
+#          dat1 <- data.frame(X=x,Y=y,SpecID=id.spec)
+#          return(dat1)
+#       }
+#
+#       sigma.vec <- rep(sigma[1],times=S)
+#    }
+#
+#    print("Test")
+#
+#    # create map for first species
+#    if (!is.numeric(points.cluster)){
+#       n.mother.points <- points.per.cluster <- sqrt(abund.vec) # assumption : similar numbers of cluster and of
+#                                                                #individuals per cluster
+#    }
+#    else {
+#       points.per.cluster <- rep(points.cluster,S)
+#       n.mother.points <- abund.vec/points.per.cluster
+#       n.mother.points <- ifelse(n.mother.points<0.1,0.1,n.mother.points)
+#    }
+#
+#    n <- 0
+#    #n.trials <- 0
+#    while (n<abund.vec[1]){
+#       pp1 <- rThomas(kappa=n.mother.points[1]/(xmax*ymax),
+#                      scale=sigma.vec[1],
+#                      mu=points.per.cluster[1],
+#                      win=owin(c(0,xmax),c(0,ymax)))
+#       n <- pp1$n
+#       #n.trials <- n.trials +1
+#    }
+#    dat1 <- as.data.frame(pp1)
+#    dat1 <- dat1[sample(1:nrow(dat1),abund.vec[1]),]
+#    dat1$SpecID <- rep(1,abund.vec[1])
+#
+#    #plot(y~x,dat1,pch=19,xlim=c(0,1),ylim=c(0,1))
+#    #n.trials
+#
+#    for (ispec in 2:S){
+#       n <- 0
+#       while (n<abund.vec[ispec]){
+#          pp1 <- rThomas(kappa=n.mother.points[ispec]/(xmax*ymax),
+#                         scale=sigma.vec[ispec],
+#                         mu=points.per.cluster[ispec],
+#                         win=owin(c(0,xmax),c(0,ymax)))
+#          n <- pp1$n
+#       }
+#       dat2 <- as.data.frame(pp1)
+#       dat2 <- dat2[sample(1:nrow(dat2),abund.vec[ispec]),]
+#       dat2$SpecID <- rep(ispec,abund.vec[ispec])
+#       dat1 <- rbind(dat1,dat2)
+#    }
+#
+#    dat3 <- dat1
+#    dat3$SpecID <- factor(dat1$SpecID)
+#
+# #    require(ggplot2)
+# #    ggplot(data=dat3,aes(x=x,y=y,color=SpecID)) + geom_point(size=4)
+#
+#    names(dat3) <- c("X","Y","SpecID")
+#    return(dat3)
+# }
 
 
 

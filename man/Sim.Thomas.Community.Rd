@@ -4,8 +4,8 @@
 \alias{Sim.Thomas.Community}
 \title{Simulate community with log-normal SAD and Thomas process clustering}
 \usage{
-Sim.Thomas.Community(S, N, cv.abund = 1, sigma = 0.02, xmax = 1,
-  ymax = 1, points.cluster = NULL, fix.S = F)
+Sim.Thomas.Community(S, N, cv.abund = 1, sigma = 0.02, xext = c(0, 1),
+  yext = c(0, 1), points.cluster = NULL, fix.S = F)
 }
 \arguments{
 \item{S}{scalar integer - number of species}
@@ -24,15 +24,15 @@ When length(sigma) == 1 and sigma is more than twice as large as the largest
 plot dimension, than a random Poisson distribution is simulated, which is more
 efficient than a Thomas cluster process.}
 
-\item{xmax}{scalar numeric - size of the simulated area in x-direction}
-
-\item{ymax}{scalar numeric - size of the simulated area in y-direction}
-
 \item{points.cluster}{scalar integer - numbers of individuals per cluster.
 If it is defined as sqrt(species abundance), i.e. there will be on average the number
 of clusters will equal the number of individuals per cluster.}
 
 \item{cv}{scalar numeric - coefficient of variation ( = sd/mean) in abundance}
+
+\item{xmax}{scalar numeric - size of the simulated area in x-direction}
+
+\item{ymax}{scalar numeric - size of the simulated area in y-direction}
 }
 \value{
 A dataframe with three columns
