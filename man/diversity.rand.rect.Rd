@@ -6,7 +6,7 @@
 of a community}
 \usage{
 diversity.rand.rect(prop.A = 0.25, community, nrect = 100, xext = c(0, 1),
-  yext = c(0, 1))
+  yext = c(0, 1), exclude_zeros = F)
 }
 \arguments{
 \item{prop.A}{Proportion of the total area samples}

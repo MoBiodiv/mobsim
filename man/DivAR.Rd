@@ -5,7 +5,7 @@
 \title{Estimate diversity-area relationships}
 \usage{
 DivAR(community, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
-  xext = c(0, 1), yext = c(0, 1))
+  xext = c(0, 1), yext = c(0, 1), exclude_zeros = F)
 }
 \arguments{
 \item{community}{Dataframe with three columns: x, y, species identity}

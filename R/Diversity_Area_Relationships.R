@@ -80,7 +80,8 @@ diversity.rect <- function(x0, y0, xsize, ysize, community)
 #' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
 #' (4) Simpson diversity
 
-diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(0,1), yext=c(0,1))
+diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(0,1), yext=c(0,1),
+                                exclude_zeros = F)
 {
    x <- community[,1]
    y <- community[,2]
@@ -111,6 +112,9 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
    div.plots <- mapply(diversity.rect, xpos, ypos,
                        MoreArgs=list(xsize = dx.rect, ysize = dy.rect, community=community))
 
+   if (exclude_zeros == T)
+      div.plots <- div.plots[, div.plots["nSpecies",] > 0]
+
    return(c(meanSpec    = mean(div.plots["nSpecies",]),
             sdSpec      = sd(div.plots["nSpecies",]),
             meanEnd     = mean(div.plots["nEndemics",]),
@@ -135,7 +139,8 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
 #' @return Vector with mean and standard deviation of the following diversity
 #' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
 #' (4) Simpson diversity
-DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(0,1), yext=c(0,1))
+DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(0,1), yext=c(0,1),
+                  exclude_zeros = F)
 {
    nscales <- length(prop.A)
    xrange <- xext[2] - xext[1]
@@ -143,10 +148,11 @@ DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(
 
    div.area <- sapply(prop.A,
                       diversity.rand.rect,
-                      community=community,
-                      nrect=nsamples,
-                      xext=xext,
-                      yext=yext)
+                      community = community,
+                      nrect = nsamples,
+                      xext = xext,
+                      yext = yext,
+                      exclude_zeros = exclude_zeros)
    div.dat <- as.data.frame(t(div.area))
    div.dat <- cbind(propArea = prop.A, div.dat)
 
