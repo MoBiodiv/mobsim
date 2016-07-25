@@ -159,28 +159,28 @@ DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(
    return(div.dat)
 }
 
-# # -----------------------------------------------------------
-# # Distance decay
-# distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yext=c(0,1), method="jaccard")
-# {
-#    require(vegan)
-#
-#    dx.plot <- xext[2] - xext[1]
-#    dy.plot <- yext[2] - yext[1]
-#
-#    area <- dx.plot*dy.plot*prop.A
-#    square.size <- sqrt(area)
-#
-#    xpos <- runif(nsamples,min=0, max=xext[2]-square.size)
-#    ypos <- runif(nsamples,min=0, max=yext[2]-square.size)
-#
-#    d <- dist(cbind(xpos,ypos))
-#
-#    com.tab <- mapply(abund.rect, xpos, ypos,
-#                      MoreArgs=list(xsize=square.size, ysize=square.size, community=community))
-#
-#    jaccard <- 1 - vegdist(t(com.tab),method=method,binary=T)
-#    dat.out <- data.frame(distance = as.numeric(d), similarity = as.numeric(jaccard))
-#    return(dat.out)
-# }
+# -----------------------------------------------------------
+# Distance decay
+distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yext=c(0,1), method="jaccard")
+{
+   require(vegan)
+
+   dx.plot <- xext[2] - xext[1]
+   dy.plot <- yext[2] - yext[1]
+
+   area <- dx.plot*dy.plot*prop.A
+   square.size <- sqrt(area)
+
+   xpos <- runif(nsamples,min=0, max=xext[2]-square.size)
+   ypos <- runif(nsamples,min=0, max=yext[2]-square.size)
+
+   d <- dist(cbind(xpos,ypos))
+
+   com.tab <- mapply(abund.rect, xpos, ypos,
+                     MoreArgs=list(xsize=square.size, ysize=square.size, community=community))
+
+   jaccard <- 1 - vegdist(t(com.tab),method=method,binary=T)
+   dat.out <- data.frame(distance = as.numeric(d), similarity = as.numeric(jaccard))
+   return(dat.out)
+}
 
