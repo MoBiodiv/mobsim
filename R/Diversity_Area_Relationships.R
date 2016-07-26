@@ -130,7 +130,7 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
 
 #' Estimate diversity-area relationships
 #'
-#' @param prop.A Proport
+#' @param prop.A Proportion of area sampled
 #' @param community Dataframe with three columns: x, y, species identity
 #' @param nrect Number of randomly located subplots
 #' @param xext Minimum and maximum x-coordinates of the community

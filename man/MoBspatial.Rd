@@ -12,18 +12,26 @@ is described by its xy-coordinates as well as a species label.
 }
 \section{Functions to simulate species abundances and distributions}{
 
-SAD.lognorm
+SAD.lognorm()
 
-Sim.Poisson.Community
+Sim.Poisson.Coords()
 
-Sim.Thomas.Community
+Sim.Thomas.Coords()
+
+Sim.Poisson.Community()
+
+Sim.Thomas.Community()
 }
 
 \section{Functions to analyse species abundances and distributions}{
 
-SAC.coleman
+SAC.coleman()
 
-sSAC.all.rcpp
+sSAC.all.rcpp()
+
+DivAR()
+
+distance.decay()
 }
 \author{
 Felix May

@@ -10,7 +10,7 @@ DivAR(community, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
 \arguments{
 \item{community}{Dataframe with three columns: x, y, species identity}
 
-\item{prop.A}{Proport}
+\item{prop.A}{Proportion of area sampled}
 
 \item{xext}{Minimum and maximum x-coordinates of the community}
 
