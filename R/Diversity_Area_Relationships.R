@@ -52,20 +52,61 @@ diversity.rect <- function(x0, y0, xsize, ysize, community)
             simpson = simpson))
 }
 
-# # -----------------------------------------------------------
-# # get the abundance distribution in a rectangle with upper left corner in x0,y0
-# # size of the rectangle: xsize*ysize
-# abund.rect <- function(x0, y0, xsize, ysize, community)
-# {
-#    x <- community[,1]
-#    y <- community[,2]
-#    id.spec <- community[,3]
-#
-#    # logical vector which trees are in the sampling rectangle
-#    in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
-#
-#    return(abund)
-# }
+# -----------------------------------------------------------
+# get the abundance distribution in a rectangle with upper left corner in x0,y0
+# size of the rectangle: xsize*ysize
+abund.rect <- function(x0, y0, xsize, ysize, community)
+{
+   x <- community[,1]
+   y <- community[,2]
+   id.spec <- community[,3]
+
+   # logical vector which trees are in the sampling rectangle
+   in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
+
+   abund <- table(id.spec[in.rect])
+   abund <- abund[abund > 0]
+
+   return(abund)
+}
+
+# -----------------------------------------------------------
+abund.rand.rect <- function(prop.A = 0.25, community,
+                            xext = c(0,1), yext=c(0,1))
+{
+   x <- community[,1]
+   y <- community[,2]
+
+   dx.plot <- xext[2] - xext[1]
+   dy.plot <- yext[2] - yext[1]
+
+   area <- dx.plot*dy.plot*prop.A
+   square.size <- sqrt(area)
+
+   if (square.size <= min(c(dx.plot, dy.plot))){
+      dx.rect <- square.size
+      dy.rect <- square.size
+   } else
+   {
+      if (dx.plot >= dy.plot){
+         dx.rect <- dx.plot*prop.A
+         dy.rect <- dy.plot
+      } else {
+         dx.rect <- dx.plot
+         dy.rect <- dy.plot*prop.A
+      }
+   }
+
+   xpos <- runif(1, min = xext[1], max = xext[2] - dx.rect)
+   ypos <- runif(1, min = yext[1], max = yext[2] - dy.rect)
+
+   abund.plots <- mapply(abund.rect, xpos, ypos,
+                         MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
+                                     community = community))
+
+   return(abund.plots[,1])
+}
+
 
 #' Get mean and sd of diversity indices in several equally sized subplots
 #' of a community
@@ -79,9 +120,8 @@ diversity.rect <- function(x0, y0, xsize, ysize, community)
 #' @return Vector with mean and standard deviation of the following diversity
 #' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
 #' (4) Simpson diversity
-
-diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(0,1), yext=c(0,1),
-                                exclude_zeros = F)
+diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100,
+                                xext = c(0,1), yext=c(0,1), exclude_zeros = F)
 {
    x <- community[,1]
    y <- community[,2]
@@ -110,7 +150,8 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
    ypos <- runif(nrect, min = yext[1], max = yext[2] - dy.rect)
 
    div.plots <- mapply(diversity.rect, xpos, ypos,
-                       MoreArgs=list(xsize = dx.rect, ysize = dy.rect, community=community))
+                       MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
+                                     community=community))
 
    if (exclude_zeros == T)
       div.plots <- div.plots[, div.plots["nSpecies",] > 0]
@@ -139,8 +180,8 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100, xext = c(
 #' @return Vector with mean and standard deviation of the following diversity
 #' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
 #' (4) Simpson diversity
-DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100, xext=c(0,1), yext=c(0,1),
-                  exclude_zeros = F)
+DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100,
+                  xext=c(0,1), yext=c(0,1), exclude_zeros = F)
 {
    nscales <- length(prop.A)
    xrange <- xext[2] - xext[1]
