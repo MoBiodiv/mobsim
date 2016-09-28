@@ -73,8 +73,8 @@ DataFrame rThomas_rcpp(int nPoints,
       ypoints = runif(nPoints, ymin, ymax);
    }
 
-   DataFrame xydat = DataFrame::create(_["x"] = xpoints,
-                                       _["y"] = ypoints);
+   DataFrame xydat = DataFrame::create(_["X"] = xpoints,
+                                       _["Y"] = ypoints);
 
    return(xydat);
 }

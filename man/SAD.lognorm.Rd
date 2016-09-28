@@ -4,8 +4,7 @@
 \alias{SAD.lognorm}
 \title{Simulate log-normal species abundance distributions}
 \usage{
-SAD.lognorm(S.pool, N.local, mean.abund = 100, cv.abund = 1,
-  fix.S.local = F)
+SAD.lognorm(S.pool, N.local, cv.abund = 1, fix.S.local = F)
 }
 \arguments{
 \item{S.pool}{single integer - number of species in the pool}

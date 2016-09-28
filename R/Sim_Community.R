@@ -40,10 +40,12 @@
 #' barplot(height = as.numeric(sad1), names.arg = names(sad1),
 #'         xlab = "Abundance class", ylab ="No. of species")
 
-SAD.lognorm <- function(S.pool, N.local, mean.abund = 100, cv.abund = 1, fix.S.local = F)
+SAD.lognorm <- function(S.pool, N.local, cv.abund = 1, fix.S.local = F)
 {
    if (fix.S.local == T)
       mean.abund <- N.local/S.pool
+   else
+      mean.abund <- 100
    sd.abund <- mean.abund*cv.abund
 
    sigma1 <- sqrt(log(sd.abund^2/mean.abund^2 +1))
@@ -165,42 +167,6 @@ Sim.Poisson.Community <- function(S,
 }
 
 # -----------------------------------------------------------------------------------------------
-#' Simulate community with log-normal SAD and Thomas process clustering
-#'
-#' @param abund.vec integer vector - species abundances
-#' @param sigma numeric vector of length = 1 or length = 2. Standard deviation of
-#'        random displacement (along each coordinate axis) of a point from
-#'        its cluster centre. Therefore sigma correlates with cluster radius.
-#'        When length(sigma) == 1 all species have the same cluster radius.
-#'        When length(sigma) == 2 a linear relationship between species-specific sigma values
-#'        and log(relative abundance) is simulated. Thereby sigma[1] is the cluster parameter
-#'        for the least abundant species and sigma[2] the cluster parameter for the most
-#'        abundant species.
-#'        When length(sigma) == 1 and sigma is more than twice as large as the largest
-#'        plot dimension, than a random Poisson distribution is simulated, which is more
-#'        efficient than a Thomas cluster process.
-#'
-#' @param xext numeric with length 2 - size of the simulated area in x-direction
-#' @param yext numeric with length 2 - size of the simulated area in y-direction
-
-#' @param points.cluster scalar integer - numbers of individuals per cluster.
-#'        If it is defined as sqrt(species abundance), i.e. there will be on average the number
-#'        of clusters will equal the number of individuals per cluster.
-#'
-#' @details To generate a Thomas cluster process of a single species this function uses a C++
-#'          re-implementation if the function \code{rThomas()} in the package \code{spatstat}.
-#'
-#' @return A dataframe with three columns
-#' \enumerate{
-#'    \item X : x-coordinate of individual
-#'    \item Y : y-coordinate of individual
-#'    \item SpecID : factor with species identity label (from 1 to number of species)
-#' }
-#'
-#' @author Felix May
-#'
-#' @seealso \code{spatstat::rThomas()}
-#'
 Sim.Thomas.Coords <- function(abund.vec,
                               sigma = 0.02,
                               xext = c(0,1),
@@ -229,45 +195,52 @@ Sim.Thomas.Coords <- function(abund.vec,
       sigma.vec <- a1 + b1*log.relabund
    }
    else {
-
-      if (sigma > 2 * max.dim){
-         x <- runif(N, xext[1], xext[2])
-         y <- runif(N, yext[1], yext[2])
-         id.spec <- rep.int(1:S.local, times = abund.vec)
-
-         dat1 <- data.frame(X = x, Y = y, SpecID = id.spec)
-         return(dat1)
-      }
-
       sigma.vec <- rep(sigma[1], times = S.local)
    }
 
    sim.dat <- data.frame(X = numeric(N),
                          Y = numeric(N))
 
-   # create map for first species
+   # determine cluster size
    if (!is.numeric(points.cluster)){
-      points.per.cluster <- sqrt(abund.vec) # assumption : similar numbers of cluster and of
-      #individuals per cluster
-   }
-   else {
+      # assumption : similar numbers of cluster and of individuals per cluster
+      points.per.cluster <- sqrt(abund.vec)
+   } else {
       points.per.cluster <- rep(points.cluster, S.local)
    }
 
-   dat1 <- rThomas_rcpp(abund.vec[1], sigma = sigma.vec[1], mu = points.per.cluster[1],
-                        xmin = xext[1], xmax = xext[2], ymin = yext[1], ymax = yext[2])
+   # create map for first species
+   if (sigma.vec[1] < 2 * max.dim){
+      dat1 <- rThomas_rcpp(abund.vec[1], sigma = sigma.vec[1],
+                           mu = points.per.cluster[1],
+                           xmin = xext[1], xmax = xext[2],
+                           ymin = yext[1], ymax = yext[2])
+   } else {
+      x <- runif(abund.vec[1], xext[1], xext[2])
+      y <- runif(abund.vec[1], yext[1], yext[2])
+      dat1 <- data.frame(X = x, Y = y)
+   }
 
    irange <- 1:cum.abund[1]
-   sim.dat$X[irange] <- dat1$x
-   sim.dat$Y[irange] <- dat1$y
+   sim.dat$X[irange] <- dat1$X
+   sim.dat$Y[irange] <- dat1$Y
 
    for (ispec in 2:S.local){
-      dat1 <- rThomas_rcpp(abund.vec[ispec], sigma = sigma.vec[ispec], mu = points.per.cluster[ispec],
-                           xmin = xext[1], xmax = xext[2], ymin = yext[1], ymax = yext[2])
+
+      if (sigma.vec[ispec] < 2 * max.dim){
+         dat1 <- rThomas_rcpp(abund.vec[ispec], sigma = sigma.vec[ispec],
+                              mu = points.per.cluster[ispec],
+                              xmin = xext[1], xmax = xext[2],
+                              ymin = yext[1], ymax = yext[2])
+      } else {
+         x <- runif(abund.vec[ispec], xext[1], xext[2])
+         y <- runif(abund.vec[ispec], yext[1], yext[2])
+         dat1 <- data.frame(X = x, Y = y)
+      }
 
       irange <- (cum.abund[ispec-1] + 1):cum.abund[ispec]
-      sim.dat$X[irange] <- dat1$x
-      sim.dat$Y[irange] <- dat1$y
+      sim.dat$X[irange] <- dat1$X
+      sim.dat$Y[irange] <- dat1$Y
    }
 
    sim.dat$SpecID <- factor(rep(names(abund.vec), abund.vec))
