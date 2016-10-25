@@ -7,6 +7,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 DataFrame rThomas_rcpp(int nPoints,
+                       int nMotherPoints,
                        double sigma,
                        double mu,     //mean number of points per cluster,
                        double xmin = 0,
@@ -16,7 +17,7 @@ DataFrame rThomas_rcpp(int nPoints,
 )
 {
    //simulate mother points
-   double kappa = nPoints/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
+   //double kappa = nPoints/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
 
    // double expand = 4.0*sigma;
    //
@@ -37,7 +38,7 @@ DataFrame rThomas_rcpp(int nPoints,
    RNGScope scope;
 
    //int nMotherPoints = as<int>(rpois(1, lambda_mother));
-   int nMotherPoints = as<int>(rpois(1, kappa));
+   //int nMotherPoints = as<int>(rpois(1, kappa));
 
    if (nMotherPoints > 0){
 
@@ -78,6 +79,3 @@ DataFrame rThomas_rcpp(int nPoints,
 
    return(xydat);
 }
-
-
-

@@ -2,38 +2,28 @@
 % Please edit documentation in R/Sim_Community.R
 \name{Sim.Poisson.Coords}
 \alias{Sim.Poisson.Coords}
-\title{Simulate community with log-normal SAD and random spatial positions}
+\title{Random spatial coordinates}
 \usage{
-Sim.Poisson.Coords(abund.vec, xext = c(0, 1), yext = c(0, 1))
+Sim.Poisson.Coords(abund.vec, xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{S}{scalar integer - number of species}
+\item{abund.vec}{integer vector with species abundances}
 
-\item{N}{scalar integer - number of individuals}
+\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
 
-\item{cv}{scalar numeric - coefficient of variation ( = sd/mean) in abundance}
-
-\item{xmax}{scalar numeric - size of the simulated area in x-direction}
-
-\item{ymax}{scalar numeric - size of the simulated area in y-direction}
+\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
 }
 \value{
-A dataframe with three columns
-\enumerate{
-   \item X : x-coordinate of individual
-   \item Y : y-coordinate of individual
-   \item SpecID : factor with species identity label (from 1 to number of species)
-}
+A community object as defined by \code{\link{community}}.
 }
 \description{
-Simulate community with log-normal SAD and random spatial positions
+Add random spatial positions to a species abundance distribution.
 }
 \examples{
-community1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
-
-spec.cols <- rainbow(length(levels(community1$SpecID)))
-plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
-
+abund <- SAD.lognorm(S.pool = 100, N.local = 1000)$abund
+sim.com1 <- Sim.Poisson.Coords(abund)
+plot(sim.com1)
+summary(sim.com1)
 }
 \author{
 Felix May

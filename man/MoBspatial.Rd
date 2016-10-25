@@ -6,21 +6,22 @@
 \alias{MoBspatial-package}
 \title{MoBspatial: A package for spatial analysis of scale-dependent biodiversity changes.}
 \description{
-The package includes functions to simulated species distributions in space
+The package includes functions to simulate species distributions in space
 as well as for the analysis of spatially-explicit data, where each individual
-is described by its xy-coordinates as well as a species label.
+is described by its xy-coordinates and a species identity label.
 }
 \section{Functions to simulate species abundances and distributions}{
 
-SAD.lognorm()
 
-Sim.Poisson.Coords()
+\code{\link{SAD.lognorm}}
 
-Sim.Thomas.Coords()
+\code{\link{Sim.Poisson.Coords}}
 
-Sim.Poisson.Community()
+\code{\link{Sim.Thomas.Coords}}
 
-Sim.Thomas.Community()
+\code{\link{Sim.Poisson.Community}}
+
+\code{\link{Sim.Thomas.Community}}
 }
 
 \section{Functions to analyse species abundances and distributions}{

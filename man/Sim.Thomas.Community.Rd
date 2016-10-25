@@ -2,57 +2,55 @@
 % Please edit documentation in R/Sim_Community.R
 \name{Sim.Thomas.Community}
 \alias{Sim.Thomas.Community}
-\title{Simulate community with log-normal SAD and Thomas process clustering}
+\title{Simulate community with clumped spatial positions.}
 \usage{
-Sim.Thomas.Community(S, N, cv.abund = 1, sigma = 0.02, xext = c(0, 1),
-  yext = c(0, 1), points.cluster = NULL, fix.S = F)
+Sim.Thomas.Community(S.pool, N.local, cv.abund = 1, fixS.local = F,
+  sigma = 0.02, cluster.points = NA, mother.points = NA, xrange = c(0,
+  1), yrange = c(0, 1))
 }
 \arguments{
-\item{S}{scalar integer - number of species}
+\item{S.pool}{integer - number of species in the pool}
 
-\item{N}{scalar integer - number of individuals}
+\item{N.local}{integer - number of individuals in the local community}
 
-\item{sigma}{numeric vector of length = 1 or length = 2. Standard deviation of
-random displacement (along each coordinate axis) of a point from
-its cluster centre. Therefore sigma correlates with cluster radius.
-When length(sigma) == 1 all species have the same cluster radius.
-When length(sigma) == 2 a linear relationship between species-specific sigma values
-and log(relative abundance) is simulated. Thereby sigma[1] is the cluster parameter
-for the least abundant species and sigma[2] the cluster parameter for the most
-abundant species.
-When length(sigma) == 1 and sigma is more than twice as large as the largest
-plot dimension, than a random Poisson distribution is simulated, which is more
-efficient than a Thomas cluster process.}
+\item{cv.abund}{numeric - coefficient of variation ( = sd/mean) of relative
+abundances. The higher \code{cv.abund}, the lower the evenness of the
+simulated community. This means with increasing \code{cv.abund} there are more
+rare and more dominant species.}
 
-\item{points.cluster}{scalar integer - numbers of individuals per cluster.
-If it is defined as sqrt(species abundance), i.e. there will be on average the number
-of clusters will equal the number of individuals per cluster.}
+\item{fixS.local}{logical - should the simulation constrain the number of
+species in the local community? This can result in deviations from mean and
+sd of local abundances from the theoretical distributions}
 
-\item{cv}{scalar numeric - coefficient of variation ( = sd/mean) in abundance}
+\item{sigma}{numeric vector of length = 1 or length = 2. Mean displacement
+(along each coordinate axes) of a point from its mother point (=cluster centre).}
 
-\item{xmax}{scalar numeric - size of the simulated area in x-direction}
+\item{cluster.points}{numeric - mean number of points per cluster.}
 
-\item{ymax}{scalar numeric - size of the simulated area in y-direction}
+\item{mother.points}{numeric - number of mother points (= cluster centres).}
+
+\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
+
+\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
 }
 \value{
-A dataframe with three columns
-\enumerate{
-   \item X : x-coordinate of individual
-   \item Y : y-coordinate of individual
-   \item SpecID : factor with species identity label (from 1 to number of species)
-}
+A community object as defined by \code{\link{community}}.
 }
 \description{
-Simulate community with log-normal SAD and Thomas process clustering
+This function simulates a community with a certain abundance distribution and
+and clumped, i.e. aggregated, spatial coordinates. This function consecutively calls
+\code{\link{SAD.lognorm}} and \code{\link{Sim.Thomas.Coords}}
 }
-\details{
-To generate a Thomas cluster process of a single species this function uses a C++
-         re-implementation if the function \code{rThomas()} in the package \code{spatstat}.
+\examples{
+com1 <- Sim.Thomas.Community(S.pool = 20, N.local = 500, cv.abund = 1,
+                             sigma = 0.01)
+plot(com1)
+
 }
 \author{
 Felix May
 }
 \seealso{
-\code{spatstat::rThomas()}
+\code{SAD.lognorm}; \code{Sim.Thomas.Coords}
 }
 

@@ -32,15 +32,25 @@ S.single.scale <- function(n, abund.vec)
 #'
 #' @return Numeric Vector with expected species numbers in samples of 1, 2, 3 ... N individuals
 #'
-#' @references Coleman, B. D. et al. 1983. Randomness, area, and species richness. Ecology 63, 1121-1133
+#' @references
+#' Coleman, B. D. et al. (1982). Randomness, area, and species richness. Ecology 63, 1121-1133
+#' Hurlbert, S.H. (1971). The nonconcept of species diversity: a critique and alternative parameters. Ecology 52, 577–586.
 #'
-SAC.coleman <- function(abund.vec)
+SAC <- function(abund.vec, method = "coleman")
 {
   N <- sum(abund.vec)
   n.vec <- 1:N
-  sac <- sapply(n.vec, S.single.scale, abund.vec = abund.vec)
+
+  if (method == "hurlbert"){
+     require(vegan)
+     sac <- as.numeric(rarefy(abund.vec, sample = n.vec))
+  } else {
+     sac <- sapply(n.vec, S.single.scale, abund.vec = abund.vec)
+  }
+
   return(sac)
 }
+
 
 # -----------------------------------------------------------
 # Function for the spatial SAC written by Xiao Xiao, Dan McGlinn and Nick Gotelli
@@ -99,84 +109,6 @@ sSAC.all.rcpp <- function(data)
    sSAC <- sSAC1_C(data[,1], data[,2], as.integer(data[,3]))
    return(sSAC)
 }
-
-
-# # -----------------------------------------------------------
-# # calculates PIE in sub-samples of a community
-# PIE.sample <- function(abund.count, sample.size, nsample)
-# {
-#    require(vegan)
-#    pie <- numeric(nsample)
-#    spec.id <- 1:length(abund.count)
-#    rel.abund <- abund.count/sum(abund.count)
-#    for (i in 1:nsample){
-#       abund.sample <- table(sample(spec.id,size=sample.size,replace=T,prob=rel.abund))
-#       pie[i] <- diversity(abund.sample,index="simpson")
-#    }
-#    return(mean(pie))
-# }
-#
-# # -----------------------------------------------------------
-# # calculates PIE of a species ID vector in a point pattern
-# PIE.ppp <- function(pp1)
-# {
-#    require(vegan)
-#    abund <- table(marks(pp1))
-#    return(diversity(abund,index="simpson"))
-# }
-#
-# # -----------------------------------------------------------
-# # calculates spatially-explicit PIE in non-noverlapping squares
-# PIE.spatial <- function(community, square.size = 0.1)
-# {
-#    require(vegan)
-#    require(spatstat)
-#
-#    x <- community[,1]
-#    y <- community[,2]
-#
-#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
-#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
-#
-#    pp1 <- ppp(x, y, marks=community[,3], window=owin(c(xmin,xmax),c(ymin,ymax)))
-#    grid1 <- tess(xgrid=seq(xmin,xmax,by=(xmax-xmin)*square.size),
-#                  ygrid=seq(ymin,ymax,by=(ymax-ymin)*square.size))
-#    pp.grid <- split(pp1,grid1)
-#
-#    pie.local <- sapply(pp.grid,PIE.ppp)
-#
-#    return(mean(pie.local))
-# }
-#
-# # -----------------------------------------------------------
-# # calculates number of species and PIE in subsquares of a plot
-# diversity.square <- function(community, square.size=0.1)
-# {
-#    require(vegan)
-#    require(spatstat)
-#
-#    x <- community[,1]
-#    y <- community[,2]
-#
-#    xmin <- floor(min(x)); xmax <- ceiling(max(x))
-#    ymin <- floor(min(y)); ymax <- ceiling(max(y))
-#
-#    pp1 <- ppp(x,y,marks=community[,3],window=owin(c(xmin,xmax),c(ymin,ymax)))
-#    grid1 <- tess(xgrid=seq(xmin, xmax, by=(xmax-xmin)*square.size),
-#                  ygrid=seq(ymin, ymax, by=(ymax-ymin)*square.size))
-#    pp.grid <- split(pp1,grid1)
-#
-#    abund.local <- lapply(pp.grid,function(pp){table(marks(pp))})
-#
-#    pie.local <- sapply(abund.local,diversity,index="simpson")
-#    sr.local <- sapply(abund.local,specnumber)
-#
-#    return(c(PIE=mean(pie.local),SR.local=mean(sr.local)))
-# }
-
-
-
-
 
 
 

@@ -2,41 +2,46 @@
 % Please edit documentation in R/Sim_Community.R
 \name{SAD.lognorm}
 \alias{SAD.lognorm}
-\title{Simulate log-normal species abundance distributions}
+\title{Simulate log-normal species abundance distributions.}
 \usage{
-SAD.lognorm(S.pool, N.local, cv.abund = 1, fix.S.local = F)
+SAD.lognorm(S.pool, N.local, cv.abund = 1, fixS.local = F)
 }
 \arguments{
-\item{S.pool}{single integer - number of species in the pool}
+\item{S.pool}{integer - number of species in the pool}
 
-\item{N.local}{single integer - number of individuals in the local community}
+\item{N.local}{integer - number of individuals in the local community}
 
-\item{cv.abund}{single numeric - coefficient of variation ( = sd/mean) in abundance}
+\item{cv.abund}{numeric - coefficient of variation ( = sd/mean) of relative
+abundances. The higher \code{cv.abund}, the lower the evenness of the
+simulated community. This means with increasing \code{cv.abund} there are more
+rare and more dominant species.}
 
-\item{fix.S.local}{- logical - should the simulation constrain the number of
-species in the local community. This can result in deviations from
-mean and sd of local abundances from the theoretical distributions}
+\item{fixS.local}{logical - should the simulation constrain the number of
+species in the local community? This can result in deviations from mean and
+sd of local abundances from the theoretical distributions}
 }
 \value{
 List with five named items:
 \enumerate{
-   \item abund - simulated abundance vector in the local community
-   \item mean.theor - theoretical mean of the distribution
-   \item sd.theor - theoretical standard deviation
-   \item mean.sim - simulated mean
-   \item sd.sim - simulated standard deviation
+    \item abund - simulated abundance vector in the local community
+    \item mean.theor - theoretical mean of the abundance distribution
+    \item sd.theor - theoretical standard deviation
+    \item mean.sim - simulated mean
+    \item sd.sim - simulated standard deviation
 }
 }
 \description{
 Simulate log-normal abundance data in a local community with fixed number of
-individuals (N.local), number of species in the pool (S.pool) and
-coefficient of variation in abundance (cv)
+individuals (N.local), number of species in the pool (S.pool), and coefficient
+of variation of relative abundances (cv.abund).
 }
 \details{
-The function can precisely control for the number of species and
-the number of individuals in the simulated community. These constraints
-can result in biases from the theoretical parameters. Therefore the simulated
-distribution parameters are provided as model output.
+When \code{fixS.local = FALSE} the species number in the local
+  community might deviate from \code{S.pool} due to sampling. When
+  \code{fix.S.local = TRUE} the local number of species will equal
+  \code{S.pool}, but this constraint can result in biases from the
+  theoretical parameters. Therefore the simulated distribution parameters are
+  provided as model output.
 }
 \examples{
 SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)
@@ -46,10 +51,10 @@ SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)
 require(untb)
 
 abund.vec <- SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)$abund
-names(abund.vec) <- paste("spec", 1:length(abund.vec),sep="")
 sad1 <- preston(census(abund.vec))
 barplot(height = as.numeric(sad1), names.arg = names(sad1),
         xlab = "Abundance class", ylab ="No. of species")
+
 }
 \author{
 Felix May

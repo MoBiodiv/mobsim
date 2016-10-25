@@ -2,38 +2,40 @@
 % Please edit documentation in R/Sim_Community.R
 \name{Sim.Poisson.Community}
 \alias{Sim.Poisson.Community}
-\title{Simulate community with log-normal SAD and random spatial positions}
+\title{Simulate community with random spatial positions.}
 \usage{
-Sim.Poisson.Community(S, N, cv.abund = 1, xext = c(0, 1), yext = c(0, 1),
-  fix.S = F)
+Sim.Poisson.Community(S.pool, N.local, cv.abund = 1, fixS.local = F,
+  xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{S}{scalar integer - number of species}
+\item{S.pool}{integer - number of species in the pool}
 
-\item{N}{scalar integer - number of individuals}
+\item{N.local}{integer - number of individuals in the local community}
 
-\item{cv}{scalar numeric - coefficient of variation ( = sd/mean) in abundance}
+\item{cv.abund}{numeric - coefficient of variation ( = sd/mean) of relative
+abundances. The higher \code{cv.abund}, the lower the evenness of the
+simulated community. This means with increasing \code{cv.abund} there are more
+rare and more dominant species.}
 
-\item{xmax}{scalar numeric - size of the simulated area in x-direction}
+\item{fixS.local}{logical - should the simulation constrain the number of
+species in the local community? This can result in deviations from mean and
+sd of local abundances from the theoretical distributions}
 
-\item{ymax}{scalar numeric - size of the simulated area in y-direction}
+\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
+
+\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
 }
 \value{
-A dataframe with three columns
-\enumerate{
-   \item X : x-coordinate of individual
-   \item Y : y-coordinate of individual
-   \item SpecID : factor with species identity label (from 1 to number of species)
-}
+A community object as defined by \code{\link{community}}.
 }
 \description{
-Simulate community with log-normal SAD and random spatial positions
+This function simulates a community with a certain abundance distribution and
+and random spatial coordinates. This function consecutively calls
+\code{\link{SAD.lognorm}} and \code{\link{Sim.Poisson.Coords}}
 }
 \examples{
-community1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
-
-spec.cols <- rainbow(length(levels(community1$SpecID)))
-plot(Y ~ X, data =community1, col = spec.cols[community1$SpecID], pch = 19)
+com1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
+plot(com1)
 
 }
 \author{

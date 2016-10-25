@@ -5,7 +5,7 @@ sSAC1_C <- function(x, y, id_spec) {
     .Call('MoBspatial_sSAC1_C', PACKAGE = 'MoBspatial', x, y, id_spec)
 }
 
-rThomas_rcpp <- function(nPoints, sigma, mu, xmin = 0, xmax = 1, ymin = 0, ymax = 1) {
-    .Call('MoBspatial_rThomas_rcpp', PACKAGE = 'MoBspatial', nPoints, sigma, mu, xmin, xmax, ymin, ymax)
+rThomas_rcpp <- function(nPoints, nMotherPoints, sigma, mu, xmin = 0, xmax = 1, ymin = 0, ymax = 1) {
+    .Call('MoBspatial_rThomas_rcpp', PACKAGE = 'MoBspatial', nPoints, nMotherPoints, sigma, mu, xmin, xmax, ymin, ymax)
 }
 

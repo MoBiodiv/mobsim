@@ -19,19 +19,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // rThomas_rcpp
-DataFrame rThomas_rcpp(int nPoints, double sigma, double mu, double xmin, double xmax, double ymin, double ymax);
-RcppExport SEXP MoBspatial_rThomas_rcpp(SEXP nPointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
+DataFrame rThomas_rcpp(int nPoints, int nMotherPoints, double sigma, double mu, double xmin, double xmax, double ymin, double ymax);
+RcppExport SEXP MoBspatial_rThomas_rcpp(SEXP nPointsSEXP, SEXP nMotherPointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< int >::type nPoints(nPointsSEXP);
+    Rcpp::traits::input_parameter< int >::type nMotherPoints(nMotherPointsSEXP);
     Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< double >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type xmin(xminSEXP);
     Rcpp::traits::input_parameter< double >::type xmax(xmaxSEXP);
     Rcpp::traits::input_parameter< double >::type ymin(yminSEXP);
     Rcpp::traits::input_parameter< double >::type ymax(ymaxSEXP);
-    __result = Rcpp::wrap(rThomas_rcpp(nPoints, sigma, mu, xmin, xmax, ymin, ymax));
+    __result = Rcpp::wrap(rThomas_rcpp(nPoints, nMotherPoints, sigma, mu, xmin, xmax, ymin, ymax));
     return __result;
 END_RCPP
 }

@@ -220,7 +220,7 @@ distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yex
    com.tab <- mapply(abund.rect, xpos, ypos,
                      MoreArgs=list(xsize=square.size, ysize=square.size, community=community))
 
-   jaccard <- 1 - vegdist(t(com.tab),method=method,binary=T)
+   jaccard <- 1 - vegdist(t(com.tab), method=method, binary=T)
    dat.out <- data.frame(distance = as.numeric(d), similarity = as.numeric(jaccard))
    return(dat.out)
 }
