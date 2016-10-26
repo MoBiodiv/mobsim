@@ -1,7 +1,7 @@
 Package: MoBspatial
 Type: Package
 Title: Spatial analysis of scale-dependent biodiversity changes
-Version: 0.1.0
+Version: 0.0.0.9000
 Author: Felix May
 Maintainer: Felix May <felix.may@idiv.de>
 Description: The package includes functions to simulated species distributions in space

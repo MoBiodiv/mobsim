@@ -26,9 +26,10 @@ is described by its xy-coordinates and a species identity label.
 
 \section{Functions to analyse species abundances and distributions}{
 
-SAC.coleman()
 
-sSAC.all.rcpp()
+\code{\link{rare_curve}}
+
+\code{\link{SAC}}
 
 DivAR()
 

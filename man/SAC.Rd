@@ -2,21 +2,32 @@
 % Please edit documentation in R/SAC_spatial.R
 \name{SAC}
 \alias{SAC}
-\title{Non-spatial species accumulation curve (SAC) after Coleman}
+\title{Spatially-explicit species accumulation curve (SAC)}
 \usage{
-SAC(abund.vec, method = "coleman")
+SAC(comm)
 }
 \arguments{
-\item{abund.vec}{Integer vector with species abundance distribution}
+\item{comm}{\code{\link{community}} object}
 }
 \value{
-Numeric Vector with expected species numbers in samples of 1, 2, 3 ... N individuals
+integer vector with expected species number when n neighbouring individuals
+         are sampled
 }
 \description{
-Non-spatial species accumulation curve (SAC) after Coleman
+The SAC is similar to the rarefaction curve, but samples of defined size
+always contain nearest-neighbour individuals. Accordingly the SAC is
+influenced by intraspecific aggregation, while the rarefaction curve is only
+driven by the species abundance distribution.
 }
-\references{
-Coleman, B. D. et al. (1982). Randomness, area, and species richness. Ecology 63, 1121-1133
-Hurlbert, S.H. (1971). The nonconcept of species diversity: a critique and alternative parameters. Ecology 52, 577–586.
+\examples{
+sim_com1 <- Sim.Thomas.Community(100, 1000)
+sac1 <- SAC(sim_com1)
+rare_curve1 <- rare_curve(table(sim_com1$census$Species))
+
+plot(sac1, type = "l", col = 2, xlab = "Sample size",
+      ylab = "Expected species richness")
+lines(1:length(rare_curve1), rare_curve1, col = 1)
+legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
+       col = 1:2, lwd = 2)
 }
 

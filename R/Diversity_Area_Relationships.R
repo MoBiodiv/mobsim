@@ -1,40 +1,41 @@
 
 # -----------------------------------------------------------
-#' Get diversity indices for one rectangle subplot in the community
+#' Local diversity indices
+#'
+#' Get diversity indices including species richness, no. of endemics,
+#' Shannon and Simpson diversity for one rectangle subplot in the community
 #'
 #' @param x0 x-coordinate of lower left corner
 #' @param y0 x-coordinate of lower left corner
 #' @param xsize size of the subplot in x-direction
-#' @param ysize size of the subplot in x-direction
-#' @param community Dataframe with three columns: x, y, species identity
+#' @param ysize size of the subplot in y-direction
+#' @param comm \code{\link{community}} object
 #'
 #' @return Named vector with four values
 #' \enumerate{
 #'    \item nSpecies - the number of species
-#'    \item nEndemics - the number of endemicsw
+#'    \item nEndemics - the number of endemics
 #'    \item shannon - Shannon diversity index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
 #'    where \eqn{p_i} is the relative abundance of species i:
 #'    \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)
 #'    defined as \eqn{D =  1 - \sum p_i^2}
 #' }
 
-diversity.rect <- function(x0, y0, xsize, ysize, community)
+div_rect <- function(x0, y0, xsize, ysize, comm)
 {
-
-   x <- community[,1]
-   y <- community[,2]
-   id.spec <- community[,3]
+   x <- comm$census$X
+   y <- comm$census$X
 
    # logical vector which trees are in the sampling rectangle
    in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
 
-   spec.in <- unique(id.spec[in.rect])
-   spec.out <- unique(id.spec[!in.rect])
+   spec.in <- unique(comm$census$Species[in.rect])
+   spec.out <- unique(comm$census$Species[!in.rect])
 
    nSpecies <- length(spec.in)
    nEndemics <- length(spec.in[!spec.in %in% spec.out])
 
-   abund <- table(id.spec[in.rect])
+   abund <- table(comm$census$Species[in.rect])
    abund <- abund[abund > 0]
    rel.abund <- abund/sum(abund)
 
@@ -107,29 +108,29 @@ abund.rand.rect <- function(prop.A = 0.25, community,
    return(abund.plots[,1])
 }
 
-
+# ------------------------------------------------------------------------------
+#' Distribution of local diversity indices
+#'
 #' Get mean and sd of diversity indices in several equally sized subplots
 #' of a community
 #'
-#' @param prop.A Proportion of the total area samples
-#' @param community Dataframe with three columns: x, y, species identity
+#' @param prop.A Size of subplots as proportion of the total area
+#' @param comm \code{\link{community}} object
 #' @param nrect Number of randomly located subplots
-#' @param xext Minimum and maximum x-coordinates of the community
-#' @param yext Minimum and maximum y-coordinates of the community
+#' @param exclude_zeros logical - should subplots without individuals be excluded?
 #'
 #' @return Vector with mean and standard deviation of the following diversity
 #' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
 #' (4) Simpson diversity
-diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100,
-                                xext = c(0,1), yext=c(0,1), exclude_zeros = F)
+#'
+#' @seealso \code{\link{div_rect}}
+#'
+div_rand_rect <- function(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
 {
-   x <- community[,1]
-   y <- community[,2]
+   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
-   dx.plot <- xext[2] - xext[1]
-   dy.plot <- yext[2] - yext[1]
-
-   area <- dx.plot*dy.plot*prop.A
+   area <- dx.plot * dy.plot * prop.A
    square.size <- sqrt(area)
 
    if (square.size <= min(c(dx.plot, dy.plot))){
@@ -146,58 +147,74 @@ diversity.rand.rect <- function(prop.A = 0.25, community, nrect = 100,
       }
    }
 
-   xpos <- runif(nrect, min = xext[1], max = xext[2] - dx.rect)
-   ypos <- runif(nrect, min = yext[1], max = yext[2] - dy.rect)
+   xpos <- runif(nrect, min = comm$x_min_max[1], max = comm$x_min_max[2] - dx.rect)
+   ypos <- runif(nrect, min = comm$y_min_max[1], max = comm$y_min_max[2] - dy.rect)
 
-   div.plots <- mapply(diversity.rect, xpos, ypos,
+   div_plots <- mapply(div_rect, xpos, ypos,
                        MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
-                                     community=community))
-
+                                     comm = comm))
    if (exclude_zeros == T)
-      div.plots <- div.plots[, div.plots["nSpecies",] > 0]
+      div_plots <- div_plots[, div_plots["nSpecies",] > 0]
 
-   return(c(meanSpec    = mean(div.plots["nSpecies",]),
-            sdSpec      = sd(div.plots["nSpecies",]),
-            meanEnd     = mean(div.plots["nEndemics",]),
-            sdEnd       = sd(div.plots["nEndemics",]),
-            meanShannon = mean(div.plots["shannon",]),
-            sdShannon   = sd(div.plots["shannon",]),
-            meanSimpson = mean(div.plots["simpson",], na.rm = T),
-            sdSimpson   = sd(div.plots["simpson",], na.rm = T))
+   return(c(meanSpec    = mean(div_plots["nSpecies",]),
+            sdSpec      = sd(div_plots["nSpecies",]),
+            meanEnd     = mean(div_plots["nEndemics",]),
+            sdEnd       = sd(div_plots["nEndemics",]),
+            meanShannon = mean(div_plots["shannon",]),
+            sdShannon   = sd(div_plots["shannon",]),
+            meanSimpson = mean(div_plots["simpson",], na.rm = T),
+            sdSimpson   = sd(div_plots["simpson",], na.rm = T))
           )
 }
 
 
 
-#' Estimate diversity-area relationships
+#' Diversity-area relationships
 #'
-#' @param prop.A Proportion of area sampled
-#' @param community Dataframe with three columns: x, y, species identity
-#' @param nrect Number of randomly located subplots
-#' @param xext Minimum and maximum x-coordinates of the community
-#' @param yext Minimum and maximum y-coordinates of the community
+#' Estimate diversity indices in subplots of different sizes. This includes the
+#' well-known species-area and endemics-area relationships.
 #'
-#' @return Vector with mean and standard deviation of the following diversity
-#' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
-#' (4) Simpson diversity
-DivAR <- function(community, prop.A = seq(0.1, 1, by=0.1), nsamples=100,
-                  xext=c(0,1), yext=c(0,1), exclude_zeros = F)
+#' @param prop.A numeric vector with subplot sizes as proportion of the total area
+#' @param comm \code{\link{community}} object
+#' @param nsamples Number of randomly located subplots per subplot size
+#' @param exclude_zeros logical - should subplots without individuals be excluded?
+#'
+#' @return Dataframe with the proportional area of the subplots and mean and
+#' standard deviation of the following diversity indices: (1) Number of species
+#' (2) Number of endemics (3) Shannon-diversity (4) Simpson diversity
+#'
+#' @seealso \code{\link{div_rand_rect}}, \code{\link{div_rect}}
+#'
+#' @examples
+#' sim_com1 <- Sim.Thomas.Community(100, 1000)
+#' divar1 <- DivAR(sim_com1, prop.A = seq(0.01, 1.0, length = 20))
+#' plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
+#'      ylab = "No. of species", type = "b", ylim = c(0,100))
+#' points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+DivAR <- function(comm, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
+                  exclude_zeros = F)
 {
+   if (any(prop.A > 1))
+      warning("Subplot areas larger than the community size are ignored!")
+   prop.A <- prop.A[prop.A <= 1]
+
+   if (class(comm) != "community")
+      stop("DiVAR requires a community object as input. See ?community.")
+
    nscales <- length(prop.A)
-   xrange <- xext[2] - xext[1]
-   yrange <- yext[2] - yext[1]
+   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
-   div.area <- sapply(prop.A,
-                      diversity.rand.rect,
-                      community = community,
+   div_area <- sapply(prop.A,
+                      div_rand_rect,
+                      comm = comm,
                       nrect = nsamples,
-                      xext = xext,
-                      yext = yext,
                       exclude_zeros = exclude_zeros)
-   div.dat <- as.data.frame(t(div.area))
-   div.dat <- cbind(propArea = prop.A, div.dat)
 
-   return(div.dat)
+   div_dat <- as.data.frame(t(div_area))
+   div_dat <- cbind(propArea = prop.A, div_dat)
+
+   return(div_dat)
 }
 
 # -----------------------------------------------------------
