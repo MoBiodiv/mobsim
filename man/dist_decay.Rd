@@ -35,6 +35,5 @@ new_dist <- data.frame(distance = seq(0.01,1,0.01))
 pred_dd <- predict(dd_loess, newdata = new_dist$distance)
 lines(new_dist$distance, pred_dd, lwd=2, col = "red")
 
-
 }
 
