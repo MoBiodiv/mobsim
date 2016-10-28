@@ -23,9 +23,9 @@
 #'
 #' \code{\link{SAC}}
 #'
-#' DivAR()
+#' \code{\link{DivAR}}
 #'
-#' distance.decay()
+#' \code{\link{dist_decay}}
 #'
 #' @author Felix May
 #'
