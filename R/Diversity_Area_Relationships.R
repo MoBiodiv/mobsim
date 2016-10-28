@@ -53,61 +53,6 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
             simpson = simpson))
 }
 
-# -----------------------------------------------------------
-# get the abundance distribution in a rectangle with upper left corner in x0,y0
-# size of the rectangle: xsize*ysize
-abund.rect <- function(x0, y0, xsize, ysize, community)
-{
-   x <- community[,1]
-   y <- community[,2]
-   id.spec <- community[,3]
-
-   # logical vector which trees are in the sampling rectangle
-   in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
-
-   abund <- table(id.spec[in.rect])
-   abund <- abund[abund > 0]
-
-   return(abund)
-}
-
-# -----------------------------------------------------------
-abund.rand.rect <- function(prop.A = 0.25, community,
-                            xext = c(0,1), yext=c(0,1))
-{
-   x <- community[,1]
-   y <- community[,2]
-
-   dx.plot <- xext[2] - xext[1]
-   dy.plot <- yext[2] - yext[1]
-
-   area <- dx.plot*dy.plot*prop.A
-   square.size <- sqrt(area)
-
-   if (square.size <= min(c(dx.plot, dy.plot))){
-      dx.rect <- square.size
-      dy.rect <- square.size
-   } else
-   {
-      if (dx.plot >= dy.plot){
-         dx.rect <- dx.plot*prop.A
-         dy.rect <- dy.plot
-      } else {
-         dx.rect <- dx.plot
-         dy.rect <- dy.plot*prop.A
-      }
-   }
-
-   xpos <- runif(1, min = xext[1], max = xext[2] - dx.rect)
-   ypos <- runif(1, min = yext[1], max = yext[2] - dy.rect)
-
-   abund.plots <- mapply(abund.rect, xpos, ypos,
-                         MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
-                                     community = community))
-
-   return(abund.plots[,1])
-}
-
 # ------------------------------------------------------------------------------
 #' Distribution of local diversity indices
 #'
@@ -167,8 +112,6 @@ div_rand_rect <- function(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
           )
 }
 
-
-
 #' Diversity-area relationships
 #'
 #' Estimate diversity indices in subplots of different sizes. This includes the
@@ -217,28 +160,128 @@ DivAR <- function(comm, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
    return(div_dat)
 }
 
+
 # -----------------------------------------------------------
-# Distance decay
-distance.decay <- function(community, prop.A=0.05, nsamples=30, xext=c(0,1), yext=c(0,1), method="jaccard")
+#' Local species abundance distribution
+#'
+#' Get local abundance distribution in rectangle bounded by x0, y0, x0 + xsize,
+#' y0 + ysize
+#'
+#' @param x0 x-coordinate of lower left corner
+#' @param y0 x-coordinate of lower left corner
+#' @param xsize size of the subplot in x-direction
+#' @param ysize size of the subplot in y-direction
+#' @param comm \code{\link{community}} object
+#'
+#' @return Integer vector with local species abundances
+
+abund_rect <- function(x0, y0, xsize, ysize, comm)
+{
+   x <- comm$census$X
+   y <- comm$census$Y
+
+   # logical vector which trees are in the sampling rectangle
+   in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
+
+   abund <- table(comm$census$Species[in.rect])
+   return(abund)
+}
+
+# -----------------------------------------------------------
+#' Distance decay
+#'
+#' Estimate pairwise similarities of abundance distributions of subplots as
+#' function of distance
+#'
+#' @param comm \code{\link{community}} object
+#' @param prop.A Subplot size as proportion of the total area
+#' @param nsamples Number of randomly located subplots per subplot size
+#' @param method Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}
+#' @param binary Perform presence/absence standardization before analysis.
+#'
+#' @return Dataframe with distances between subplots and the respective similarity
+#' indices
+#'
+#' @examples
+#' sim_com1 <- Sim.Thomas.Community(100, 10000)
+#' dd1 <- dist_decay(sim_com1)
+#' plot(similarity ~ distance, data = dd1)
+#' dd_loess <- loess(similarity ~ distance, data = dd1)
+#' new_dist <- data.frame(distance = seq(0.01,1,0.01))
+#' pred_dd <- predict(dd_loess, newdata = new_dist$distance)
+#' lines(new_dist$distance, pred_dd, lwd=2, col = "red")
+#'
+dist_decay <- function(comm, prop.A = 0.05, nsamples = 30,
+                       method = "bray", binary = F)
 {
    require(vegan)
 
-   dx.plot <- xext[2] - xext[1]
-   dy.plot <- yext[2] - yext[1]
+   if (any(prop.A > 1))
+      warning("Subplot areas larger than the community size are ignored!")
+   prop.A <- prop.A[prop.A <= 1]
 
-   area <- dx.plot*dy.plot*prop.A
+   if (class(comm) != "community")
+      stop("DiVAR requires a community object as input. See ?community.")
+
+   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
+
+   area <- dx.plot * dy.plot * prop.A
    square.size <- sqrt(area)
 
-   xpos <- runif(nsamples,min=0, max=xext[2]-square.size)
-   ypos <- runif(nsamples,min=0, max=yext[2]-square.size)
+   xpos <- runif(nsamples, min = comm$x_min_max[1], max = comm$x_min_max[2] - square.size)
+   ypos <- runif(nsamples, min = comm$y_min_max[1], max = comm$y_min_max[2] - square.size)
 
    d <- dist(cbind(xpos,ypos))
 
-   com.tab <- mapply(abund.rect, xpos, ypos,
-                     MoreArgs=list(xsize=square.size, ysize=square.size, community=community))
+   com.tab <- mapply(abund_rect, xpos, ypos,
+                     MoreArgs=list(xsize = square.size, ysize = square.size,
+                                   comm = comm ))
 
-   jaccard <- 1 - vegdist(t(com.tab), method=method, binary=T)
-   dat.out <- data.frame(distance = as.numeric(d), similarity = as.numeric(jaccard))
-   return(dat.out)
+   similarity <- 1 - vegdist(t(com.tab), method = method, binary = binary)
+   similarity[!is.finite(similarity)] <- NA
+
+   dat_out <- data.frame(distance = as.numeric(d),
+                         similarity = as.numeric(similarity))
+   return(dat_out)
 }
+
+# # -----------------------------------------------------------
+# abund.rand.rect <- function(prop.A = 0.25, community,
+#                             xext = c(0,1), yext=c(0,1))
+# {
+#    x <- community[,1]
+#    y <- community[,2]
+#
+#    dx.plot <- xext[2] - xext[1]
+#    dy.plot <- yext[2] - yext[1]
+#
+#    area <- dx.plot*dy.plot*prop.A
+#    square.size <- sqrt(area)
+#
+#    if (square.size <= min(c(dx.plot, dy.plot))){
+#       dx.rect <- square.size
+#       dy.rect <- square.size
+#    } else
+#    {
+#       if (dx.plot >= dy.plot){
+#          dx.rect <- dx.plot*prop.A
+#          dy.rect <- dy.plot
+#       } else {
+#          dx.rect <- dx.plot
+#          dy.rect <- dy.plot*prop.A
+#       }
+#    }
+#
+#    xpos <- runif(1, min = xext[1], max = xext[2] - dx.rect)
+#    ypos <- runif(1, min = yext[1], max = yext[2] - dy.rect)
+#
+#    abund.plots <- mapply(abund.rect, xpos, ypos,
+#                          MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
+#                                        community = community))
+#
+#    return(abund.plots[,1])
+# }
+#
+
 
