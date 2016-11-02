@@ -1,0 +1,188 @@
+---
+title: "Analysis of biodiversity patterns"
+author: "Felix May"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Analysis of biodiversity patterns}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This introduction shows the list of biodiversity patterns that can be analysed
+using `MoBspatial`. In this vignette the patterns are evaluated on a simulated
+data set, but of cause the same patterns can be also derived from real data.
+
+# Simulate and explore data
+
+First, we generate community data by simulating 500 individuals from 30 species
+with a cluster size of `sigma = 0.05`.
+
+```{r}
+library(MoBspatial)
+sim_dat1 <- Sim.Thomas.Community(S = 30, N = 500, sigma = 0.05)
+```
+
+Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
+identity.
+
+```{r, fig.width = 5, fig.height = 5}
+plot(sim_dat1)
+summary(sim_dat1)
+str(sim_dat1)
+```
+
+# Non-spatial patterns
+
+## Species abundance distribution
+
+A fundamental non-spatial pattern of a community is the abundance distribution,
+i.e. the distribution of commonness and rarity in a community. For the abundance
+distribution there is no function in `MoBspatial`, but you easily get the 
+abundance distribution by counting the number of individuals of each species using
+the R standard function `table()`
+
+```{r}
+abund <- table(sim_dat1$census$Species)
+```
+
+A standard plot in community ecology is the *rank-abundance plot* where the 
+abundance of each species is plotted vs. its rank from highest to lowest abundance.
+As a standard a double log-scaling is used for this plot.
+
+```{r, fig.width = 5, fig.height = 5}
+plot(sort(as.numeric(abund), decreasing = T), type="b", log="y",
+     xlab="Species rank", ylab="Species abundance")
+```
+
+Of course the abundance distribution can be also visualized as a histogram. 
+By tradition for the binning of species abundances logarithms with base 2 are used,
+following the suggestion of Preston (1948).
+This means the first abundance class includes species with just one invididual,
+the second class with two individuals, the third class with 3-4, the fourth with
+5-8 etc.
+
+This binning method can be easily implemented using the R package [untb](https://CRAN.R-project.org/package=untb) by
+Robin Hankin. 
+
+```{r, fig.width = 5, fig.height = 5}
+library(untb)
+abund_dist <- preston(count(abund))
+abund_dist
+
+barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
+        xlab = "Abundance class", ylab ="No. of species")
+```
+
+## Rarefaction curve
+
+Another important biodiversity pattern is the *rarefaction-curve*, which estimates
+how the number of observed species increases with sample size of individuals.
+The rarefaction curve assumes that individuals are sampled randomly and
+independently (Gotelli & Colwell 2001). The rarefaction curve only depends on 
+the abundance distribution of species and therefore the function of MoBspatial only
+requires species abundances as argument.
+
+```{r, fig.width = 5, fig.height = 5}
+rc1 <- rare_curve(abund)
+str(rc1)
+plot(1:length(rc1), rc1, type = "l", xlab = "No. of individuals sampled",
+     ylab = " Expected no. of species")
+```
+
+# Spatial patterns
+
+As indicated by the name of the package the main strengths of MoBspatial are the
+simulation and analysis of *spatial* biodiversity patterns. In the following all
+functions for spatial pattern evaluation included in MoBspatial are introduced.
+
+## Species-accumulation curve
+
+Closely related to the *rarefaction curve* is the *species-accumulation curve*
+(Gotelli & Colwell 2001). In contrast to the rarefaction curve for the derivation
+of the species-accumulation curve individuals are not sampled randomly, but starting
+from a focal individual always the closets neighbour individual is sampled and the
+number of encountered species is counted. The resultting curve is derived as the 
+average of the curves for each focal individual. The species-accumulation curve
+is influenced by the abundance distribution, but also by the spatial aggregation
+or regularity of conspecific individuals (i.e. individuals of the same species).
+Therefore the species-accumulation curves requires individuals positions in addition
+to the abundances.
+
+It is comprehensive to plot the rarefaction and the species-accumulation curve
+together. The difference between the two curves indicates aggregation or regularity
+of conspecifics.
+
+```{r, fig.width = 5, fig.height = 5}
+sac1 <- SAC(sim_dat1)
+plot(1:length(rc1), rc1, type = "l", xlab = "No. of individuals sampled",
+     ylab = " Expected no. of species")
+lines(1:length(sac1), sac1, col = "red")
+legend("bottomright", legend = c("Rarefaction","Accumulation"), col = 1:2, lwd = 2)
+```
+
+
+
+## Diversity-area relationships
+
+## Distance decay of community similarity
+
+<!-- #SAR and EAR -->
+
+<!-- Generate diversity-area relationships (DiVAR) -->
+
+<!-- ```{r,fig.width=5, fig.height=5} -->
+<!-- DivAR <- DivAR(community1, prop.A = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5,  -->
+<!--                                            0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 1))  -->
+<!-- plot(meanSpec ~ propArea, data = DivAR, xlab="Area sampled", ylab="No. of species", pch=21, bg="black", ylim=c(0,length(abund))) -->
+<!-- lines(meanSpec ~ propArea, data = DivAR) -->
+<!-- lines(meanEnd ~ propArea, data = DivAR,lty=2) -->
+<!-- points(meanEnd ~ propArea, data = DivAR, pch=21, bg="gray") -->
+<!-- legend("topleft",legend=c("SAR","EAR"),lty=c(1,2),pch=21,pt.bg=c("black","gray"),cex=1) -->
+<!-- ``` -->
+
+<!-- #Distance decay -->
+
+<!-- ```{r,fig.width=5, fig.height=5} -->
+<!-- dd <- distance.decay(community1, prop.A = 0.05, nsamples = 30) -->
+<!-- dd <- dd[order(dd$distance),] -->
+<!-- plot(similarity~distance, data=dd, pch= 21, xlab="Distance", ylab="Jaccard similarity") -->
+<!-- dd.loess <- loess(similarity~distance, data=dd) -->
+<!-- pred.sim <- predict(dd.loess) -->
+<!-- lines(dd$distance,pred.sim,lwd=2) -->
+<!-- ``` -->
+
+<!-- #Complete figure -->
+
+<!-- ```{r, fig.width=7, fig.height=7} -->
+<!-- pdf("Figure1.pdf", width=8, height=8) -->
+
+<!-- par(mfrow=c(2,2),cex.lab=1.2,cex.axis=1,mar=c(6,6,1,1),las=1) -->
+
+<!-- plot(Y~X, data=community1, pch=spec.lab$sp.pch[community1$SpecID], bg=spec.lab$sp.col[community1$SpecID],cex=1.2) -->
+
+<!-- plot(as.numeric(abund),type="b",log="y",xlab="Species rank",ylab="Species abundance",pch=21,bg="gray") -->
+
+<!-- plot(meanSpec ~ propArea, data = DivAR, xlab="Area sampled", ylab="No. of species", pch=21, bg="black", ylim=c(0,length(abund))) -->
+<!-- lines(meanSpec ~ propArea, data = DivAR) -->
+
+<!-- lines(meanEnd ~ propArea, data = DivAR, lty=2) -->
+<!-- points(meanEnd ~ propArea, data = DivAR, pch=21, bg="gray") -->
+<!-- legend("topleft",legend=c("SAR","EAR"),lty=c(1,2),pch=21,pt.bg=c("black","gray"),cex=1) -->
+
+<!-- plot(similarity ~ distance, data=dd, pch= 21, xlab="Distance", ylab="Jaccard similarity") -->
+<!-- lines(dd$distance,pred.sim,lwd=2) -->
+<!-- dev.off() -->
+<!-- ``` -->
+
+
+
+# References
+
+1. F. W. Preston 1948. The Commonness, and Rarity, of Species. Ecology 29:254-283.
+
+2. Cotelli & Colwell 2001. Quantifying biodiversity: procedures and pitfalls in 
+the measurement and comparison of species richness. Ecology Letters 4: 379–391.
