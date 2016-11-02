@@ -1,58 +1,147 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Changes of biodiversity components"
+author: "Felix May"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+ rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Felix May}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+# Introduction
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+Biodiversity in any sampled area depends on three components
 
-## Vignette Info
+1. The total number of individuals
+2. The relative abundances of species
+3. The spatial distribution of species
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+Changes of each component result in specific signatures with respect to the change
+of non-spatial and spatial biodiversity patterns (see vignette *Analysis of biodiversity patterns*).
+Therefore, biodiversity patterns can be assessed to investigate the scale-dependent 
+effects of biodiversity drivers, e.g. habitat loss, climate change etc. on the 
+three biodiversity components.
 
-## Styles
+In this vignette we simulate independent variations of each of the three components
+and demonstrate how rarefaction and species-accumulation curves can be applied to 
+diagnose changes in biodiversity components.
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+For this purpose we first simulate a reference community. We assume a random
+distribution of species in sapce, so we can use the function `Sim.Poisson.Community`:
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+```{r, fig.width = 5, fig.height = 5}
+library(MoBspatial)
 
-## Figures
+S0 <- 100
+N0 <- 1000
+cv0 <- 0.5
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+sim_ref <- Sim.Poisson.Community(S.pool = S0, N.local = N0, cv.abund = cv0)
+plot(sim_ref)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+# Change in total number of individuals
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+First we vary the total number of individuals. For this purpose we simulate a second 
+community with just half of the individuals.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+sim_lower_N <-  Sim.Poisson.Community(S.pool = S0, N.local = N0/2, cv.abund = cv0)
 ```
 
-Also a quote using `>`:
+Then we evaluate the rarefaction and species-accumulation curve for both communities
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r,  fig.width = 7, fig.height = 3.5}
+rc_ref    <- rare_curve(table(sim_ref$census$Species))
+rc_lower_N <- rare_curve(table(sim_lower_N$census$Species))
+
+sac_ref    <- SAC(sim_ref)
+sac_lower_N <- SAC(sim_lower_N)
+
+par(mfrow = c(1,2))
+plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:(N0/2), rc_lower_N, col = 2)
+
+plot(1:N0, sac_ref, type = "l", main = "Species accumulation curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:(N0/2), sac_lower_N, col = 2)
+```
+
+Due to the stochasticity of simulations the curves of the reference and the changed
+community slightly differ, but on average random losses of individuals are indicated
+by by overlapping curves, which end at different numbers of individuals.
+
+# Change in the abundance distribution 
+
+The second simulated change represents a reduction of the evenness of the species
+abundance distribution, i.e. there are more very rare and more very common
+species than in the reference community. In `MoBspatial` there is the argument
+`cv.abund` in the simulation functions, which is the coefficient of variation (cv)
+of species abundances. The higher the cv the lower the evenness and vice versa.
+We also use the argument `fixS.local = T` to simulate a community with exactly S0
+species.
+
+```{r, fig.width = 7, fig.height = 3.5}
+sim_uneven <-  Sim.Poisson.Community(S.pool = S0, N.local = N0,
+                                     cv.abund = cv0*4, fixS.local = T)
+
+rc_uneven<- rare_curve(table(sim_uneven$census$Species))
+sac_uneven <- SAC(sim_uneven)
+
+par(mfrow = c(1,2))
+plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:N0, rc_uneven, col = 2)
+
+plot(1:N0, sac_ref, type = "l", main = "Species accumulation curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:N0, sac_uneven, col = 2)
+```
+
+As we see changes in the abundance distributions without changes in total species
+richness are indicated by changing slopes and shapes of the curves.
+
+
+# Change in spatial distributions
+
+Finally we change the spatial patterns of species, by simulating clumpoing of 
+conspecific individuals using a Thomas process model instead of a Poisson
+
+```{r, fig.width = 7, fig.height = 3.5}
+sim_clumped <-  Sim.Thomas.Community(S.pool = S0, N.local = N0,
+                                     cv.abund = cv0, sigma = 0.05)
+
+par(mfrow = c(1,2))
+plot(sim_ref)
+plot(sim_clumped)
+```
+
+As before we compare the rarefaction and accumulation curves:
+
+```{r, fig.width = 7, fig.height = 3.5}
+
+rc_clumped<- rare_curve(table(sim_clumped$census$Species))
+sac_clumped <- SAC(sim_clumped)
+
+par(mfrow = c(1,2))
+plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:N0, rc_clumped, col = 2)
+
+plot(1:N0, sac_ref, type = "l", main = "Species accumulation curve",
+     xlab = "No. of individuals", ylab = "No. of species")
+lines(1:N0, sac_clumped, col = 2)
+```
+
+When there is only a change in spatial distribution the rarefaction curve does not 
+change, because it only depends on species abundances, but not on spatial distributions
+(see vignette *Analysis of biodiversity patterns*). In contrast the species-accumulation
+curves indicates higher intraspecific clumping (also called aggregation) by a lower
+slope and lower expected species richness for the same number of sampled individuals.
+
+

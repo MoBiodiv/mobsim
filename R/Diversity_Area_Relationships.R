@@ -243,6 +243,10 @@ dist_decay <- function(comm, prop.A = 0.05, nsamples = 30,
 
    dat_out <- data.frame(distance = as.numeric(d),
                          similarity = as.numeric(similarity))
+
+   # order by increasing distance
+   dat_out <- dat_out[order(dat_out$distance), ]
+
    return(dat_out)
 }
 
