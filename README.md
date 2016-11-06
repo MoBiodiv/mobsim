@@ -13,10 +13,13 @@ C++ compiler (e.g. Rtools for Windows) need to be installed first
 [https://github.com/MoBiodiv/MoBspatial](MoBspatial on GitHub)
 
 library(devtools)
+
 install_github("MoBiodiv/MoBspatial", build_vignettes = T)
+
 library(MoBspatial)
 
 ## Getting help
 
 ?MoBspatial
+
 browseVignettes("MoBspatial")
