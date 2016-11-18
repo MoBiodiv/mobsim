@@ -34,6 +34,8 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{DivAR}}
 
 \code{\link{dist_decay}}
+
+\code{\link{sample_quadrats}}
 }
 \author{
 Felix May

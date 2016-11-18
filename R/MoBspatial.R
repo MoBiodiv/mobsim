@@ -27,6 +27,8 @@
 #'
 #' \code{\link{dist_decay}}
 #'
+#' \code{\link{sample_quadrats}}
+#'
 #' @author Felix May
 #'
 #' @docType package
