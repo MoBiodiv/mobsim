@@ -86,7 +86,8 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
       xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
       ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
 
-      if (min(dist(coords)) < quadrat_size)
+      coords <- cbind(xpos,ypos)
+      if (min(dist(coords)) < 0.9999*quadrat_size)
          warning("There are overlapping sampling squares in the design")
    } # end transect
 
