@@ -104,7 +104,7 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
       if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
          stop ("y-extent of sampling desing is larger than landscape")
 
-      coords <- expand.grid(xpos = x1, ypos = x1)
+      coords <- expand.grid(xpos = x1, ypos = y1)
 
       xpos <- coords$xpos[1:n_quadrats]
       ypos <- coords$ypos[1:n_quadrats]
