@@ -47,7 +47,7 @@ spatial.plot <- function(sim.com, print=T){
       theme_biodiviz()
 
    if(print==T) print(spat.plot)
-   if(print==F) return(spat.plot)
+   return(spat.plot)
 }
 
 ##
@@ -64,11 +64,11 @@ SAD.plot <- function(sim.com, title="Species-abundance distribution",col="black"
       theme_biodiviz()
 
    if(print==T) print(SAD.plot)
-   if(print==F) return(SAD.plot)
+   return(SAD.plot)
 }
 
 ##
-SAC.plot <- function(sim.com, title="Species-accumulation curve", col="black", print=T){
+SAC.plot <- function(sim.com, title="Species-accumulation curve", col="black", lty="solid", size=1, print=T){
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
@@ -77,18 +77,18 @@ SAC.plot <- function(sim.com, title="Species-accumulation curve", col="black", p
    SAC <- data.frame(ind=1:sum(SAD$abundance),SR=SAC(sim.com))
 
    SAC.plot <- ggplot(data=SAC,aes(x=ind,y=SR)) +
-      geom_line(color=paste(col)) +
+      geom_line(color=paste(col), linetype=paste(lty), size=size) +
       xlab("# individuals sampled") +
       ylab("Species richness") +
       ggtitle(paste(title)) +
       theme_biodiviz()
 
    if(print==T) print(SAC.plot)
-   if(print==F) return(SAC.plot)
+   return(SAC.plot)
 }
 
 ##
-SAR.plot <- function(sim.com, title="Species-area relationship", col="black", add.ribbon=F, print=T){
+SAR.plot <- function(sim.com, title="Species-area relationship", col="black", lty="solid", size=1, add.ribbon=F, print=T){
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
@@ -97,7 +97,7 @@ SAR.plot <- function(sim.com, title="Species-area relationship", col="black", ad
    SAR <- data.frame(DivAR(sim.com, prop.A=prop.a, nsamples = n))
 
    SAR.plot <- ggplot(data=SAR,aes(x=propArea,y=meanSpec)) +
-      geom_line(color=paste(col)) +
+      geom_line(color=paste(col), linetype=paste(lty), size=size) +
       xlab("sampled area/total area") +
       ylab("Species richness") +
       ggtitle(paste(title)) +
@@ -108,11 +108,12 @@ SAR.plot <- function(sim.com, title="Species-area relationship", col="black", ad
       }
 
    if(print==T) print(SAR.plot)
-   if(print==F) return(SAR.plot)
+
+   return(SAR.plot)
 }
 
 ##
-add.to.plot <- function(sim.com, plot.to.add, plot.type, col="red",print=T){
+add.to.plot <- function(sim.com, plot.to.add, plot.type, col="red", lty="solid", size=1, print=T){
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    if (!is.element(plot.type, c("SAD","SAR","SAC")))
@@ -121,22 +122,22 @@ add.to.plot <- function(sim.com, plot.to.add, plot.type, col="red",print=T){
    if(plot.type=="SAD"){
       SAD <- data.frame(specID = names(table(sim.com$census$Species)),
                         abundance = as.integer(table(sim.com$census$Species)))
-      p <- plot.to.add + geom_histogram(data=SAD, aes(abundance), bins=ceiling(max(SAD$abundance/20)), color=paste(col))
+      p <- plot.to.add + geom_histogram(data=SAD, aes(abundance), bins=ceiling(max(SAD$abundance/20)), fill=paste(col))
    }
    if(plot.type=="SAC"){
       SAD <- data.frame(specID = names(table(sim.com$census$Species)),
                         abundance = as.integer(table(sim.com$census$Species)))
       SAC <- data.frame(ind=1:sum(SAD$abundance),SR=SAC(sim.com))
-      p <- plot.to.add + geom_line(data=SAC,aes(x=ind,y=SR), color=paste(col))
+      p <- plot.to.add + geom_line(data=SAC,aes(x=ind,y=SR), color=paste(col), linetype=paste(lty), size=size)
    }
    if(plot.type=="SAR"){
       prop.a <- c(0.01,seq(0.1, 1, by = 0.1)) # size of area samples in proportions of total area
       n <- 50 # number of samples used for each size of area
       SAR <- data.frame(DivAR(sim.com, prop.A=prop.a, nsamples = n))
-      p <- plot.to.add + geom_line(data=SAR,aes(x=propArea,y=meanSpec),color=paste(col))
+      p <- plot.to.add + geom_line(data=SAR,aes(x=propArea,y=meanSpec),color=paste(col), linetype=paste(lty), size=size)
    }
    if(print==T)   print(p)
-   if(print==F)   return(p)
+   return(p)
 }
 
 ##
