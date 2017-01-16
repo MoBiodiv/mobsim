@@ -7,7 +7,9 @@
 #'    \item y_min_max - extent of the community in y-direction
 #' }, output from \code{\link{Sim.Poisson.Community} or \code{\link{Sim.Thomas.Community}.
 #' @param print - logical. If TRUE plot is plotted directly, otherwise is returned with an object to be plotted later, default is TRUE
-#' @param col - the color to be used for plotting
+#' @param col - color to be used for plotting. Default is 'black'
+#' @param lty - line type to be used for plotting. Default is 'solid'
+#' @param size - size of lines. Default is 1.
 #' @param add.ribbon - logical. If TRUE plots a 95% confidence interval around the species-area curve. Default is FALSE.
 #' @param plot.to.add - output of ggplot
 #' @param plot.type - character. Type of plot, either "SAD", "SAC", or "SAR".
