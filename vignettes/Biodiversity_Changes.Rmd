@@ -40,7 +40,7 @@ S0 <- 100
 N0 <- 1000
 cv0 <- 0.5
 
-sim_ref <- Sim.Poisson.Community(S.pool = S0, N.local = N0, cv.abund = cv0)
+sim_ref <- sim_poisson_community(s_pool = S0, n_local = N0, cv_abund = cv0)
 plot(sim_ref)
 ```
 
@@ -50,17 +50,17 @@ First we vary the total number of individuals. For this purpose we simulate a se
 community with just half of the individuals.
 
 ```{r}
-sim_lower_N <-  Sim.Poisson.Community(S.pool = S0, N.local = N0/2, cv.abund = cv0)
+sim_lower_N <-  sim_poisson_community(s_pool = S0, n_local = N0/2, cv_abund = cv0)
 ```
 
 Then we evaluate the rarefaction and species-accumulation curve for both communities
 
 ```{r,  fig.width = 7, fig.height = 3.5}
-rc_ref    <- rare_curve(table(sim_ref$census$Species))
-rc_lower_N <- rare_curve(table(sim_lower_N$census$Species))
+rc_ref    <- rare_curve(table(sim_ref$census$species))
+rc_lower_N <- rare_curve(table(sim_lower_N$census$species))
 
-sac_ref    <- SAC(sim_ref)
-sac_lower_N <- SAC(sim_lower_N)
+sac_ref    <- accum_curve(sim_ref)
+sac_lower_N <- accum_curve(sim_lower_N)
 
 par(mfrow = c(1,2))
 plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",
@@ -81,17 +81,17 @@ by by overlapping curves, which end at different numbers of individuals.
 The second simulated change represents a reduction of the evenness of the species
 abundance distribution, i.e. there are more very rare and more very common
 species than in the reference community. In `MoBspatial` there is the argument
-`cv.abund` in the simulation functions, which is the coefficient of variation (cv)
+`cv_abund` in the simulation functions, which is the coefficient of variation (cv)
 of species abundances. The higher the cv the lower the evenness and vice versa.
-We also use the argument `fixS.local = T` to simulate a community with exactly S0
+We also use the argument `fix_s_local= T` to simulate a community with exactly S0
 species.
 
 ```{r, fig.width = 7, fig.height = 3.5}
-sim_uneven <-  Sim.Poisson.Community(S.pool = S0, N.local = N0,
-                                     cv.abund = cv0*4, fixS.local = T)
+sim_uneven <-  sim_poisson_community(s_pool = S0, n_local = N0,
+                                     cv_abund = cv0*4, fix_s_local= T)
 
-rc_uneven<- rare_curve(table(sim_uneven$census$Species))
-sac_uneven <- SAC(sim_uneven)
+rc_uneven <- rare_curve(table(sim_uneven$census$species))
+sac_uneven <- accum_curve(sim_uneven)
 
 par(mfrow = c(1,2))
 plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",
@@ -113,8 +113,8 @@ Finally we change the spatial patterns of species, by simulating clumpoing of
 conspecific individuals using a Thomas process model instead of a Poisson
 
 ```{r, fig.width = 7, fig.height = 3.5}
-sim_clumped <-  Sim.Thomas.Community(S.pool = S0, N.local = N0,
-                                     cv.abund = cv0, sigma = 0.05)
+sim_clumped <-  sim_thomas_community(s_pool = S0, n_local = N0,
+                                     cv_abund = cv0, sigma = 0.05)
 
 par(mfrow = c(1,2))
 plot(sim_ref)
@@ -125,8 +125,8 @@ As before we compare the rarefaction and accumulation curves:
 
 ```{r, fig.width = 7, fig.height = 3.5}
 
-rc_clumped<- rare_curve(table(sim_clumped$census$Species))
-sac_clumped <- SAC(sim_clumped)
+rc_clumped<- rare_curve(table(sim_clumped$census$species))
+sac_clumped <- accum_curve(sim_clumped)
 
 par(mfrow = c(1,2))
 plot(1:N0, rc_ref, type = "l", main = "Rarefaction curve",

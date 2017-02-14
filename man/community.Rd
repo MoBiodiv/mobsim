@@ -4,14 +4,14 @@
 \alias{community}
 \title{Create spatial community object.}
 \usage{
-community(x, y, specID, xrange = c(0, 1), yrange = c(0, 1))
+community(x, y, spec_id, xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
 \item{x}{numeric - x coordinates}
 
 \item{y}{numeric - y coordinates}
 
-\item{specID}{character vector - species names or IDs. Can be integers, characters or factors}
+\item{spec_id}{character vector - species names or IDs. Can be integers, characters or factors}
 
 \item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
 

@@ -4,15 +4,15 @@
 \alias{dist_decay}
 \title{Distance decay}
 \usage{
-dist_decay(comm, prop.A = 0.05, nsamples = 30, method = "bray",
+dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
   binary = F)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}
 
-\item{prop.A}{Subplot size as proportion of the total area}
+\item{prop_area}{Subplot size as proportion of the total area}
 
-\item{nsamples}{Number of randomly located subplots per subplot size}
+\item{n_samples}{Number of randomly located subplots per subplot size}
 
 \item{method}{Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}}
 

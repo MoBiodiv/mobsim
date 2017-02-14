@@ -2,24 +2,24 @@
 #' Simulate log-normal species abundance distributions.
 #'
 #' Simulate log-normal abundance data in a local community with fixed number of
-#' individuals (N.local), number of species in the pool (S.pool), and coefficient
-#' of variation of relative abundances (cv.abund).
+#' individuals (n_local), number of species in the pool (s_pool), and coefficient
+#' of variation of relative abundances (cv_abund).
 #'
-#' @param S.pool integer - number of species in the pool
-#' @param N.local integer - number of individuals in the local community
-#' @param cv.abund numeric - coefficient of variation ( = sd/mean) of relative
-#' abundances. The higher \code{cv.abund}, the lower the evenness of the
-#' simulated community. This means with increasing \code{cv.abund} there are more
+#' @param s_pool integer - number of species in the pool
+#' @param n_local integer - number of individuals in the local community
+#' @param cv_abund numeric - coefficient of variation ( = sd/mean) of relative
+#' abundances. The higher \code{cv_abund}, the lower the evenness of the
+#' simulated community. This means with increasing \code{cv_abund} there are more
 #' rare and more dominant species.
 #'
-#' @param fixS.local logical - should the simulation constrain the number of
+#' @param fix_s_local logical - should the simulation constrain the number of
 #'   species in the local community? This can result in deviations from mean and
 #'   sd of local abundances from the theoretical distributions
 #'
-#' @details When \code{fixS.local = FALSE} the species number in the local
-#'   community might deviate from \code{S.pool} due to sampling. When
-#'   \code{fix.S.local = TRUE} the local number of species will equal
-#'   \code{S.pool}, but this constraint can result in biases from the
+#' @details When \code{fix_s_local = FALSE} the species number in the local
+#'   community might deviate from \code{s_pool} due to sampling. When
+#'   \code{fix_s_local = TRUE} the local number of species will equal
+#'   \code{s_pool}, but this constraint can result in biases from the
 #'   theoretical parameters. Therefore the simulated distribution parameters are
 #'   provided as model output.
 #'
@@ -35,64 +35,81 @@
 #' @author Felix May
 #'
 #' @examples
-#' SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)
+#' abund1 <- sim_sad(s_pool = 100, n_local = 10000, cv_abund = 1)
+#' plot(abund1, method = "preston")
+#' plot(abund1, method = "rank")
 #'
-#' ## Create preston SAD plot with log2 abundance classes
-#'
-#' require(untb)
-#'
-#' abund.vec <- SAD.lognorm(S.pool = 100, N.local = 10000, cv.abund = 1)$abund
-#' sad1 <- preston(census(abund.vec))
-#' barplot(height = as.numeric(sad1), names.arg = names(sad1),
-#'         xlab = "Abundance class", ylab ="No. of species")
-#'
-SAD.lognorm <- function(S.pool, N.local, cv.abund = 1, fixS.local = F)
+sim_sad <- function(s_pool, n_local, cv_abund = 1, fix_s_local = F)
 {
-   if (fixS.local == T)
-      mean.abund <- N.local/S.pool
+   if (fix_s_local == T)
+      mean_abund <- n_local/s_pool
    else
-      mean.abund <- 100
-   sd.abund <- mean.abund*cv.abund
+      mean_abund <- 100
 
-   sigma1 <- sqrt(log(sd.abund^2/mean.abund^2 +1))
-   mu1 <- log(mean.abund) - sigma1^2/2
+   sd_abund <- mean_abund * cv_abund
 
-   if (fixS.local == T){
+   sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
+   mu1 <- log(mean_abund) - sigma1^2/2
+
+   if (fix_s_local == T){
 
       n <- 0
-      while (n < N.local){
-         abund1 <- rlnorm(S.pool, meanlog = mu1, sdlog = sigma1)
-         abund.local <- round(abund1)
-         abund.local[abund.local == 0] <- 1
-         n <- sum(abund.local)
+      while (n < n_local){
+         abund1 <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
+         abund_local <- round(abund1)
+         abund_local[abund_local == 0] <- 1
+         n <- sum(abund_local)
       }
 
       #randomly remove individuals until target level is reached
-      while (n > N.local){
-         relabund <- abund.local/sum(abund.local)
-         irand <- sample(1:S.pool, size=1, prob=relabund) # draw proportional to relative abundance
-         if (abund.local[irand]>1) abund.local[irand] <- abund.local[irand]-1
-         n <- sum(abund.local)
+      while (n > n_local){
+         relabund <- abund_local/sum(abund_local)
+         # draw proportional to relative abundance
+         irand <- sample(1:s_pool, size = 1, prob = relabund)
+         if (abund_local[irand] > 1) abund_local[irand] <- abund_local[irand]-1
+         n <- sum(abund_local)
       }
 
-      abund.local <- sort(abund.local, decreasing = T)
-      names(abund.local) <- paste("species", 1:length(abund.local), sep = "")
+      abund_local <- sort(abund_local, decreasing = T)
+      names(abund_local) <- paste("species", 1:length(abund_local), sep = "")
 
    } else {
 
-      abund.pool <- rlnorm(S.pool, meanlog = mu1, sdlog = sigma1)
-      relabund.pool <- sort(abund.pool/sum(abund.pool), decreasing = T)
-      abund.local <- table(sample(1:S.pool, N.local, replace = T, prob = relabund.pool))
-      names(abund.local) <- paste("species", names(abund.local), sep = "")
+      abund_pool <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
+      relabund_pool <- sort(abund_pool/sum(abund_pool), decreasing = T)
+      abund_local <- table(sample(1:s_pool, n_local, replace = T,
+                                  prob = relabund_pool))
+      names(abund_local) <- paste("species", names(abund_local), sep = "")
 
    }
 
-   return(list(abund = abund.local,
-               mean.theor = N.local/S.pool,
-               sd.theor   = N.local/S.pool * cv.abund,
-               mean.sim   = mean(abund.local),
-               sd.sim     = sd(abund.local))
-   )
+   # return(list(abund = abund.local,
+   #             mean.theor = n_local/s_pool,
+   #             sd.theor   = n_local/s_pool * cv_abund,
+   #             mean.sim   = mean(abund.local),
+   #             sd.sim     = sd(abund.local))
+   # )
+
+   class(abund_local) <- "sad"
+   return(abund_local)
+}
+
+# Plot abundance distribution
+plot.sad <- function(abund, method = c("preston","rank"))
+{
+   require(untb)
+
+   method <- match.arg(method)
+   par(las = 1)
+   if (method == "rank")
+      plot(sort(as.numeric(abund), decreasing = T), type="b", log="y",
+        xlab="Species rank", ylab="Species abundance")
+
+   if (method == "preston"){
+      abund_dist <- preston(count(abund))
+      barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
+           xlab = "Abundance class", ylab ="No. of species")
+   }
 }
 
 # ----------------------------------------------------------------------------------
@@ -103,7 +120,7 @@ SAD.lognorm <- function(S.pool, N.local, cv.abund = 1, fixS.local = F)
 #'
 #' @param x numeric - x coordinates
 #' @param y numeric - y coordinates
-#' @param specID character vector - species names or IDs. Can be integers, characters or factors
+#' @param spec_id character vector - species names or IDs. Can be integers, characters or factors
 #' @param xrange numeric vector of length 2 - extent of the community in x-direction
 #' @param yrange numeric vector of length 2 - extent of the community in y-direction
 #'
@@ -123,7 +140,7 @@ SAD.lognorm <- function(S.pool, N.local, cv.abund = 1, fixS.local = F)
 #' plot(com1)
 #' summary(com1)
 #'
-community <- function(x, y, specID, xrange = c(0,1), yrange = c(0,1))
+community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
    if (length(xrange) < 2 | length(yrange) < 2) ("Érror: missing ranges for x or y!")
 
@@ -134,8 +151,8 @@ community <- function(x, y, specID, xrange = c(0,1), yrange = c(0,1))
    if (yrange[2] < max(y)) return("Error: Inappropriate ranges for y!")
 
 
-   points <- data.frame(X = as.numeric(x), Y = as.numeric(y),
-                       Species = as.factor(specID))
+   points <- data.frame(x = as.numeric(x), y = as.numeric(y),
+                        species = as.factor(spec_id))
 
    com <- list(census = points,
                x_min_max = as.numeric(xrange[1:2]),
@@ -151,7 +168,7 @@ community <- function(x, y, specID, xrange = c(0,1), yrange = c(0,1))
 summary.community <- function(com1)
 {
    cat("No. of individuals: ", nrow(com1$census), "\n")
-   cat("No. of species: ", length(unique(com1$census$Species)), "\n")
+   cat("No. of species: ", length(unique(com1$census$species)), "\n")
    cat("x-extent: ", com1$x_min_max, "\n")
    cat("y-extent: ", com1$y_min_max, "\n\n")
    print(summary(com1$census))
@@ -160,12 +177,12 @@ summary.community <- function(com1)
 #' Plot spatial community object
 plot.community <- function(com1, col = NA, pch = NA, ...)
 {
-   nSpec <- length(table(com1$census$Species))
-   if (is.na(col))  col <- rainbow(nSpec)
+   nspec <- length(table(com1$census$species))
+   if (is.na(col))  col <- rainbow(nspec)
    if (is.na(pch))  pch <- 19
 
-   plot(Y ~ X, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
-        col = col[com1$census$Species], pch = pch, ...)
+   plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
+        col = col[com1$census$species], pch = pch, ...)
 }
 
 # ----------------------------------------------------------------------------------
@@ -173,7 +190,7 @@ plot.community <- function(com1, col = NA, pch = NA, ...)
 #'
 #' Add random spatial positions to a species abundance distribution.
 #'
-#' @param abund.vec integer vector with species abundances
+#' @param abund_vec integer vector with species abundances
 #' @param xrange numeric vector of length 2 - extent of the community in x-direction
 #' @param yrange numeric vector of length 2 - extent of the community in y-direction
 #'
@@ -181,28 +198,28 @@ plot.community <- function(com1, col = NA, pch = NA, ...)
 #'
 #' @author Felix May
 #' @examples
-#' abund <- SAD.lognorm(S.pool = 100, N.local = 1000)$abund
-#' sim.com1 <- Sim.Poisson.Coords(abund)
-#' plot(sim.com1)
-#' summary(sim.com1)
+#' abund <- sim_sad(s_pool = 100, n_local = 1000)
+#' sim_com1 <- sim_poisson_coords(abund)
+#' plot(sim_com1)
+#' summary(sim_com1)
 
-Sim.Poisson.Coords <- function(abund.vec,
+sim_poisson_coords <- function(abund_vec,
                                xrange = c(0,1),
                                yrange = c(0,1)
                                )
 {
-   abund.vec <- trunc(abund.vec)
-   if (length(names(abund.vec)) < length(abund.vec))
-      names(abund.vec) <- paste("species", 1:length(abund.vec), sep = "")
+   abund_vec <- trunc(abund_vec)
+   if (length(names(abund_vec)) < length(abund_vec))
+      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
 
-   N <- sum(abund.vec)
-   x <- runif(N, xrange[1], xrange[2])
-   y <- runif(N, yrange[1], yrange[2])
+   n <- sum(abund_vec)
+   x <- runif(n, xrange[1], xrange[2])
+   y <- runif(n, yrange[1], yrange[2])
 
-   id.spec <- factor(rep(names(abund.vec), times=abund.vec))
+   id_spec <- factor(rep(names(abund_vec), times = abund_vec))
 
-   sim.dat1 <- community(x, y, id.spec, xrange, yrange)
-   return(sim.dat1)
+   sim_dat1 <- community(x, y, id_spec, xrange, yrange)
+   return(sim_dat1)
 }
 
 # ----------------------------------------------------------------------------------
@@ -210,9 +227,9 @@ Sim.Poisson.Coords <- function(abund.vec,
 #'
 #' This function simulates a community with a certain abundance distribution and
 #' and random spatial coordinates. This function consecutively calls
-#' \code{\link{SAD.lognorm}} and \code{\link{Sim.Poisson.Coords}}
+#' \code{\link{sim_sad}} and \code{\link{sim_poisson_coords}}
 #'
-#' @inheritParams SAD.lognorm
+#' @inheritParams sim_sad
 #' @param xrange numeric vector of length 2 - extent of the community in x-direction
 #' @param yrange numeric vector of length 2 - extent of the community in y-direction
 #'
@@ -221,24 +238,24 @@ Sim.Poisson.Coords <- function(abund.vec,
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- Sim.Poisson.Community(S = 20, N = 500, cv = 1)
+#' com1 <- sim_poisson_community(S = 20, N = 500, cv = 1)
 #' plot(com1)
 #'
-Sim.Poisson.Community <- function(S.pool,
-                                  N.local,
-                                  cv.abund = 1,
-                                  fixS.local = F,
+sim_poisson_community <- function(s_pool,
+                                  n_local,
+                                  cv_abund = 1,
+                                  fix_s_local = F,
                                   xrange= c(0,1),
                                   yrange = c(0,1)
                                   )
 {
-   sim1 <- SAD.lognorm(S.pool = S.pool, N.local = N.local, cv.abund = cv.abund,
-                       fixS.local = fixS.local)
-   abund.vec <- sim1$abund
+   sim1 <- sim_sad(s_pool = s_pool, n_local = n_local, cv_abund = cv_abund,
+                       fix_s_local = fix_s_local)
+   abund_vec <- sim1
 
-   sim.dat <- Sim.Poisson.Coords(abund.vec = abund.vec,
+   sim_dat <- sim_poisson_coords(abund_vec = abund_vec,
                                  xrange = xrange, yrange = yrange)
-   return(sim.dat)
+   return(sim_dat)
 }
 
 
@@ -249,7 +266,7 @@ Sim.Poisson.Community <- function(S.pool,
 #' Clumping is simulated using a Thomas cluster process, also known as Poisson
 #' cluster process (Morlon et al. 2008, Wiegand & Moloney 2014)
 #'
-#' @param abund.vec integer vector with species abundances
+#' @param abund_vec integer vector with species abundances
 #'
 #' @param sigma numeric vector of length = 1 or length = 2. Mean displacement
 #' (along each coordinate axes) of a point from its mother point (= cluster centre).
@@ -263,21 +280,21 @@ Sim.Poisson.Community <- function(S.pool,
 #' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds to the
 #' \code{scale} parameter of \code{\link[spatstat]{rThomas}}.
 #'
-#' @param mother.points numeric - number of mother points (= cluster centres).
+#' @param mother_points numeric - number of mother points (= cluster centres).
 #' If this is a single value, all species have the same number of clusters.
-#' For example \code{mother.points = 1} can be used to simulate only one cluster
+#' For example \code{mother_points = 1} can be used to simulate only one cluster
 #' per species, which then represents the complete species range.
-#' If \code{mother.points} is a vector of the same length as \code{abund.vec},
+#' If \code{mother_points} is a vector of the same length as \code{abund_vec},
 #' each species has a specific number of clusters. If no value is provided, the
 #' number of clusters is determined from the abundance and the number of points
-#' per cluster (\code{cluster.points}).
+#' per cluster (\code{cluster_points}).
 #'
-#' @param cluster.points numeric - mean number of points per cluster. If this is
+#' @param cluster_points numeric - mean number of points per cluster. If this is
 #' a single value, species have the same average number of points per cluster.
-#' If this is a vector of the same length as \code{abund.vec}, each species has
+#' If this is a vector of the same length as \code{abund_vec}, each species has
 #' a specific mean number of points per cluster.  If no value is provided, the
 #' number of points per cluster is determined from the abundance and from
-#' \code{mother.points}.  The parameter \code{cluster.points} corresponds to the
+#' \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
 #' \code{mu} parameter of \code{\link[spatstat]{rThomas}}.
 #'
 #' @param xrange numeric vector of length 2 - extent of the community in x-direction
@@ -287,21 +304,21 @@ Sim.Poisson.Community <- function(S.pool,
 #' function uses a C++ re-implementation if the function
 #' \code{\link[spatstat]{rThomas}} in the package \code{spatstat}.
 #'
-#' There is an inherent link between the parameters \code{abund.vec},
-#' \code{mother.points}, and \code{cluster.points}. For every species the
+#' There is an inherent link between the parameters \code{abund_vec},
+#' \code{mother_points}, and \code{cluster_points}. For every species the
 #' abundance has to be equal to the product of the number of clusters
-#' (\code{mother.points}) times the numbers of points per cluster
-#' (\code{mother.points}).
+#' (\code{mother_points}) times the numbers of points per cluster
+#' (\code{mother_points}).
 #'
-#' \deqn{abundance = mother.points * cluster.points}
+#' \deqn{abundance = mother_points * cluster_points}
 #'
 #' Accordingly, if one of the parameters is provided the other one is directly
-#' calculated from the abundance. Values for \code{mother.points} override values
-#' for \code{cluster.points}. If none of the parameters is specified, it is assumed
+#' calculated from the abundance. Values for \code{mother_points} override values
+#' for \code{cluster_points}. If none of the parameters is specified, it is assumed
 #' that for every species there is a similar number of clusters and of points
 #' per cluster.
 #'
-#' \deqn{mother.points = cluster.points = \sqrt(abundance),}
+#' \deqn{mother_points = cluster_points = \sqrt(abundance),}
 #'
 #' In this case rare species have few clusters with few points per
 #' cluster, while abundant species have many clusters with many points per cluster.
@@ -322,183 +339,180 @@ Sim.Poisson.Community <- function(S.pool,
 #' @examples
 #'
 #' abund <- c(10,20,50,100)
-#' sim1 <- Sim.Thomas.Coords(abund, sigma = 0.02)
+#' sim1 <- sim_thomas_coords(abund, sigma = 0.02)
 #' plot(sim1)
 #'
 #' # Simulate species "ranges"
-#' sim2 <- Sim.Thomas.Coords(abund, sigma = 0.02, mother.points = 1)
+#' sim2 <- sim_thomas_coords(abund, sigma = 0.02, mother_points = 1)
 #' plot(sim2)
 #'
 #' # Equal numbers of points per cluster
-#' sim3 <- Sim.Thomas.Coords(abund, sigma = 0.02, cluster.points = 5)
+#' sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 #' plot(sim3)
 
-Sim.Thomas.Coords <- function(abund.vec,
+sim_thomas_coords <- function(abund_vec,
                               sigma = 0.02,
-                              mother.points = NA,
-                              cluster.points = NA,
+                              mother_points = NA,
+                              cluster_points = NA,
                               xrange = c(0,1),
                               yrange = c(0,1)
                               )
 {
-   abund.vec <- trunc(abund.vec)
-   if (length(names(abund.vec)) < length(abund.vec))
-      names(abund.vec) <- paste("species", 1:length(abund.vec), sep = "")
+   abund_vec <- trunc(abund_vec)
+   if (length(names(abund_vec)) < length(abund_vec))
+      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
 
    xext <- xrange[2] - xrange[1]
    yext <- yrange[2] - yrange[1]
 
-   max.dim <- ifelse(xext >= yext, xext, yext)
+   max_dim <- ifelse(xext >= yext, xext, yext)
 
-   cum.abund <- cumsum(abund.vec)
-   S.local <- length(abund.vec)
-   N <- sum(abund.vec)
+   cum_abund <- cumsum(abund_vec)
+   s_local <- length(abund_vec)
+   n <- sum(abund_vec)
 
    if (length(sigma) == 2){
       # linear relationship between sigma and log(relabund)
       # sigma = a1 + b1 * log(relabund)
-      log.relabund <- log(abund.vec/sum(abund.vec))
-      range.abund <- max(log.relabund) - min(log.relabund)
+      log_relabund <- log(abund_vec/sum(abund_vec))
+      range_abund <- max(log_relabund) - min(log_relabund)
 
-      if (range.abund != 0) b1 <- (sigma[2] - sigma[1])/range.abund
+      if (range_abund != 0) b1 <- (sigma[2] - sigma[1])/range_abund
       else b1 <- 0
 
-      a1 <- sigma[2] - b1*max(log.relabund)
-      sigma.vec <- a1 + b1*log.relabund
+      a1 <- sigma[2] - b1*max(log_relabund)
+      sigma_vec <- a1 + b1*log_relabund
    }
    else {
-      sigma.vec <- rep(sigma[1], times = S.local)
+      sigma_vec <- rep(sigma[1], times = s_local)
    }
 
-   X = numeric(N)
-   Y = numeric(N)
-   id.spec <- factor(rep(names(abund.vec), times=abund.vec))
+   x = numeric(n)
+   y = numeric(n)
+   id_spec <- factor(rep(names(abund_vec), times=abund_vec))
 
    # determine points per cluster and number of mother points
-   if (is.numeric(mother.points)){
+   if (is.numeric(mother_points)){
 
-      if (length(mother.points) == S.local)
-         n.mother.points <- mother.points
+      if (length(mother_points) == s_local)
+         n_mothers <- mother_points
       else
-         n.mother.points <- rep(mother.points[1], S.local)
+         n_mothers <- rep(mother_points[1], s_local)
 
-      points.per.cluster <- abund.vec / n.mother.points
+      points_per_cluster <- abund_vec / n_mothers
 
    } else {
 
-      if (is.numeric(cluster.points)){
+      if (is.numeric(cluster_points)){
 
-         if (length(cluster.points) == S.local)
-             points.per.cluster <- cluster.points
+         if (length(cluster_points) == s_local)
+             points_per_cluster <- cluster_points
          else
-            points.per.cluster <- rep(cluster.points[1], S.local)
+            points_per_cluster <- rep(cluster_points[1], s_local)
 
-         lambda.mother <- abund.vec / points.per.cluster
+         lambda_mother <- abund_vec / points_per_cluster
 
       } else {
-         lambda.mother <- points.per.cluster <- sqrt(abund.vec)
+         lambda_mother <- points_per_cluster <- sqrt(abund_vec)
       }
-      #n.mother.points <- rpois(S.local, lambda = lambda.mother)
-      n.mother.points <- ceiling(lambda.mother)
+      #n.mother_points <- rpois(s_local, lambda = lambda_mother)
+      n_mothers <- ceiling(lambda_mother)
    }
 
    # create map for first species
-   if (sigma.vec[1] < 2 * max.dim){
-      dat1 <- rThomas_rcpp(abund.vec[1],
-                           nMotherPoints = n.mother.points[1],
-                           sigma = sigma.vec[1],
-                           mu = points.per.cluster[1],
+   if (sigma_vec[1] < 2 * max_dim){
+      dat1 <- rThomas_rcpp(abund_vec[1],
+                           n_mother_points = n_mothers[1],
+                           sigma = sigma_vec[1],
+                           mu = points_per_cluster[1],
                            xmin = xrange[1], xmax = xrange[2],
                            ymin = yrange[1], ymax = yrange[2])
    } else {
-      x <- runif(abund.vec[1], xrange[1], xrange[2])
-      y <- runif(abund.vec[1], yrange[1], yrange[2])
-      dat1 <- data.frame(X = x, Y = y)
+      x <- runif(abund_vec[1], xrange[1], xrange[2])
+      y <- runif(abund_vec[1], yrange[1], yrange[2])
+      dat1 <- data.frame(x = x, y = y)
    }
 
-   irange <- 1:cum.abund[1]
-   X[irange] <- dat1$X
-   Y[irange] <- dat1$Y
+   irange <- 1:cum_abund[1]
+   x[irange] <- dat1$x
+   y[irange] <- dat1$y
 
-   for (ispec in 2:S.local){
+   for (ispec in 2:s_local){
 
-      if (sigma.vec[ispec] < 2 * max.dim){
-         dat1 <- rThomas_rcpp(abund.vec[ispec],
-                              nMotherPoints = n.mother.points[ispec],
-                              sigma = sigma.vec[ispec],
-                              mu = points.per.cluster[ispec],
+      if (sigma_vec[ispec] < 2 * max_dim){
+         dat1 <- rThomas_rcpp(abund_vec[ispec],
+                              n_mother_points = n_mothers[ispec],
+                              sigma = sigma_vec[ispec],
+                              mu = points_per_cluster[ispec],
                               xmin = xrange[1], xmax = xrange[2],
                               ymin = yrange[1], ymax = yrange[2])
       } else {
-         x <- runif(abund.vec[ispec], xrange[1], xrange[2])
-         y <- runif(abund.vec[ispec], yrange[1], yrange[2])
-         dat1 <- data.frame(X = x, Y = y)
+         x <- runif(abund_vec[ispec], xrange[1], xrange[2])
+         y <- runif(abund_vec[ispec], yrange[1], yrange[2])
+         dat1 <- data.frame(x = x, y = y)
       }
 
-      irange <- (cum.abund[ispec-1] + 1):cum.abund[ispec]
-      X[irange] <- dat1$X
-      Y[irange] <- dat1$Y
+      irange <- (cum_abund[ispec-1] + 1):cum_abund[ispec]
+      x[irange] <- dat1$x
+      y[irange] <- dat1$y
    }
 
-   sim.dat1 <- community(X, Y, id.spec, xrange, yrange)
-   return(sim.dat1)
+   sim_dat1 <- community(x, y, id_spec, xrange, yrange)
+   return(sim_dat1)
 }
-
-
-
 
 # -----------------------------------------------------------------------------------------------
 #' Simulate community with clumped spatial positions.
 #'
 #' This function simulates a community with a certain abundance distribution and
 #' and clumped, i.e. aggregated, spatial coordinates. This function consecutively calls
-#' \code{\link{SAD.lognorm}} and \code{\link{Sim.Thomas.Coords}}
+#' \code{\link{sim_sad}} and \code{\link{sim_thomas_coords}}
 #'
-#' @inheritParams SAD.lognorm
+#' @inheritParams sim_sad
 #'
 #' @param sigma numeric vector of length = 1 or length = 2. Mean displacement
 #' (along each coordinate axes) of a point from its mother point (=cluster centre).
 #'
-#' @param mother.points numeric - number of mother points (= cluster centres).
-#' @param cluster.points numeric - mean number of points per cluster.
+#' @param mother_points numeric - number of mother points (= cluster centres).
+#' @param cluster_points numeric - mean number of points per cluster.
 
 #' @param xrange numeric vector of length 2 - extent of the community in x-direction
 #' @param yrange numeric vector of length 2 - extent of the community in y-direction
 #'
 #' @return A community object as defined by \code{\link{community}}.
 #'
-#' @seealso \code{SAD.lognorm}; \code{Sim.Thomas.Coords}
+#' @seealso \code{sim_sad}; \code{sim_thomas_coords}
 
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- Sim.Thomas.Community(S.pool = 20, N.local = 500, cv.abund = 1,
+#' com1 <- sim_thomas_community(s_pool = 20, n_local = 500, cv_abund = 1,
 #'                              sigma = 0.01)
 #' plot(com1)
 #'
-Sim.Thomas.Community <- function(S.pool,
-                                 N.local,
-                                 cv.abund = 1,
-                                 fixS.local = F,
+sim_thomas_community <- function(s_pool,
+                                 n_local,
+                                 cv_abund = 1,
+                                 fix_s_local = F,
                                  sigma = 0.02,
-                                 cluster.points = NA,
-                                 mother.points = NA,
+                                 cluster_points = NA,
+                                 mother_points = NA,
                                  xrange = c(0,1),
                                  yrange = c(0,1)
                                  )
 {
-   sim1 <- SAD.lognorm(S.pool = S.pool, N.local = N.local, cv.abund = cv.abund,
-                       fixS.local = fixS.local)
-   abund.vec <- sim1$abund
+   sim1 <- sim_sad(s_pool = s_pool, n_local = n_local, cv_abund = cv_abund,
+                       fix_s_local = fix_s_local)
+   abund_vec <- sim1
 
-   sim.dat <- Sim.Thomas.Coords(abund.vec = abund.vec,
+   sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
                                 sigma = sigma,
-                                mother.points = mother.points,
-                                cluster.points = cluster.points,
+                                mother_points = mother_points,
+                                cluster_points = cluster_points,
                                 xrange = xrange,
                                 yrange = yrange)
 
-   return(sim.dat)
+   return(sim_dat)
 }
 
 
@@ -506,8 +520,8 @@ Sim.Thomas.Community <- function(S.pool,
 # # ----------------------------------------------------------------------------------
 # # Simulate community with log-normal SAD and Thomas process clustering
 # # when sigma > 2*(max(xmax,ymax)) a Poisson distribution is simulated which is more efficient
-# Sim.Thomas.Community <- function(S,N,
-#                                  cv.abund=1,
+# sim_thomas_community <- function(S,N,
+#                                  cv_abund=1,
 #                                  sigma=0.02, #single value for all species or
 #                                              #min and max for least and most abundant species
 #                                  xmax=1,
@@ -516,93 +530,93 @@ Sim.Thomas.Community <- function(S.pool,
 # {
 #    require(spatstat)
 #
-#    max.dim <- ifelse(xmax>=ymax,xmax,ymax)
+#    max_dim <- ifelse(xmax>=ymax,xmax,ymax)
 #
-#    sim1 <- SAD.log.normal(S,N,cv.abund)
-#    abund.vec <- sim1$abund
+#    sim1 <- SAD.log.normal(S,N,cv_abund)
+#    abund_vec <- sim1$abund
 #
 #    if (length(sigma)==2){
 #       # linear relationship between sigma and log(relabund)
 #       # sigma = a1 + b1 * log(relabund)
-#       log.relabund <- log(abund.vec/sum(abund.vec))
-#       range.abund <- max(log.relabund)-min(log.relabund)
+#       log_relabund <- log(abund_vec/sum(abund_vec))
+#       range_abund <- max(log_relabund)-min(log_relabund)
 #
-#       if (range.abund != 0) b1 <- (sigma[2]-sigma[1])/range.abund
+#       if (range_abund != 0) b1 <- (sigma[2]-sigma[1])/range_abund
 #       else b1 <- 0
-#       a1 <- sigma[2] - b1*max(log.relabund)
-#       sigma.vec <- a1 + b1*log.relabund
+#       a1 <- sigma[2] - b1*max(log_relabund)
+#       sigma_vec <- a1 + b1*log_relabund
 #
-#    #    plot(sigma.vec~log.relabund)
+#    #    plot(sigma_vec~log_relabund)
 #    #    abline(a1,b1,col="red")
 #    #    abline(h=c(sigma[1],sigma[2]),col=1:2)
-#    #    abline(v=c(min(log.relabund),max(log.relabund)))
+#    #    abline(v=c(min(log_relabund),max(log_relabund)))
 #    }
 #    else {
 #
-#       if (sigma > 2*max.dim){
+#       if (sigma > 2*max_dim){
 #          x <- runif(N,0,xmax)
 #          y <- runif(N,0,ymax)
-#          id.spec <- rep.int(1:S,times=abund.vec)
+#          id_spec <- rep.int(1:S,times=abund_vec)
 #
-#          dat1 <- data.frame(X=x,Y=y,SpecID=id.spec)
+#          dat1 <- data.frame(X=x,Y=y,spec_id=id_spec)
 #          return(dat1)
 #       }
 #
-#       sigma.vec <- rep(sigma[1],times=S)
+#       sigma_vec <- rep(sigma[1],times=S)
 #    }
 #
 #    print("Test")
 #
 #    # create map for first species
 #    if (!is.numeric(points.cluster)){
-#       n.mother.points <- points.per.cluster <- sqrt(abund.vec) # assumption : similar numbers of cluster and of
+#       n.mother_points <- points_per_cluster <- sqrt(abund_vec) # assumption : similar numbers of cluster and of
 #                                                                #individuals per cluster
 #    }
 #    else {
-#       points.per.cluster <- rep(points.cluster,S)
-#       n.mother.points <- abund.vec/points.per.cluster
-#       n.mother.points <- ifelse(n.mother.points<0.1,0.1,n.mother.points)
+#       points_per_cluster <- rep(points.cluster,S)
+#       n.mother_points <- abund_vec/points_per_cluster
+#       n.mother_points <- ifelse(n.mother_points<0.1,0.1,n.mother_points)
 #    }
 #
 #    n <- 0
 #    #n.trials <- 0
-#    while (n<abund.vec[1]){
-#       pp1 <- rThomas(kappa=n.mother.points[1]/(xmax*ymax),
-#                      scale=sigma.vec[1],
-#                      mu=points.per.cluster[1],
+#    while (n<abund_vec[1]){
+#       pp1 <- rThomas(kappa=n.mother_points[1]/(xmax*ymax),
+#                      scale=sigma_vec[1],
+#                      mu=points_per_cluster[1],
 #                      win=owin(c(0,xmax),c(0,ymax)))
 #       n <- pp1$n
 #       #n.trials <- n.trials +1
 #    }
 #    dat1 <- as.data.frame(pp1)
-#    dat1 <- dat1[sample(1:nrow(dat1),abund.vec[1]),]
-#    dat1$SpecID <- rep(1,abund.vec[1])
+#    dat1 <- dat1[sample(1:nrow(dat1),abund_vec[1]),]
+#    dat1$spec_id <- rep(1,abund_vec[1])
 #
 #    #plot(y~x,dat1,pch=19,xlim=c(0,1),ylim=c(0,1))
 #    #n.trials
 #
 #    for (ispec in 2:S){
 #       n <- 0
-#       while (n<abund.vec[ispec]){
-#          pp1 <- rThomas(kappa=n.mother.points[ispec]/(xmax*ymax),
-#                         scale=sigma.vec[ispec],
-#                         mu=points.per.cluster[ispec],
+#       while (n<abund_vec[ispec]){
+#          pp1 <- rThomas(kappa=n.mother_points[ispec]/(xmax*ymax),
+#                         scale=sigma_vec[ispec],
+#                         mu=points_per_cluster[ispec],
 #                         win=owin(c(0,xmax),c(0,ymax)))
 #          n <- pp1$n
 #       }
 #       dat2 <- as.data.frame(pp1)
-#       dat2 <- dat2[sample(1:nrow(dat2),abund.vec[ispec]),]
-#       dat2$SpecID <- rep(ispec,abund.vec[ispec])
+#       dat2 <- dat2[sample(1:nrow(dat2),abund_vec[ispec]),]
+#       dat2$spec_id <- rep(ispec,abund_vec[ispec])
 #       dat1 <- rbind(dat1,dat2)
 #    }
 #
 #    dat3 <- dat1
-#    dat3$SpecID <- factor(dat1$SpecID)
+#    dat3$spec_id <- factor(dat1$spec_id)
 #
 # #    require(ggplot2)
-# #    ggplot(data=dat3,aes(x=x,y=y,color=SpecID)) + geom_point(size=4)
+# #    ggplot(data=dat3,aes(x=x,y=y,color=spec_id)) + geom_point(size=4)
 #
-#    names(dat3) <- c("X","Y","SpecID")
+#    names(dat3) <- c("X","Y","spec_id")
 #    return(dat3)
 # }
 

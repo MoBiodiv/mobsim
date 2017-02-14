@@ -23,7 +23,7 @@ with a cluster size of `sigma = 0.05`.
 
 ```{r}
 library(MoBspatial)
-sim_dat1 <- Sim.Thomas.Community(S = 30, N = 500, sigma = 0.05)
+sim_dat1 <- sim_thomas_community(s_pool = 30, n_local = 500, sigma = 0.05)
 ```
 
 Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
@@ -46,7 +46,7 @@ abundance distribution by counting the number of individuals of each species usi
 the R standard function `table()`
 
 ```{r}
-abund <- table(sim_dat1$census$Species)
+abund <- table(sim_dat1$census$species)
 ```
 
 A standard plot in community ecology is the *rank-abundance plot* where the 
@@ -117,7 +117,7 @@ together. The difference between the two curves indicates aggregation or regular
 of conspecifics.
 
 ```{r, fig.width = 5, fig.height = 5}
-sac1 <- SAC(sim_dat1)
+sac1 <- accum_curve(sim_dat1)
 plot(1:length(rc1), rc1, type = "l", xlab = "No. of individuals sampled",
      ylab = " Expected no. of species")
 lines(1:length(sac1), sac1, col = "red")
@@ -144,15 +144,15 @@ with subplot sizes as proportion of the total community size has to be defined
 ```{r}
 subplot_size <- c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 
                    0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 1)
-divar1 <- DivAR(sim_dat1, prop.A = subplot_size)
+divar1 <- divar(sim_dat1, prop_area = subplot_size)
 head(divar1)
 ```
 Plot SAR and EAR
 
 ```{r, fig.width = 5, fig.height = 5}
-plot(meanSpec ~ propArea, data = divar1, type = "b", ylim = c(0, 30),
+plot(mean_spec ~ prop_area, data = divar1, type = "b", ylim = c(0, 30),
      xlab = "Proportion of area", ylab = "No. of species")
-lines(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+lines(mean_end ~ prop_area, data = divar1, type = "b", col = 2)
 legend("topleft",c("SAR","EAR"), col = 1:2, lwd = 2)
 ```
 
@@ -169,10 +169,10 @@ The function `dist_decay` makes use of the function `vegdist` from the package
 Here is a demonstration how the distance decay can be estimated and visualized
 
 ```{r,fig.width=5, fig.height=5}
-dd <- dist_decay(sim_dat1, prop.A = 0.05, nsamples = 30, method = "jaccard")
+dd <- dist_decay(sim_dat1, prop_area = 0.05, n_samples = 30, method = "jaccard")
 head(dd)
 
-plot(similarity ~ distance, data=dd, xlab = "Distance", ylab = "Similarity")
+plot(similarity ~ distance, data = dd, xlab = "Distance", ylab = "Similarity")
 dd.loess <- loess(similarity ~ distance, data = dd)
 pred.sim <- predict(dd.loess)
 lines(dd$distance, pred.sim, lwd=2)

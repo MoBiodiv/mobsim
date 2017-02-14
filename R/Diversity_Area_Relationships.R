@@ -13,8 +13,8 @@
 #'
 #' @return Named vector with four values
 #' \enumerate{
-#'    \item nSpecies - the number of species
-#'    \item nEndemics - the number of endemics
+#'    \item n_species - the number of species
+#'    \item n_endemics - the number of endemics
 #'    \item shannon - Shannon diversity index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
 #'    where \eqn{p_i} is the relative abundance of species i:
 #'    \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)
@@ -23,32 +23,32 @@
 
 div_rect <- function(x0, y0, xsize, ysize, comm)
 {
-   x <- comm$census$X
-   y <- comm$census$X
+   x <- comm$census$x
+   y <- comm$census$y
 
    # logical vector which trees are in the sampling rectangle
-   in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
+   in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
 
-   spec.in <- unique(comm$census$Species[in.rect])
-   spec.out <- unique(comm$census$Species[!in.rect])
+   spec_in <- unique(comm$census$species[in_rect])
+   spec_out <- unique(comm$census$species[!in_rect])
 
-   nSpecies <- length(spec.in)
-   nEndemics <- length(spec.in[!spec.in %in% spec.out])
+   n_species <- length(spec_in)
+   n_endemics <- length(spec_in[!spec_in %in% spec_out])
 
-   abund <- table(comm$census$Species[in.rect])
+   abund <- table(comm$census$species[in_rect])
    abund <- abund[abund > 0]
-   rel.abund <- abund/sum(abund)
+   relabund <- abund/sum(abund)
 
-   shannon <- - sum(rel.abund * log(rel.abund))
+   shannon <- - sum(relabund * log(relabund))
 
    n <- sum(abund)
    if (n > 1)
-      simpson <- (n/(n-1)) * (1 - sum(rel.abund^2))
+      simpson <- (n/(n-1)) * (1 - sum(relabund^2))
    else
       simpson <- NA
 
-   return(c(nSpecies = nSpecies,
-            nEndemics = nEndemics,
+   return(c(n_species = n_species,
+            n_endemics = n_endemics,
             shannon = shannon,
             simpson = simpson))
 }
@@ -59,9 +59,9 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #' Get mean and sd of diversity indices in several equally sized subplots
 #' of a community
 #'
-#' @param prop.A Size of subplots as proportion of the total area
+#' @param prop_area Size of subplots as proportion of the total area
 #' @param comm \code{\link{community}} object
-#' @param nrect Number of randomly located subplots
+#' @param n_rect Number of randomly located subplots
 #' @param exclude_zeros logical - should subplots without individuals be excluded?
 #'
 #' @return Vector with mean and standard deviation of the following diversity
@@ -70,45 +70,46 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #'
 #' @seealso \code{\link{div_rect}}
 #'
-div_rand_rect <- function(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
+div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
+                          exclude_zeros = F)
 {
-   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
-   area <- dx.plot * dy.plot * prop.A
-   square.size <- sqrt(area)
+   area <- dx_plot * dy_plot * prop_area
+   square_size <- sqrt(area)
 
-   if (square.size <= min(c(dx.plot, dy.plot))){
-      dx.rect <- square.size
-      dy.rect <- square.size
+   if (square_size <= min(c(dx_plot, dy_plot))){
+      dx_rect <- square_size
+      dy_rect <- square_size
    } else
    {
-      if (dx.plot >= dy.plot){
-         dx.rect <- dx.plot*prop.A
-         dy.rect <- dy.plot
+      if (dx_plot >= dy_plot){
+         dx_rect <- dx_plot*prop_area
+         dy_rect <- dy_plot
       } else {
-         dx.rect <- dx.plot
-         dy.rect <- dy.plot*prop.A
+         dx_rect <- dx_plot
+         dy_rect <- dy_plot*prop_area
       }
    }
 
-   xpos <- runif(nrect, min = comm$x_min_max[1], max = comm$x_min_max[2] - dx.rect)
-   ypos <- runif(nrect, min = comm$y_min_max[1], max = comm$y_min_max[2] - dy.rect)
+   xpos <- runif(n_rect, min = comm$x_min_max[1], max = comm$x_min_max[2] - dx_rect)
+   ypos <- runif(n_rect, min = comm$y_min_max[1], max = comm$y_min_max[2] - dy_rect)
 
    div_plots <- mapply(div_rect, xpos, ypos,
-                       MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
+                       MoreArgs=list(xsize = dx_rect, ysize = dy_rect,
                                      comm = comm))
    if (exclude_zeros == T)
-      div_plots <- div_plots[, div_plots["nSpecies",] > 0]
+      div_plots <- div_plots[, div_plots["n_species",] > 0]
 
-   return(c(meanSpec    = mean(div_plots["nSpecies",]),
-            sdSpec      = sd(div_plots["nSpecies",]),
-            meanEnd     = mean(div_plots["nEndemics",]),
-            sdEnd       = sd(div_plots["nEndemics",]),
-            meanShannon = mean(div_plots["shannon",]),
-            sdShannon   = sd(div_plots["shannon",]),
-            meanSimpson = mean(div_plots["simpson",], na.rm = T),
-            sdSimpson   = sd(div_plots["simpson",], na.rm = T))
+   return(c(mean_spec    = mean(div_plots["n_species",]),
+            sd_spec      = sd(div_plots["n_species",]),
+            mean_end     = mean(div_plots["n_endemics",]),
+            sd_end       = sd(div_plots["n_endemics",]),
+            mean_shannon = mean(div_plots["shannon",]),
+            sd_shannon   = sd(div_plots["shannon",]),
+            mean_simpson = mean(div_plots["simpson",], na.rm = T),
+            sd_simpson   = sd(div_plots["simpson",], na.rm = T))
           )
 }
 
@@ -117,9 +118,9 @@ div_rand_rect <- function(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
 #' Estimate diversity indices in subplots of different sizes. This includes the
 #' well-known species-area and endemics-area relationships.
 #'
-#' @param prop.A numeric vector with subplot sizes as proportion of the total area
+#' @param prop_area numeric vector with subplot sizes as proportion of the total area
 #' @param comm \code{\link{community}} object
-#' @param nsamples Number of randomly located subplots per subplot size
+#' @param n_samples Number of randomly located subplots per subplot size
 #' @param exclude_zeros logical - should subplots without individuals be excluded?
 #'
 #' @return Dataframe with the proportional area of the subplots and mean and
@@ -130,32 +131,32 @@ div_rand_rect <- function(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
 #'
 #' @examples
 #' sim_com1 <- Sim.Thomas.Community(100, 1000)
-#' divar1 <- DivAR(sim_com1, prop.A = seq(0.01, 1.0, length = 20))
+#' divar1 <- DivAR(sim_com1, prop_area = seq(0.01, 1.0, length = 20))
 #' plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
 #'      ylab = "No. of species", type = "b", ylim = c(0,100))
 #' points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
-DivAR <- function(comm, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
+divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
                   exclude_zeros = F)
 {
-   if (any(prop.A > 1))
+   if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
-   prop.A <- prop.A[prop.A <= 1]
+   prop_area <- prop_area[prop_area <= 1]
 
    if (class(comm) != "community")
       stop("DiVAR requires a community object as input. See ?community.")
 
-   nscales <- length(prop.A)
-   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   nscales <- length(prop_area)
+   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
-   div_area <- sapply(prop.A,
+   div_area <- sapply(prop_area,
                       div_rand_rect,
                       comm = comm,
-                      nrect = nsamples,
+                      n_rect = n_samples,
                       exclude_zeros = exclude_zeros)
 
    div_dat <- as.data.frame(t(div_area))
-   div_dat <- cbind(propArea = prop.A, div_dat)
+   div_dat <- cbind(prop_area = prop_area, div_dat)
 
    return(div_dat)
 }
@@ -177,13 +178,13 @@ DivAR <- function(comm, prop.A = seq(0.1, 1, by = 0.1), nsamples = 100,
 
 abund_rect <- function(x0, y0, xsize, ysize, comm)
 {
-   x <- comm$census$X
-   y <- comm$census$Y
+   x <- comm$census$x
+   y <- comm$census$y
 
    # logical vector which trees are in the sampling rectangle
-   in.rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
+   in_rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
 
-   abund <- table(comm$census$Species[in.rect])
+   abund <- table(comm$census$species[in_rect])
    return(abund)
 }
 
@@ -194,8 +195,8 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' function of distance
 #'
 #' @param comm \code{\link{community}} object
-#' @param prop.A Subplot size as proportion of the total area
-#' @param nsamples Number of randomly located subplots per subplot size
+#' @param prop_area Subplot size as proportion of the total area
+#' @param n_samples Number of randomly located subplots per subplot size
 #' @param method Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}
 #' @param binary Perform presence/absence standardization before analysis.
 #'
@@ -211,34 +212,36 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' pred_dd <- predict(dd_loess, newdata = new_dist$distance)
 #' lines(new_dist$distance, pred_dd, lwd=2, col = "red")
 #'
-dist_decay <- function(comm, prop.A = 0.05, nsamples = 30,
+dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
                        method = "bray", binary = F)
 {
    require(vegan)
 
-   if (any(prop.A > 1))
+   if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
-   prop.A <- prop.A[prop.A <= 1]
+   prop_area <- prop_area[prop_area <= 1]
 
    if (class(comm) != "community")
-      stop("DiVAR requires a community object as input. See ?community.")
+      stop("divar requires a community object as input. See ?community.")
 
-   dx.plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy.plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
+   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
-   area <- dx.plot * dy.plot * prop.A
-   square.size <- sqrt(area)
+   area <- dx_plot * dy_plot * prop_area
+   square_size <- sqrt(area)
 
-   xpos <- runif(nsamples, min = comm$x_min_max[1], max = comm$x_min_max[2] - square.size)
-   ypos <- runif(nsamples, min = comm$y_min_max[1], max = comm$y_min_max[2] - square.size)
+   xpos <- runif(n_samples, min = comm$x_min_max[1],
+                 max = comm$x_min_max[2] - square_size)
+   ypos <- runif(n_samples, min = comm$y_min_max[1],
+                 max = comm$y_min_max[2] - square_size)
 
    d <- dist(cbind(xpos,ypos))
 
-   com.tab <- mapply(abund_rect, xpos, ypos,
-                     MoreArgs=list(xsize = square.size, ysize = square.size,
+   com_tab <- mapply(abund_rect, xpos, ypos,
+                     MoreArgs=list(xsize = square_size, ysize = square_size,
                                    comm = comm ))
 
-   similarity <- 1 - vegdist(t(com.tab), method = method, binary = binary)
+   similarity <- 1 - vegdist(t(com_tab), method = method, binary = binary)
    similarity[!is.finite(similarity)] <- NA
 
    dat_out <- data.frame(distance = as.numeric(d),
@@ -251,37 +254,37 @@ dist_decay <- function(comm, prop.A = 0.05, nsamples = 30,
 }
 
 # # -----------------------------------------------------------
-# abund.rand.rect <- function(prop.A = 0.25, community,
+# abund.rand.rect <- function(prop_area = 0.25, community,
 #                             xext = c(0,1), yext=c(0,1))
 # {
 #    x <- community[,1]
 #    y <- community[,2]
 #
-#    dx.plot <- xext[2] - xext[1]
-#    dy.plot <- yext[2] - yext[1]
+#    dx_plot <- xext[2] - xext[1]
+#    dy_plot <- yext[2] - yext[1]
 #
-#    area <- dx.plot*dy.plot*prop.A
-#    square.size <- sqrt(area)
+#    area <- dx_plot*dy_plot*prop_area
+#    square_size <- sqrt(area)
 #
-#    if (square.size <= min(c(dx.plot, dy.plot))){
-#       dx.rect <- square.size
-#       dy.rect <- square.size
+#    if (square_size <= min(c(dx_plot, dy_plot))){
+#       dx_rect <- square_size
+#       dy_rect <- square_size
 #    } else
 #    {
-#       if (dx.plot >= dy.plot){
-#          dx.rect <- dx.plot*prop.A
-#          dy.rect <- dy.plot
+#       if (dx_plot >= dy_plot){
+#          dx_rect <- dx_plot*prop_area
+#          dy_rect <- dy_plot
 #       } else {
-#          dx.rect <- dx.plot
-#          dy.rect <- dy.plot*prop.A
+#          dx_rect <- dx_plot
+#          dy_rect <- dy_plot*prop_area
 #       }
 #    }
 #
-#    xpos <- runif(1, min = xext[1], max = xext[2] - dx.rect)
-#    ypos <- runif(1, min = yext[1], max = yext[2] - dy.rect)
+#    xpos <- runif(1, min = xext[1], max = xext[2] - dx_rect)
+#    ypos <- runif(1, min = yext[1], max = yext[2] - dy_rect)
 #
 #    abund.plots <- mapply(abund.rect, xpos, ypos,
-#                          MoreArgs=list(xsize = dx.rect, ysize = dy.rect,
+#                          MoreArgs=list(xsize = dx_rect, ysize = dy_rect,
 #                                        community = community))
 #
 #    return(abund.plots[,1])

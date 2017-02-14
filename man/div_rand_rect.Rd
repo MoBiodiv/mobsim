@@ -4,14 +4,14 @@
 \alias{div_rand_rect}
 \title{Distribution of local diversity indices}
 \usage{
-div_rand_rect(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
+div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = F)
 }
 \arguments{
-\item{prop.A}{Size of subplots as proportion of the total area}
+\item{prop_area}{Size of subplots as proportion of the total area}
 
 \item{comm}{\code{\link{community}} object}
 
-\item{nrect}{Number of randomly located subplots}
+\item{n_rect}{Number of randomly located subplots}
 
 \item{exclude_zeros}{logical - should subplots without individuals be excluded?}
 }

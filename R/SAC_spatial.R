@@ -5,7 +5,7 @@
 #' Expected species richness in a random sample of fixed size
 #'
 #' @param n single integer - sample size in number of individuals
-#' @param abund.vec integer vector - species abundance distribution of the community
+#' @param abund_vec integer vector - species abundance distribution of the community
 #'
 #' @return expected number of species in n individuals
 #'
@@ -14,12 +14,12 @@
 #' @references
 #' Coleman, B. D. et al. (1982). Randomness, area, and species richness. Ecology 63, 1121-1133
 #'
-S.sample <- function(n, abund.vec)
+spec_sample <- function(n, abund_vec)
 {
-  S <- length(abund.vec)
-  N <- sum(abund.vec)
-  S.n <- S - sum((1-n/N)^abund.vec)
-  return(S.n)
+  n_spec <- length(abund_vec)
+  n_ind <- sum(abund_vec)
+  spec_n <- n_spec - sum((1 - n/ n_ind)^abund_vec)
+  return(spec_n)
 }
 
 
@@ -27,12 +27,12 @@ S.sample <- function(n, abund.vec)
 #'
 #' Estimate expected species richness as a function of sample size
 #'
-#' @param abund.vec integer vector with species abundance distribution
+#' @param abund_vec integer vector with species abundance distribution
 #' @param method available methods are \code{"coleman"} or \code{"hurlbert"}.
 #' The species richness estimations of both methods quickly converge for larger
 #' numbers of individuals
 #'
-#' @return Numeric Vector with expected species richness in samples of 1, 2, 3 ... N individuals
+#' @return Numeric Vector with expected species richness in samples of 1, 2, 3 ... n individuals
 #'
 #' @references
 #' Coleman, B. D. et al. 1982. Randomness, area, and species richness. Ecology 63, 1121-1133
@@ -49,16 +49,16 @@ S.sample <- function(n, abund.vec)
 #'      ylab = "Expected species richness")
 #' lines(1:length(rc2), rc2, lty = 2, col = 2)
 #'
-rare_curve <- function(abund.vec, method = "coleman")
+rare_curve <- function(abund_vec, method = "coleman")
 {
-  N <- sum(abund.vec)
-  n.vec <- 1:N
+  n <- sum(abund_vec)
+  n_vec <- 1:n
 
   if (method == "hurlbert"){
      require(vegan)
-     rc <- as.numeric(rarefy(abund.vec, sample = n.vec))
+     rc <- as.numeric(rarefy(abund_vec, sample = n_vec))
   } else {
-     rc <- sapply(n.vec, S.sample, abund.vec = abund.vec)
+     rc <- sapply(n_vec, spec_sample, abund_vec = abund_vec)
   }
 
   return(rc)
@@ -87,12 +87,12 @@ rare_curve <- function(abund.vec, method = "coleman")
 #' lines(1:length(rare_curve1), rare_curve1, col = 1)
 #' legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
 #'        col = 1:2, lwd = 2)
-SAC <- function(comm)
+accum_curve <- function(comm)
 {
    if (class(comm) != "community")
-      stop("SAC requires a community object as input. See ?community.")
+      stop("accum_curve requires a community object as input. See ?community.")
 
-   SAC <- sSAC1_C(comm$census$X, comm$census$X, as.integer(comm$census$Species))
+   SAC <- sSAC1_C(comm$census$x, comm$census$y, as.integer(comm$census$species))
    return(SAC)
 }
 
@@ -119,17 +119,17 @@ SAC <- function(comm)
 #       i_rich = length(unique(sp_id_list))
 #       S = c(S, i_rich)
 #    }
-#    N = 1:dim(data_order)[1]
-#    return(list(S = S, N = N))
+#    n = 1:dim(data_order)[1]
+#    return(list(S = S, n = n))
 # }
 #
 # # -----------------------------------------------------------
 # # Average sSAC starting from n (=nsamples) random individuals in the local community
 # sSAC.avg <- function(data, nsamples=20)
 # {
-#    N <- nrow(data)
+#    n <- nrow(data)
 #
-#    sac.mat <- matrix(NA,nrow=nsamples,ncol=N)
+#    sac.mat <- matrix(NA,nrow=nsamples,ncol=n)
 #    for (i in 1:nsamples)
 #       sac.mat[i,] <- near_neigh_ind(data)$S
 #    return(colMeans(sac.mat))

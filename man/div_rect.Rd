@@ -20,8 +20,8 @@ div_rect(x0, y0, xsize, ysize, comm)
 \value{
 Named vector with four values
 \enumerate{
-   \item nSpecies - the number of species
-   \item nEndemics - the number of endemics
+   \item n_species - the number of species
+   \item n_endemics - the number of endemics
    \item shannon - Shannon diversity index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
    where \eqn{p_i} is the relative abundance of species i:
    \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)

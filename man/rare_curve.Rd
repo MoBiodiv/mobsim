@@ -4,17 +4,17 @@
 \alias{rare_curve}
 \title{species rarefaction curves}
 \usage{
-rare_curve(abund.vec, method = "coleman")
+rare_curve(abund_vec, method = "coleman")
 }
 \arguments{
-\item{abund.vec}{integer vector with species abundance distribution}
+\item{abund_vec}{integer vector with species abundance distribution}
 
 \item{method}{available methods are \code{"coleman"} or \code{"hurlbert"}.
 The species richness estimations of both methods quickly converge for larger
 numbers of individuals}
 }
 \value{
-Numeric Vector with expected species richness in samples of 1, 2, 3 ... N individuals
+Numeric Vector with expected species richness in samples of 1, 2, 3 ... n individuals
 }
 \description{
 Estimate expected species richness as a function of sample size
