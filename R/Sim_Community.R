@@ -2,11 +2,11 @@
 #' Simulate log-normal species abundance distributions.
 #'
 #' Simulate log-normal abundance data in a local community with fixed number of
-#' individuals (n_local), number of species in the pool (s_pool), and coefficient
+#' individuals (n_sim), number of species in the pool (s_pool), and coefficient
 #' of variation of relative abundances (cv_abund).
 #'
 #' @param s_pool integer - number of species in the pool
-#' @param n_local integer - number of individuals in the local community
+#' @param n_sim integer - number of individuals in the simulate local community
 #' @param cv_abund numeric - coefficient of variation ( = sd/mean) of relative
 #' abundances. The higher \code{cv_abund}, the lower the evenness of the
 #' simulated community. This means with increasing \code{cv_abund} there are more
@@ -35,14 +35,27 @@
 #' @author Felix May
 #'
 #' @examples
-#' abund1 <- sim_sad(s_pool = 100, n_local = 10000, cv_abund = 1)
+#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
 #' plot(abund1, method = "preston")
 #' plot(abund1, method = "rank")
 #'
-sim_sad <- function(s_pool, n_local, cv_abund = 1, fix_s_local = F)
+sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
 {
+   if (!is.numeric(s_pool) || s_pool <= 0)
+      stop("s_pool has to be a positive integer number")
+   if (!is.numeric(n_sim) || n_sim <= 0)
+      stop("n_sim has to be a positive integer number")
+
+   if (s_pool %% as.integer(s_pool) > 0)
+      warning("s_pool is rounded to the nearest integer")
+   if (n_sim %% as.integer(n_sim) > 0)
+      warning("n_sim is rounded to the nearest integer")
+
+   s_pool <- round(s_pool, digits = 0)
+   n_sim <- round(n_sim, digits = 0)
+
    if (fix_s_local == T)
-      mean_abund <- n_local/s_pool
+      mean_abund <- n_sim/s_pool
    else
       mean_abund <- 100
 
@@ -54,7 +67,7 @@ sim_sad <- function(s_pool, n_local, cv_abund = 1, fix_s_local = F)
    if (fix_s_local == T){
 
       n <- 0
-      while (n < n_local){
+      while (n < n_sim){
          abund1 <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
          abund_local <- round(abund1)
          abund_local[abund_local == 0] <- 1
@@ -62,7 +75,7 @@ sim_sad <- function(s_pool, n_local, cv_abund = 1, fix_s_local = F)
       }
 
       #randomly remove individuals until target level is reached
-      while (n > n_local){
+      while (n > n_sim){
          relabund <- abund_local/sum(abund_local)
          # draw proportional to relative abundance
          irand <- sample(1:s_pool, size = 1, prob = relabund)
@@ -77,15 +90,15 @@ sim_sad <- function(s_pool, n_local, cv_abund = 1, fix_s_local = F)
 
       abund_pool <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
       relabund_pool <- sort(abund_pool/sum(abund_pool), decreasing = T)
-      abund_local <- table(sample(1:s_pool, n_local, replace = T,
+      abund_local <- table(sample(1:s_pool, n_sim, replace = T,
                                   prob = relabund_pool))
       names(abund_local) <- paste("species", names(abund_local), sep = "")
 
    }
 
    # return(list(abund = abund.local,
-   #             mean.theor = n_local/s_pool,
-   #             sd.theor   = n_local/s_pool * cv_abund,
+   #             mean.theor = n_sim/s_pool,
+   #             sd.theor   = n_sim/s_pool * cv_abund,
    #             mean.sim   = mean(abund.local),
    #             sd.sim     = sd(abund.local))
    # )
@@ -100,15 +113,17 @@ plot.sad <- function(abund, method = c("preston","rank"))
    require(untb)
 
    method <- match.arg(method)
-   par(las = 1)
+
    if (method == "rank")
-      plot(sort(as.numeric(abund), decreasing = T), type="b", log="y",
-        xlab="Species rank", ylab="Species abundance")
+      plot(sort(as.numeric(abund), decreasing = T), type="b", log="y", las = 1,
+           xlab="Species rank", ylab="Species abundance",
+           main = "Rank-abundance curve", las = 1)
 
    if (method == "preston"){
       abund_dist <- preston(count(abund))
       barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
-           xlab = "Abundance class", ylab ="No. of species")
+              xlab = "Abundance class", ylab ="No. of species",
+              main = "Preston octave plot", las = 1)
    }
 }
 
@@ -175,14 +190,45 @@ summary.community <- function(com1)
 }
 
 #' Plot spatial community object
-plot.community <- function(com1, col = NA, pch = NA, ...)
+plot.community <- function(com1, col = NA, pch = NA,
+                           patterns = c("points","sad","rare_accum","divar","dist_decay"),
+                           ...)
 {
-   nspec <- length(table(com1$census$species))
-   if (is.na(col))  col <- rainbow(nspec)
-   if (is.na(pch))  pch <- 19
+   pattern <- match.arg(pattern)
 
-   plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
-        col = col[com1$census$species], pch = pch, ...)
+   if (pattern == "points"){
+      nspec <- length(table(com1$census$species))
+      if (is.na(col))  col <- rainbow(nspec)
+      if (is.na(pch))  pch <- 19
+
+      plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
+           col = col[com1$census$species], pch = pch, ...)
+   }
+
+   if (pattern == "sad"){
+      abund <- table(com1$census$species)
+      class(abund) <- "sad"
+      plot(abund)
+   }
+
+   if (pattern == "rare_accum"){
+      rare1 <- rare_curve(table(com1$census$species))
+      accum1 <- accum_curve(com1)
+      plot(species ~ n, data = rare1, type = "l",
+           xlab = "No. of individuals sampled",
+           ylab = " Expected no. of species",
+           main = "Species rarefaction and accumulation curves",
+           las = 1, col = "blue")
+      lines(species ~ n, data = accum1, col = "red")
+      legend("bottomright", legend = c("Rarefaction", "Accumulation"),
+             col = c("blue","red"), lwd = 2)
+   }
+
+   if (pattern == "divar")
+      divar(com1, plot = T)
+
+   if (pattern == "dist_decay")
+      dist_decay(com1, plot = T)
 }
 
 # ----------------------------------------------------------------------------------
@@ -198,7 +244,7 @@ plot.community <- function(com1, col = NA, pch = NA, ...)
 #'
 #' @author Felix May
 #' @examples
-#' abund <- sim_sad(s_pool = 100, n_local = 1000)
+#' abund <- sim_sad(s_pool = 100, n_sim = 1000)
 #' sim_com1 <- sim_poisson_coords(abund)
 #' plot(sim_com1)
 #' summary(sim_com1)
@@ -242,14 +288,14 @@ sim_poisson_coords <- function(abund_vec,
 #' plot(com1)
 #'
 sim_poisson_community <- function(s_pool,
-                                  n_local,
+                                  n_sim,
                                   cv_abund = 1,
                                   fix_s_local = F,
                                   xrange= c(0,1),
                                   yrange = c(0,1)
                                   )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_local = n_local, cv_abund = cv_abund,
+   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
                        fix_s_local = fix_s_local)
    abund_vec <- sim1
 
@@ -486,12 +532,12 @@ sim_thomas_coords <- function(abund_vec,
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- sim_thomas_community(s_pool = 20, n_local = 500, cv_abund = 1,
+#' com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, cv_abund = 1,
 #'                              sigma = 0.01)
 #' plot(com1)
 #'
 sim_thomas_community <- function(s_pool,
-                                 n_local,
+                                 n_sim,
                                  cv_abund = 1,
                                  fix_s_local = F,
                                  sigma = 0.02,
@@ -501,7 +547,7 @@ sim_thomas_community <- function(s_pool,
                                  yrange = c(0,1)
                                  )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_local = n_local, cv_abund = cv_abund,
+   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
                        fix_s_local = fix_s_local)
    abund_vec <- sim1
 

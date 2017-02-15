@@ -4,7 +4,7 @@
 \alias{rare_curve}
 \title{species rarefaction curves}
 \usage{
-rare_curve(abund_vec, method = "coleman")
+rare_curve(abund_vec, method = c("hurlbert", "coleman"), plot = F)
 }
 \arguments{
 \item{abund_vec}{integer vector with species abundance distribution}

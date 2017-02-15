@@ -5,7 +5,7 @@
 \title{Diversity-area relationships}
 \usage{
 divar(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-  exclude_zeros = F)
+  exclude_zeros = T, plot = F)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}

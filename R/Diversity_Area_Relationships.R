@@ -50,7 +50,10 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
    return(c(n_species = n_species,
             n_endemics = n_endemics,
             shannon = shannon,
-            simpson = simpson))
+            ens_shannon = exp(shannon),
+            simpson = simpson,
+            ens_simpson = 1/(1 - simpson)
+            ))
 }
 
 # ------------------------------------------------------------------------------
@@ -108,8 +111,12 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
             sd_end       = sd(div_plots["n_endemics",]),
             mean_shannon = mean(div_plots["shannon",]),
             sd_shannon   = sd(div_plots["shannon",]),
+            mean_ens_shannon = mean(div_plots["ens_shannon",]),
+            sd_ens_shannon   = sd(div_plots["ens_shannon",]),
             mean_simpson = mean(div_plots["simpson",], na.rm = T),
-            sd_simpson   = sd(div_plots["simpson",], na.rm = T))
+            sd_simpson   = sd(div_plots["simpson",], na.rm = T),
+            mean_ens_simpson = mean(div_plots["ens_simpson",], na.rm = T),
+            sd_ens_simpson   = sd(div_plots["ens_simpson",], na.rm = T))
           )
 }
 
@@ -136,7 +143,7 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #'      ylab = "No. of species", type = "b", ylim = c(0,100))
 #' points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
 divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-                  exclude_zeros = F)
+                  exclude_zeros = T, plot = F)
 {
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
@@ -145,7 +152,7 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
    if (class(comm) != "community")
       stop("DiVAR requires a community object as input. See ?community.")
 
-   nscales <- length(prop_area)
+   n_scales <- length(prop_area)
    dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
 
@@ -157,6 +164,23 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 
    div_dat <- as.data.frame(t(div_area))
    div_dat <- cbind(prop_area = prop_area, div_dat)
+
+   if (plot == T){
+      max_spec <- max(div_dat$mean_spec)
+      par(mar=c(5.1, 4.1, 4.1, 9.1), xpd = TRUE, oma = c(0,0,0,0))
+      plot(mean_spec ~ prop_area, data = div_dat, ylim = c(0, max_spec),
+           type = "n", las = 1,
+           xlab = "Proportion of area", ylab = "No. of species",
+           main = "Diversity-area relationships")
+      lines(mean_spec ~ prop_area, data = div_dat, type = "b", col = 1)
+      lines(mean_end ~ prop_area, data = div_dat, type = "b", col = 2)
+      lines(mean_ens_shannon ~ prop_area, data = div_dat, type = "b", col = 3)
+      lines(mean_ens_simpson ~ prop_area, data = div_dat, type = "b", col = 4)
+
+      legend("right", inset=c(-0.42,0),
+             legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
+             col = 1:4, lwd = 2, cex = 0.9)
+   }
 
    return(div_dat)
 }
@@ -212,8 +236,8 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' pred_dd <- predict(dd_loess, newdata = new_dist$distance)
 #' lines(new_dist$distance, pred_dd, lwd=2, col = "red")
 #'
-dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
-                       method = "bray", binary = F)
+   dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
+                       method = "bray", binary = F, plot = F)
 {
    require(vegan)
 
@@ -249,6 +273,14 @@ dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
 
    # order by increasing distance
    dat_out <- dat_out[order(dat_out$distance), ]
+
+   if (plot == T){
+      plot(similarity ~ distance, data = dat_out, las = 1,
+           xlab = "Distance", ylab = "Similarity", main = "Distance decay")
+      dd_loess <- loess(similarity ~ distance, data = dat_out)
+      pred_sim <- predict(dd_loess)
+      lines(dat_out$distance, pred_sim, lwd=2)
+   }
 
    return(dat_out)
 }

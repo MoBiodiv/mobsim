@@ -4,14 +4,14 @@
 \alias{sim_thomas_community}
 \title{Simulate community with clumped spatial positions.}
 \usage{
-sim_thomas_community(s_pool, n_local, cv_abund = 1, fix_s_local = F,
+sim_thomas_community(s_pool, n_sim, cv_abund = 1, fix_s_local = F,
   sigma = 0.02, cluster_points = NA, mother_points = NA, xrange = c(0,
   1), yrange = c(0, 1))
 }
 \arguments{
 \item{s_pool}{integer - number of species in the pool}
 
-\item{n_local}{integer - number of individuals in the local community}
+\item{n_sim}{integer - number of individuals in the simulate local community}
 
 \item{cv_abund}{numeric - coefficient of variation ( = sd/mean) of relative
 abundances. The higher \code{cv_abund}, the lower the evenness of the
@@ -42,7 +42,7 @@ and clumped, i.e. aggregated, spatial coordinates. This function consecutively c
 \code{\link{sim_sad}} and \code{\link{sim_thomas_coords}}
 }
 \examples{
-com1 <- sim_thomas_community(s_pool = 20, n_local = 500, cv_abund = 1,
+com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, cv_abund = 1,
                              sigma = 0.01)
 plot(com1)
 

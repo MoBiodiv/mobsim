@@ -5,7 +5,7 @@
 \title{Distance decay}
 \usage{
 dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
-  binary = F)
+  binary = F, plot = F)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}

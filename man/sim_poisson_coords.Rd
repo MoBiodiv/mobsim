@@ -20,7 +20,7 @@ A community object as defined by \code{\link{community}}.
 Add random spatial positions to a species abundance distribution.
 }
 \examples{
-abund <- sim_sad(s_pool = 100, n_local = 1000)
+abund <- sim_sad(s_pool = 100, n_sim = 1000)
 sim_com1 <- sim_poisson_coords(abund)
 plot(sim_com1)
 summary(sim_com1)

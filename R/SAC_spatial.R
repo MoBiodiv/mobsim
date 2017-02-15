@@ -22,7 +22,6 @@ spec_sample <- function(n, abund_vec)
   return(spec_n)
 }
 
-
 #' species rarefaction curves
 #'
 #' Estimate expected species richness as a function of sample size
@@ -49,19 +48,27 @@ spec_sample <- function(n, abund_vec)
 #'      ylab = "Expected species richness")
 #' lines(1:length(rc2), rc2, lty = 2, col = 2)
 #'
-rare_curve <- function(abund_vec, method = "coleman")
+rare_curve <- function(abund_vec, method = c("hurlbert","coleman"), plot = F)
 {
-  n <- sum(abund_vec)
-  n_vec <- 1:n
+   method <- match.arg(method)
 
-  if (method == "hurlbert"){
-     require(vegan)
-     rc <- as.numeric(rarefy(abund_vec, sample = n_vec))
-  } else {
-     rc <- sapply(n_vec, spec_sample, abund_vec = abund_vec)
-  }
+   n <- sum(abund_vec)
+   n_vec <- 1:n
 
-  return(rc)
+   if (method == "hurlbert"){
+      require(vegan)
+      rc <- as.numeric(rarefy(abund_vec, sample = n_vec))
+   } else {
+      rc <- sapply(n_vec, spec_sample, abund_vec = abund_vec)
+   }
+
+   rc_dat <- data.frame(n = n_vec, species = rc)
+      if (plot == T)
+      plot(species ~ n, rc_dat, type = "l", xlab = "No. of individuals sampled",
+           ylab = " Expected no. of species", main = "Species rarefaction curve",
+           las = 1, col = "blue")
+
+  return(rc_dat)
 }
 
 # -----------------------------------------------------------
@@ -87,13 +94,21 @@ rare_curve <- function(abund_vec, method = "coleman")
 #' lines(1:length(rare_curve1), rare_curve1, col = 1)
 #' legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
 #'        col = 1:2, lwd = 2)
-accum_curve <- function(comm)
+accum_curve <- function(comm, plot = F)
 {
    if (class(comm) != "community")
       stop("accum_curve requires a community object as input. See ?community.")
 
-   SAC <- sSAC1_C(comm$census$x, comm$census$y, as.integer(comm$census$species))
-   return(SAC)
+   sac <- sSAC1_C(comm$census$x, comm$census$y, as.integer(comm$census$species))
+
+   sac_dat <- data.frame(n = 1:nrow(comm$census), species = sac)
+
+   if (plot == T)
+      plot(species ~ n, sac_dat, type = "l", xlab = "No. of individuals sampled",
+           ylab = " Expected no. of species", main = "Species accumulation curve",
+           las = 1, col = "red")
+
+   return(sac_dat)
 }
 
 

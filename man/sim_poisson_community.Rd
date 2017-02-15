@@ -4,13 +4,13 @@
 \alias{sim_poisson_community}
 \title{Simulate community with random spatial positions.}
 \usage{
-sim_poisson_community(s_pool, n_local, cv_abund = 1, fix_s_local = F,
+sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_local = F,
   xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
 \item{s_pool}{integer - number of species in the pool}
 
-\item{n_local}{integer - number of individuals in the local community}
+\item{n_sim}{integer - number of individuals in the simulate local community}
 
 \item{cv_abund}{numeric - coefficient of variation ( = sd/mean) of relative
 abundances. The higher \code{cv_abund}, the lower the evenness of the

@@ -4,12 +4,12 @@
 \alias{sim_sad}
 \title{Simulate log-normal species abundance distributions.}
 \usage{
-sim_sad(s_pool, n_local, cv_abund = 1, fix_s_local = F)
+sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
 }
 \arguments{
 \item{s_pool}{integer - number of species in the pool}
 
-\item{n_local}{integer - number of individuals in the local community}
+\item{n_sim}{integer - number of individuals in the simulate local community}
 
 \item{cv_abund}{numeric - coefficient of variation ( = sd/mean) of relative
 abundances. The higher \code{cv_abund}, the lower the evenness of the
@@ -32,7 +32,7 @@ List with five named items:
 }
 \description{
 Simulate log-normal abundance data in a local community with fixed number of
-individuals (n_local), number of species in the pool (s_pool), and coefficient
+individuals (n_sim), number of species in the pool (s_pool), and coefficient
 of variation of relative abundances (cv_abund).
 }
 \details{
@@ -44,7 +44,7 @@ When \code{fix_s_local = FALSE} the species number in the local
   provided as model output.
 }
 \examples{
-abund1 <- sim_sad(s_pool = 100, n_local = 10000, cv_abund = 1)
+abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
 plot(abund1, method = "preston")
 plot(abund1, method = "rank")
 

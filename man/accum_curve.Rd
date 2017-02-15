@@ -4,7 +4,7 @@
 \alias{accum_curve}
 \title{Spatially-explicit species accumulation curve (SAC)}
 \usage{
-accum_curve(comm)
+accum_curve(comm, plot = F)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}

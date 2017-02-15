@@ -23,7 +23,7 @@ with a cluster size of `sigma = 0.05`.
 
 ```{r}
 library(MoBspatial)
-sim_dat1 <- sim_thomas_community(s_pool = 30, n_local = 500, sigma = 0.05)
+sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 500, sigma = 0.05)
 ```
 
 Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
