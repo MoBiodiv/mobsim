@@ -29,6 +29,9 @@
 #' comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
 #' quadrat_area = 0.002, method = "grid")
 #' renyi(comm_mat1, hill = T)
+#'
+#' @export
+#'
 sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
                             plot = T, method = "random",
                             avoid_overlap = F,

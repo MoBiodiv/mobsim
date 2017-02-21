@@ -4,7 +4,7 @@
 \alias{sim_thomas_community}
 \title{Simulate community with clumped spatial positions.}
 \usage{
-sim_thomas_community(s_pool, n_sim, cv_abund = 1, fix_s_local = F,
+sim_thomas_community(s_pool, n_sim, cv_abund = 1, fix_s_sim = F,
   sigma = 0.02, cluster_points = NA, mother_points = NA, xrange = c(0,
   1), yrange = c(0, 1))
 }
@@ -18,7 +18,7 @@ abundances. The higher \code{cv_abund}, the lower the evenness of the
 simulated community. This means with increasing \code{cv_abund} there are more
 rare and more dominant species.}
 
-\item{fix_s_local}{logical - should the simulation constrain the number of
+\item{fix_s_sim}{logical - should the simulation constrain the number of
 species in the local community? This can result in deviations from mean and
 sd of local abundances from the theoretical distributions}
 

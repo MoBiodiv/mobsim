@@ -2,7 +2,8 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{abund_rect}
 \alias{abund_rect}
-\title{Local species abundance distribution}
+\title{-----------------------------------------------------------------------------
+Local species abundance distribution}
 \usage{
 abund_rect(x0, y0, xsize, ysize, comm)
 }

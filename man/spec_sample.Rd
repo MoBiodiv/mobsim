@@ -2,14 +2,15 @@
 % Please edit documentation in R/SAC_spatial.R
 \name{spec_sample}
 \alias{spec_sample}
-\title{Sample species richness}
+\title{-----------------------------------------------------------------------------
+Sample species richness}
 \usage{
-spec_sample(n, abund_vec)
+spec_sample(abund_vec, n)
 }
 \arguments{
-\item{n}{single integer - sample size in number of individuals}
-
 \item{abund_vec}{integer vector - species abundance distribution of the community}
+
+\item{n}{single integer - sample size in number of individuals}
 }
 \value{
 expected number of species in n individuals
@@ -21,6 +22,7 @@ Expected species richness in a random sample of fixed size
 The expected number of species is calculated after Coleman 1982.
 }
 \references{
-Coleman, B. D. et al. (1982). Randomness, area, and species richness. Ecology 63, 1121-1133
+Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
+Ecology 52, 577-586.
 }
 

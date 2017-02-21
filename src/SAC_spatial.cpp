@@ -51,6 +51,8 @@ NumericVector sSAC1_C(NumericVector x,
          ++SpecAbund[NeighDistVec[k].ID_spec];
          sSAC[k] = sSAC[k] + SpecAbund.size();
       }
+
+      Rcpp::checkUserInterrupt();
    }
 
    for (int i=0; i<N; i++)

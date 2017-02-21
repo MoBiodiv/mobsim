@@ -2,7 +2,8 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{divar}
 \alias{divar}
-\title{Diversity-area relationships}
+\title{-----------------------------------------------------------------------------
+Diversity-area relationships}
 \usage{
 divar(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
   exclude_zeros = T, plot = F)
@@ -31,6 +32,7 @@ divar1 <- DivAR(sim_com1, prop_area = seq(0.01, 1.0, length = 20))
 plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
      ylab = "No. of species", type = "b", ylim = c(0,100))
 points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+
 }
 \seealso{
 \code{\link{div_rand_rect}}, \code{\link{div_rect}}

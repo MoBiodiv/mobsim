@@ -2,7 +2,8 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{div_rand_rect}
 \alias{div_rand_rect}
-\title{Distribution of local diversity indices}
+\title{-----------------------------------------------------------------------------
+Distribution of local diversity indices}
 \usage{
 div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = F)
 }

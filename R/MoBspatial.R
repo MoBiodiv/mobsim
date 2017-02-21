@@ -35,3 +35,7 @@
 #'
 #' @name MoBspatial
 NULL
+
+#' @useDynLib MoBspatial
+#' @importFrom Rcpp sourceCpp
+NULL

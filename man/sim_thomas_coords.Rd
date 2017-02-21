@@ -88,6 +88,7 @@ plot(sim2)
 # Equal numbers of points per cluster
 sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 plot(sim3)
+
 }
 \author{
 Felix May

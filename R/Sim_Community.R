@@ -1,4 +1,3 @@
-# ----------------------------------------------------------------------------------
 #' Simulate log-normal species abundance distributions.
 #'
 #' Simulate log-normal abundance data in a local community with fixed number of
@@ -12,13 +11,13 @@
 #' simulated community. This means with increasing \code{cv_abund} there are more
 #' rare and more dominant species.
 #'
-#' @param fix_s_local logical - should the simulation constrain the number of
+#' @param fix_s_sim logical - should the simulation constrain the number of
 #'   species in the local community? This can result in deviations from mean and
 #'   sd of local abundances from the theoretical distributions
 #'
-#' @details When \code{fix_s_local = FALSE} the species number in the local
+#' @details When \code{fix_s_sim = FALSE} the species number in the local
 #'   community might deviate from \code{s_pool} due to sampling. When
-#'   \code{fix_s_local = TRUE} the local number of species will equal
+#'   \code{fix_s_sim = TRUE} the local number of species will equal
 #'   \code{s_pool}, but this constraint can result in biases from the
 #'   theoretical parameters. Therefore the simulated distribution parameters are
 #'   provided as model output.
@@ -39,7 +38,9 @@
 #' plot(abund1, method = "preston")
 #' plot(abund1, method = "rank")
 #'
-sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
+#' @export
+#'
+sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
 {
    if (!is.numeric(s_pool) || s_pool <= 0)
       stop("s_pool has to be a positive integer number")
@@ -54,7 +55,7 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
    s_pool <- round(s_pool, digits = 0)
    n_sim <- round(n_sim, digits = 0)
 
-   if (fix_s_local == T)
+   if (fix_s_sim == T)
       mean_abund <- n_sim/s_pool
    else
       mean_abund <- 100
@@ -64,7 +65,7 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
    sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
    mu1 <- log(mean_abund) - sigma1^2/2
 
-   if (fix_s_local == T){
+   if (fix_s_sim == T){
 
       n <- 0
       while (n < n_sim){
@@ -107,10 +108,18 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
    return(abund_local)
 }
 
-# Plot abundance distribution
+
+
+#' Plot species abundance distribution
+#'
+#' @param abund
+#'
+#' @param method
+#'
+#' @export
 plot.sad <- function(abund, method = c("preston","rank"))
 {
-   require(untb)
+   # require(untb)
 
    method <- match.arg(method)
 
@@ -120,14 +129,13 @@ plot.sad <- function(abund, method = c("preston","rank"))
            main = "Rank-abundance curve", las = 1)
 
    if (method == "preston"){
-      abund_dist <- preston(count(abund))
+      abund_dist <- untb::preston(untb::count(abund))
       barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
               xlab = "Abundance class", ylab ="No. of species",
               main = "Preston octave plot", las = 1)
    }
 }
 
-# ----------------------------------------------------------------------------------
 #' Create spatial community object.
 #'
 #' Creates a spatial community object with a certain extent and with coordinates
@@ -155,6 +163,8 @@ plot.sad <- function(abund, method = c("preston","rank"))
 #' plot(com1)
 #' summary(com1)
 #'
+#' @export
+#'
 community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
    if (length(xrange) < 2 | length(yrange) < 2) ("Érror: missing ranges for x or y!")
@@ -180,6 +190,11 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 }
 
 #' Print summary of spatial community object
+#'
+#' @param com1
+#'
+#' @export
+#'
 summary.community <- function(com1)
 {
    cat("No. of individuals: ", nrow(com1$census), "\n")
@@ -190,48 +205,44 @@ summary.community <- function(com1)
 }
 
 #' Plot spatial community object
-plot.community <- function(com1, col = NA, pch = NA,
-                           patterns = c("points","sad","rare_accum","divar","dist_decay"),
-                           ...)
+#'
+#' @param com1
+#' @param col
+#' @param pch
+#' @param pattern
+#' @param ...
+#'
+#' @export
+#'
+plot.community <- function(com1, col = NA, pch = NA, ...)
 {
-   pattern <- match.arg(pattern)
+   nspec <- length(table(com1$census$species))
+   if (is.na(col))  col <- rainbow(nspec)
+   if (is.na(pch))  pch <- 19
 
-   if (pattern == "points"){
-      nspec <- length(table(com1$census$species))
-      if (is.na(col))  col <- rainbow(nspec)
-      if (is.na(pch))  pch <- 19
+   plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
+        col = col[com1$census$species], pch = pch, ...)
 
-      plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
-           col = col[com1$census$species], pch = pch, ...)
-   }
-
-   if (pattern == "sad"){
-      abund <- table(com1$census$species)
-      class(abund) <- "sad"
-      plot(abund)
-   }
-
-   if (pattern == "rare_accum"){
-      rare1 <- rare_curve(table(com1$census$species))
-      accum1 <- accum_curve(com1)
-      plot(species ~ n, data = rare1, type = "l",
-           xlab = "No. of individuals sampled",
-           ylab = " Expected no. of species",
-           main = "Species rarefaction and accumulation curves",
-           las = 1, col = "blue")
-      lines(species ~ n, data = accum1, col = "red")
-      legend("bottomright", legend = c("Rarefaction", "Accumulation"),
-             col = c("blue","red"), lwd = 2)
-   }
-
-   if (pattern == "divar")
-      divar(com1, plot = T)
-
-   if (pattern == "dist_decay")
-      dist_decay(com1, plot = T)
 }
 
-# ----------------------------------------------------------------------------------
+#' Get species abundance distribution from community object
+#'
+#' @param com
+#'
+#' @export
+#'
+community_to_sad <- function(com)
+{
+   if (class(com) != "community")
+      stop("community_to_sad requires a community object as input. See ?community.")
+
+   abund <- table(com$census$species)
+   class(abund) <- "sad"
+
+   return(abund)
+}
+
+
 #' Random spatial coordinates
 #'
 #' Add random spatial positions to a species abundance distribution.
@@ -248,7 +259,9 @@ plot.community <- function(com1, col = NA, pch = NA,
 #' sim_com1 <- sim_poisson_coords(abund)
 #' plot(sim_com1)
 #' summary(sim_com1)
-
+#'
+#' @export
+#'
 sim_poisson_coords <- function(abund_vec,
                                xrange = c(0,1),
                                yrange = c(0,1)
@@ -268,7 +281,6 @@ sim_poisson_coords <- function(abund_vec,
    return(sim_dat1)
 }
 
-# ----------------------------------------------------------------------------------
 #' Simulate community with random spatial positions.
 #'
 #' This function simulates a community with a certain abundance distribution and
@@ -287,16 +299,18 @@ sim_poisson_coords <- function(abund_vec,
 #' com1 <- sim_poisson_community(S = 20, N = 500, cv = 1)
 #' plot(com1)
 #'
+#' @export
+#'
 sim_poisson_community <- function(s_pool,
                                   n_sim,
                                   cv_abund = 1,
-                                  fix_s_local = F,
+                                  fix_s_sim = F,
                                   xrange= c(0,1),
                                   yrange = c(0,1)
                                   )
 {
    sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
-                       fix_s_local = fix_s_local)
+                       fix_s_sim = fix_s_sim)
    abund_vec <- sim1
 
    sim_dat <- sim_poisson_coords(abund_vec = abund_vec,
@@ -305,7 +319,6 @@ sim_poisson_community <- function(s_pool,
 }
 
 
-#-----------------------------------------------------------------------------
 #' Clumped spatial coordinates
 #'
 #' Add clumped (aggregated) positions to a species abundance distribution.
@@ -395,7 +408,9 @@ sim_poisson_community <- function(s_pool,
 #' # Equal numbers of points per cluster
 #' sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 #' plot(sim3)
-
+#'
+#' @export
+#'
 sim_thomas_coords <- function(abund_vec,
                               sigma = 0.02,
                               mother_points = NA,
@@ -507,7 +522,6 @@ sim_thomas_coords <- function(abund_vec,
    return(sim_dat1)
 }
 
-# -----------------------------------------------------------------------------------------------
 #' Simulate community with clumped spatial positions.
 #'
 #' This function simulates a community with a certain abundance distribution and
@@ -536,10 +550,12 @@ sim_thomas_coords <- function(abund_vec,
 #'                              sigma = 0.01)
 #' plot(com1)
 #'
+#' @export
+#'
 sim_thomas_community <- function(s_pool,
                                  n_sim,
                                  cv_abund = 1,
-                                 fix_s_local = F,
+                                 fix_s_sim = F,
                                  sigma = 0.02,
                                  cluster_points = NA,
                                  mother_points = NA,
@@ -548,7 +564,7 @@ sim_thomas_community <- function(s_pool,
                                  )
 {
    sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
-                       fix_s_local = fix_s_local)
+                       fix_s_sim = fix_s_sim)
    abund_vec <- sim1
 
    sim_dat <- sim_thomas_coords(abund_vec = abund_vec,

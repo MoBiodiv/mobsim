@@ -2,7 +2,8 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{dist_decay}
 \alias{dist_decay}
-\title{Distance decay}
+\title{------------------ -----------------------------------------------------------
+Distance decay}
 \usage{
 dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
   binary = F, plot = F)

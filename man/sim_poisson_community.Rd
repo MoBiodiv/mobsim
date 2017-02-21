@@ -4,7 +4,7 @@
 \alias{sim_poisson_community}
 \title{Simulate community with random spatial positions.}
 \usage{
-sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_local = F,
+sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_sim = F,
   xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
@@ -17,7 +17,7 @@ abundances. The higher \code{cv_abund}, the lower the evenness of the
 simulated community. This means with increasing \code{cv_abund} there are more
 rare and more dominant species.}
 
-\item{fix_s_local}{logical - should the simulation constrain the number of
+\item{fix_s_sim}{logical - should the simulation constrain the number of
 species in the local community? This can result in deviations from mean and
 sd of local abundances from the theoretical distributions}
 

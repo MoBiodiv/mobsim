@@ -1,5 +1,4 @@
 
-# -----------------------------------------------------------
 #' Local diversity indices
 #'
 #' Get diversity indices including species richness, no. of endemics,
@@ -20,7 +19,9 @@
 #'    \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)
 #'    defined as \eqn{D =  1 - \sum p_i^2}
 #' }
-
+#'
+#' @export
+#'
 div_rect <- function(x0, y0, xsize, ysize, comm)
 {
    x <- comm$census$x
@@ -56,7 +57,7 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
             ))
 }
 
-# ------------------------------------------------------------------------------
+#' -----------------------------------------------------------------------------
 #' Distribution of local diversity indices
 #'
 #' Get mean and sd of diversity indices in several equally sized subplots
@@ -72,6 +73,8 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #' (4) Simpson diversity
 #'
 #' @seealso \code{\link{div_rect}}
+#'
+#' @export
 #'
 div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
                           exclude_zeros = F)
@@ -105,21 +108,23 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
    if (exclude_zeros == T)
       div_plots <- div_plots[, div_plots["n_species",] > 0]
 
-   return(c(mean_spec    = mean(div_plots["n_species",]),
-            sd_spec      = sd(div_plots["n_species",]),
-            mean_end     = mean(div_plots["n_endemics",]),
-            sd_end       = sd(div_plots["n_endemics",]),
-            mean_shannon = mean(div_plots["shannon",]),
-            sd_shannon   = sd(div_plots["shannon",]),
-            mean_ens_shannon = mean(div_plots["ens_shannon",]),
-            sd_ens_shannon   = sd(div_plots["ens_shannon",]),
-            mean_simpson = mean(div_plots["simpson",], na.rm = T),
-            sd_simpson   = sd(div_plots["simpson",], na.rm = T),
-            mean_ens_simpson = mean(div_plots["ens_simpson",], na.rm = T),
-            sd_ens_simpson   = sd(div_plots["ens_simpson",], na.rm = T))
+   return(c(species    = mean(div_plots["n_species",]),
+            # se_species      = sd(div_plots["n_species",]),
+            endemics     = mean(div_plots["n_endemics",]),
+            # se_end       = sd(div_plots["n_endemics",]),
+            shannon = mean(div_plots["shannon",]),
+            # sd_shannon   = sd(div_plots["shannon",]),
+            ens_shannon = mean(div_plots["ens_shannon",]),
+            # sd_ens_shannon   = sd(div_plots["ens_shannon",]),
+            simpson = mean(div_plots["simpson",], na.rm = T),
+            # sd_simpson   = sd(div_plots["simpson",], na.rm = T),
+            ens_simpson = mean(div_plots["ens_simpson",], na.rm = T)
+            # sd_ens_simpson   = sd(div_plots["ens_simpson",], na.rm = T))
           )
+   )
 }
 
+#' -----------------------------------------------------------------------------
 #' Diversity-area relationships
 #'
 #' Estimate diversity indices in subplots of different sizes. This includes the
@@ -142,6 +147,9 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #' plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
 #'      ylab = "No. of species", type = "b", ylim = c(0,100))
 #' points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+#'
+#' @export
+#'
 divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
                   exclude_zeros = T, plot = F)
 {
@@ -165,28 +173,53 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
    div_dat <- as.data.frame(t(div_area))
    div_dat <- cbind(prop_area = prop_area, div_dat)
 
-   if (plot == T){
-      max_spec <- max(div_dat$mean_spec)
-      par(mar=c(5.1, 4.1, 4.1, 9.1), xpd = TRUE, oma = c(0,0,0,0))
-      plot(mean_spec ~ prop_area, data = div_dat, ylim = c(0, max_spec),
-           type = "n", las = 1,
-           xlab = "Proportion of area", ylab = "No. of species",
-           main = "Diversity-area relationships")
-      lines(mean_spec ~ prop_area, data = div_dat, type = "b", col = 1)
-      lines(mean_end ~ prop_area, data = div_dat, type = "b", col = 2)
-      lines(mean_ens_shannon ~ prop_area, data = div_dat, type = "b", col = 3)
-      lines(mean_ens_simpson ~ prop_area, data = div_dat, type = "b", col = 4)
-
-      legend("right", inset=c(-0.42,0),
-             legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
-             col = 1:4, lwd = 2, cex = 0.9)
-   }
+   class(div_dat) <- c("divar", "data.frame")
 
    return(div_dat)
 }
 
+#' -----------------------------------------------------------------------------
+#' Plot diversity-area relationships
+#'
+#' @param divar
+#'
+#' @export
+plot.divar <- function(divar)
+{
+   #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
 
-# -----------------------------------------------------------
+   #Plot an empty graph and legend to get the size of the legend
+   max_spec <- max(divar$species)
+   plot(species ~ prop_area, data = divar, ylim = c(0, max_spec),
+        type = "n")
+
+   my_legend_size <-legend("topright",
+                           legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
+                           lwd = 2, plot = FALSE)
+   dev.off()
+
+   #custom ylim. Add the height of legend to upper bound of the range
+   my_range <- c(0, max_spec)
+   my_range[2] <- 1.1*(my_range[2] + my_legend_size$rect$h)
+
+   #draw the plot with custom ylim
+   plot(species ~ prop_area, data = divar, ylim = my_range,
+        type = "n", las = 1,
+        xlab = "Proportion of area sampled", ylab = "No. of species",
+        main = "Diversity-area relationships")
+   lines(species ~ prop_area, data = divar, type = "b", col = 1)
+   lines(endemics ~ prop_area, data = divar, type = "b", col = 2)
+   lines(ens_shannon ~ prop_area, data = divar, type = "b", col = 3)
+   lines(ens_simpson ~ prop_area, data = divar, type = "b", col = 4)
+
+   legend("topleft",legend = c("Species","Endemics",
+                               "ENS Shannon (common species) ",
+                               "ENS Simpson (dominant species)"),
+          col = 1:4, lwd = 2, cex = 0.9)
+}
+
+
+#' -----------------------------------------------------------------------------
 #' Local species abundance distribution
 #'
 #' Get local abundance distribution in rectangle bounded by x0, y0, x0 + xsize,
@@ -199,7 +232,8 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 #' @param comm \code{\link{community}} object
 #'
 #' @return Integer vector with local species abundances
-
+#' @export
+#'
 abund_rect <- function(x0, y0, xsize, ysize, comm)
 {
    x <- comm$census$x
@@ -212,7 +246,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
    return(abund)
 }
 
-# -----------------------------------------------------------
+#'------------------ -----------------------------------------------------------
 #' Distance decay
 #'
 #' Estimate pairwise similarities of abundance distributions of subplots as
@@ -236,10 +270,12 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' pred_dd <- predict(dd_loess, newdata = new_dist$distance)
 #' lines(new_dist$distance, pred_dd, lwd=2, col = "red")
 #'
-   dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
+#'@export
+#'
+dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
                        method = "bray", binary = F, plot = F)
 {
-   require(vegan)
+   # require(vegan)
 
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
@@ -274,15 +310,25 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
    # order by increasing distance
    dat_out <- dat_out[order(dat_out$distance), ]
 
-   if (plot == T){
-      plot(similarity ~ distance, data = dat_out, las = 1,
-           xlab = "Distance", ylab = "Similarity", main = "Distance decay")
-      dd_loess <- loess(similarity ~ distance, data = dat_out)
-      pred_sim <- predict(dd_loess)
-      lines(dat_out$distance, pred_sim, lwd=2)
-   }
+   class(dat_out) <- c("dist_decay", "data.frame")
 
    return(dat_out)
+}
+
+#' Plot distance decay object
+#'
+#' @param dist_decay
+#'
+#' @return
+#' @export
+#'
+plot.dist_decay <- function(dist_decay)
+{
+   plot(similarity ~ distance, data = dist_decay, las = 1,
+        xlab = "Distance", ylab = "Similarity", main = "Distance decay")
+   dd_loess <- loess(similarity ~ distance, data = dist_decay)
+   pred_sim <- predict(dd_loess)
+   lines(dist_decay$distance, pred_sim, col = "red")
 }
 
 # # -----------------------------------------------------------
@@ -322,5 +368,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #    return(abund.plots[,1])
 # }
 #
+
+
 
 

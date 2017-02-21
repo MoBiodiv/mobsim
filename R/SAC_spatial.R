@@ -1,5 +1,4 @@
-
-# -----------------------------------------------------------
+#' -----------------------------------------------------------------------------
 #' Sample species richness
 #'
 #' Expected species richness in a random sample of fixed size
@@ -12,14 +11,21 @@
 #' @details The expected number of species is calculated after Coleman 1982.
 #'
 #' @references
-#' Coleman, B. D. et al. (1982). Randomness, area, and species richness. Ecology 63, 1121-1133
+#' Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
+#' Ecology 52, 577-586.
 #'
-spec_sample <- function(n, abund_vec)
+#' @export
+#'
+spec_sample <- function(abund_vec, n)
 {
-  n_spec <- length(abund_vec)
-  n_ind <- sum(abund_vec)
-  spec_n <- n_spec - sum((1 - n/ n_ind)^abund_vec)
-  return(spec_n)
+   abund_vec <- abund_vec[abund_vec > 0]
+   n_total <- sum(abund_vec)
+   ldiv <- lchoose(n_total, n)
+   p1 <- exp(lchoose(n_total - abund_vec, n) - ldiv)
+   out <- sum(1 - p1)
+   names(out) <- n
+
+   return(out)
 }
 
 #' species rarefaction curves
@@ -48,30 +54,20 @@ spec_sample <- function(n, abund_vec)
 #'      ylab = "Expected species richness")
 #' lines(1:length(rc2), rc2, lty = 2, col = 2)
 #'
-rare_curve <- function(abund_vec, method = c("hurlbert","coleman"), plot = F)
+#' @export
+#'
+rare_curve <- function(abund_vec)
 {
-   method <- match.arg(method)
+   abund_vec <- abund_vec[abund_vec > 0]
+   n_total <- sum(abund_vec)
+   n_vec <- 1:n_total
 
-   n <- sum(abund_vec)
-   n_vec <- 1:n
-
-   if (method == "hurlbert"){
-      require(vegan)
-      rc <- as.numeric(rarefy(abund_vec, sample = n_vec))
-   } else {
-      rc <- sapply(n_vec, spec_sample, abund_vec = abund_vec)
-   }
-
-   rc_dat <- data.frame(n = n_vec, species = rc)
-      if (plot == T)
-      plot(species ~ n, rc_dat, type = "l", xlab = "No. of individuals sampled",
-           ylab = " Expected no. of species", main = "Species rarefaction curve",
-           las = 1, col = "blue")
-
-  return(rc_dat)
+   rc <- sapply(n_vec, function(n_sample){spec_sample(abund_vec, n = n_sample)})
+   names(rc) <- n_vec
+   return(rc)
 }
 
-# -----------------------------------------------------------
+#' -----------------------------------------------------------------------------
 #' Spatially-explicit species accumulation curve (SAC)
 #'
 #' The SAC is similar to the rarefaction curve, but samples of defined size
@@ -93,63 +89,61 @@ rare_curve <- function(abund_vec, method = c("hurlbert","coleman"), plot = F)
 #'       ylab = "Expected species richness")
 #' lines(1:length(rare_curve1), rare_curve1, col = 1)
 #' legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
-#'        col = 1:2, lwd = 2)
-accum_curve <- function(comm, plot = F)
+#'        col = 1:2, lwd = 2)#
+#'
+#' @export
+#'
+spec_sample_curve <- function(comm, method = c("accumulation" ,"rarefaction"))
 {
    if (class(comm) != "community")
-      stop("accum_curve requires a community object as input. See ?community.")
+      stop("spec_sample_curve requires a community object as input. See ?community.")
 
-   sac <- sSAC1_C(comm$census$x, comm$census$y, as.integer(comm$census$species))
+   out_dat <- data.frame(n = 1:nrow(comm$census))
 
-   sac_dat <- data.frame(n = 1:nrow(comm$census), species = sac)
+   method <- match.arg(method, several.ok = TRUE)
 
-   if (plot == T)
-      plot(species ~ n, sac_dat, type = "l", xlab = "No. of individuals sampled",
-           ylab = " Expected no. of species", main = "Species accumulation curve",
-           las = 1, col = "red")
+   if ("accumulation" %in% method){
+      out_dat$spec_accum <- sSAC1_C(comm$census$x, comm$census$y, as.integer(comm$census$species))
+   }
 
-   return(sac_dat)
+   if ("rarefaction" %in% method){
+      abund <- community_to_sad(comm)
+      out_dat$spec_rarefied <- rare_curve(abund)
+
+   }
+
+   class(out_dat) <- c("spec_sample_curve", "data.frame")
+
+   return(out_dat)
 }
 
 
+#' -----------------------------------------------------------------------------
+#' @export
+plot.spec_sample_curve <- function(curve)
+{
+   plot(curve[[1]], curve[[2]], type = "n", xlab = "No. of individuals sampled",
+        ylab = "Expected no.of species", main = "Species sampling curves")
 
-# # -----------------------------------------------------------
-# # Function for the spatial SAC written by Xiao Xiao, Dan McGlinn and Nick Gotelli
-# # This function computes the sSAC from one random individual in the community
-#
-# near_neigh_ind = function(data){
-#    # The input data has three columns: x, y, and species ID for each individual.
-#    data = data[sample(1:dim(data)[1]), ]
-#    focal_row = sample(dim(data)[1], 1)
-#    # Compute Euclidean distances
-#    x_diff = data[, 1] - as.numeric(data[focal_row, 1])
-#    y_diff = data[, 2] - as.numeric(data[focal_row, 2])
-#    dist_row = sqrt(x_diff^2 + y_diff^2)
-#    data_order = data[order(dist_row), ]
-#    S = c()
-#    #vec_list = lapply(1:dim(data_order)[1], seq)
-#    #lapply(vec_list, length(unique(data_order[vec_list, 3])))
-#    for (i in 1:dim(data_order)[1]){
-#       sp_id_list = data_order[1:i, 3]
-#       i_rich = length(unique(sp_id_list))
-#       S = c(S, i_rich)
-#    }
-#    n = 1:dim(data_order)[1]
-#    return(list(S = S, n = n))
-# }
-#
-# # -----------------------------------------------------------
-# # Average sSAC starting from n (=nsamples) random individuals in the local community
-# sSAC.avg <- function(data, nsamples=20)
-# {
-#    n <- nrow(data)
-#
-#    sac.mat <- matrix(NA,nrow=nsamples,ncol=n)
-#    for (i in 1:nsamples)
-#       sac.mat[i,] <- near_neigh_ind(data)$S
-#    return(colMeans(sac.mat))
-# }
-#
+   if (ncol(curve) == 2){
+      if (names(curve)[2] == "spec_accum"){
+         legend_text <- c("Accumulation")
+         line_col <- "red"
+      }
+      if (names(curve)[2] == "spec_rarefied"){
+         legend_text <- c("Rarefaction")
+         line_col <- "blue"
+      }
+      lines(curve[[1]], curve[[2]], col = line_col)
+   }
 
+   if (ncol(curve) == 3){
+      legend_text <- c("Accumulation","Rarefaction")
+      line_col <- c("red","blue")
+      lines(curve[[1]], curve[[2]], col = line_col[1])
+      lines(curve[[1]], curve[[3]], col = line_col[2])
+   }
 
+   legend("bottomright", legend = legend_text, lty = 1, col = line_col)
+}
 

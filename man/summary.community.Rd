@@ -6,6 +6,9 @@
 \usage{
 \method{summary}{community}(com1)
 }
+\arguments{
+\item{com1}{}
+}
 \description{
 Print summary of spatial community object
 }

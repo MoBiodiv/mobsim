@@ -4,8 +4,10 @@
 \alias{plot.community}
 \title{Plot spatial community object}
 \usage{
-\method{plot}{community}(com1, col = NA, pch = NA, patterns = c("points",
-  "sad", "rare_accum", "divar", "dist_decay"), ...)
+\method{plot}{community}(com1, col = NA, pch = NA, ...)
+}
+\arguments{
+\item{...}{}
 }
 \description{
 Plot spatial community object

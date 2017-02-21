@@ -4,7 +4,7 @@
 \alias{sim_sad}
 \title{Simulate log-normal species abundance distributions.}
 \usage{
-sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_local = F)
+sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
 }
 \arguments{
 \item{s_pool}{integer - number of species in the pool}
@@ -16,7 +16,7 @@ abundances. The higher \code{cv_abund}, the lower the evenness of the
 simulated community. This means with increasing \code{cv_abund} there are more
 rare and more dominant species.}
 
-\item{fix_s_local}{logical - should the simulation constrain the number of
+\item{fix_s_sim}{logical - should the simulation constrain the number of
 species in the local community? This can result in deviations from mean and
 sd of local abundances from the theoretical distributions}
 }
@@ -36,9 +36,9 @@ individuals (n_sim), number of species in the pool (s_pool), and coefficient
 of variation of relative abundances (cv_abund).
 }
 \details{
-When \code{fix_s_local = FALSE} the species number in the local
+When \code{fix_s_sim = FALSE} the species number in the local
   community might deviate from \code{s_pool} due to sampling. When
-  \code{fix_s_local = TRUE} the local number of species will equal
+  \code{fix_s_sim = TRUE} the local number of species will equal
   \code{s_pool}, but this constraint can result in biases from the
   theoretical parameters. Therefore the simulated distribution parameters are
   provided as model output.
