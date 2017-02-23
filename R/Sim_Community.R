@@ -221,7 +221,7 @@ plot.community <- function(com1, col = NA, pch = NA, ...)
    if (is.na(pch))  pch <- 19
 
    plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
-        col = col[com1$census$species], pch = pch, ...)
+        col = col[com1$census$species], pch = pch, las = 1, ...)
 
 }
 

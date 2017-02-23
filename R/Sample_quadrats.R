@@ -42,91 +42,105 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
 
    quadrat_size <- sqrt(quadrat_area)
 
-   if (method == "random"){
+   community_size <- (comm$x_min_max[2] - comm$x_min_max[1]) *
+      (comm$y_min_max[2] - comm$y_min_max[1])
 
-      xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-      ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+   if (quadrat_size < community_size){
 
-      coords <- cbind(xpos,ypos)
-      min_dist <- sqrt(2*quadrat_size^2)
+      if (method == "random"){
 
-      if (avoid_overlap == T){
+         xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+         ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
 
-         count <- 0
+         coords <- cbind(xpos,ypos)
+         min_dist <- sqrt(2*quadrat_size^2)
 
-         while(min(dist(coords)) < min_dist && count <= 9999){
-            xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-            ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+         if (avoid_overlap == T){
 
-            coords <- cbind(xpos,ypos)
-            count <- count + 1
+            count <- 0
+
+            while(min(dist(coords)) < min_dist && count <= 9999){
+               xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+               ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+
+               coords <- cbind(xpos,ypos)
+               count <- count + 1
+            }
+
+            if (count > 9999) stop("Cannot find a sampling layout with no overlap")
+
+         } else {
+            if (min(dist(coords)) < min_dist)
+               warning("There are overlapping sampling squares in the design")
          }
+      } # end method == random
 
-         if (count > 9999) stop("Cannot find a sampling layout with no overlap")
+      if (method == "transect"){
 
-      } else {
-         if (min(dist(coords)) < min_dist)
+         xmin <- x0
+         ymin <- y0
+
+         xmax <- x0 + (n_quadrats - 1) * delta_x + quadrat_size
+         ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
+
+         if (xmin < comm$x_min_max[1] || xmax > comm$x_min_max[2])
+            stop ("x-extent of sampling desing is larger than landscape")
+
+         if (ymin < comm$y_min_max[1] || ymax > comm$y_min_max[2])
+            stop ("y-extent of sampling desing is larger than landscape")
+
+         xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
+         ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
+
+         coords <- cbind(xpos,ypos)
+         if (min(dist(coords)) < 0.9999*quadrat_size)
             warning("There are overlapping sampling squares in the design")
-      }
-   } # end method == random
+      } # end transect
 
-   if (method == "transect"){
+      if (method == "grid"){
 
-      xmin <- x0
-      ymin <- y0
+         grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
 
-      xmax <- x0 + (n_quadrats - 1) * delta_x + quadrat_size
-      ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
+         x1 <- seq(from = x0, by = delta_x, len = grid_dim)
+         y1 <- seq(from = y0, by = delta_y, len = grid_dim)
 
-      if (xmin < comm$x_min_max[1] || xmax > comm$x_min_max[2])
-         stop ("x-extent of sampling desing is larger than landscape")
+         if (min(x1) < comm$x_min_max[1] || max(x1) > comm$x_min_max[2])
+            stop ("x-extent of sampling desing is larger than landscape")
 
-      if (ymin < comm$y_min_max[1] || ymax > comm$y_min_max[2])
-         stop ("y-extent of sampling desing is larger than landscape")
+         if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
+            stop ("y-extent of sampling desing is larger than landscape")
 
-      xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
-      ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
+         coords <- expand.grid(xpos = x1, ypos = y1)
 
-      coords <- cbind(xpos,ypos)
-      if (min(dist(coords)) < 0.9999*quadrat_size)
-         warning("There are overlapping sampling squares in the design")
-   } # end transect
+         xpos <- coords$xpos[1:n_quadrats]
+         ypos <- coords$ypos[1:n_quadrats]
 
-   if (method == "grid"){
+         if (min(dist(coords)) < 0.9999*quadrat_size)
+            warning("There are overlapping sampling squares in the design")
 
-      grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
+      } # end grid
 
-      x1 <- seq(from = x0, by = delta_x, len = grid_dim)
-      y1 <- seq(from = y0, by = delta_y, len = grid_dim)
+      comm_tab <- mapply(abund_rect, xpos, ypos,
+                        MoreArgs=list(xsize = quadrat_size, ysize = quadrat_size,
+                                      comm = comm))
 
-      if (min(x1) < comm$x_min_max[1] || max(x1) > comm$x_min_max[2])
-         stop ("x-extent of sampling desing is larger than landscape")
+   } else {
+      comm_tab <- table(comm$census$species)
 
-      if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
-         stop ("y-extent of sampling desing is larger than landscape")
+      xpos <- comm$x_min_max[1]
+      ypos <- comm$y_min_max[1]
+   }
 
-      coords <- expand.grid(xpos = x1, ypos = y1)
-
-      xpos <- coords$xpos[1:n_quadrats]
-      ypos <- coords$ypos[1:n_quadrats]
-
-      if (min(dist(coords)) < 0.9999*quadrat_size)
-         warning("There are overlapping sampling squares in the design")
-
-   } # end grid
+   comm_tab <- t(comm_tab)
+   rownames(comm_tab) <- paste("site", 1:nrow(comm_tab), sep = "")
 
    # plot sampling design
    if (plot == TRUE){
       plot(comm)
       rect(xpos, ypos, xpos + quadrat_size, ypos + quadrat_size, lwd = 2,
-        col = adjustcolor("white", alpha.f = 0.6))
+           col = adjustcolor("white", alpha.f = 0.6))
    }
 
-   comm_tab <- mapply(abund_rect, xpos, ypos,
-                     MoreArgs=list(xsize = quadrat_size, ysize = quadrat_size,
-                                   comm = comm))
-   comm_tab <- t(comm_tab)
-   rownames(comm_tab) <- paste("site", 1:nrow(comm_tab), sep = "")
    return(comm_tab)
 
 }
