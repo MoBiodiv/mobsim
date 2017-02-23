@@ -1,5 +1,3 @@
-
-
 #' Plot-based samples from a spatially-explicit census
 #'
 #' This function allows to sample quadratic subplots from a spatially-explicit

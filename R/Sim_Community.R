@@ -432,19 +432,22 @@ sim_thomas_coords <- function(abund_vec,
    s_local <- length(abund_vec)
    n <- sum(abund_vec)
 
-   if (length(sigma) == 2){
-      # linear relationship between sigma and log(relabund)
-      # sigma = a1 + b1 * log(relabund)
-      log_relabund <- log(abund_vec/sum(abund_vec))
-      range_abund <- max(log_relabund) - min(log_relabund)
+   # if (length(sigma) == 2){
+   #    # linear relationship between sigma and log(relabund)
+   #    # sigma = a1 + b1 * log(relabund)
+   #    log_relabund <- log(abund_vec/sum(abund_vec))
+   #    range_abund <- max(log_relabund) - min(log_relabund)
+   #
+   #    if (range_abund != 0) b1 <- (sigma[2] - sigma[1])/range_abund
+   #    else b1 <- 0
+   #
+   #    a1 <- sigma[2] - b1*max(log_relabund)
+   #    sigma_vec <- a1 + b1*log_relabund
+   # }
 
-      if (range_abund != 0) b1 <- (sigma[2] - sigma[1])/range_abund
-      else b1 <- 0
-
-      a1 <- sigma[2] - b1*max(log_relabund)
-      sigma_vec <- a1 + b1*log_relabund
-   }
-   else {
+   if (length(sigma) == s_local){
+      sigma_vec <- sigma
+   } else {
       sigma_vec <- rep(sigma[1], times = s_local)
    }
 
