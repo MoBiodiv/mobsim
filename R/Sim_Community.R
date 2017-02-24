@@ -456,7 +456,7 @@ sim_thomas_coords <- function(abund_vec,
    id_spec <- factor(rep(names(abund_vec), times=abund_vec))
 
    # determine points per cluster and number of mother points
-   if (is.numeric(mother_points)){
+   if (!is.na(mother_points)){
 
       if (length(mother_points) == s_local)
          n_mothers <- mother_points
@@ -467,7 +467,7 @@ sim_thomas_coords <- function(abund_vec,
 
    } else {
 
-      if (is.numeric(cluster_points)){
+      if (!is.na(cluster_points)){
 
          if (length(cluster_points) == s_local)
              points_per_cluster <- cluster_points

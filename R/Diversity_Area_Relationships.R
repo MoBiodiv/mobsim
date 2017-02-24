@@ -151,7 +151,7 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #' @export
 #'
 divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-                  exclude_zeros = T, plot = F)
+                  exclude_zeros = T)
 {
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
