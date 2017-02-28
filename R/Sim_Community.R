@@ -453,7 +453,7 @@ sim_thomas_coords <- function(abund_vec,
 
    x = numeric(n)
    y = numeric(n)
-   id_spec <- factor(rep(names(abund_vec), times=abund_vec))
+   id_spec <- factor(rep(names(abund_vec), times = abund_vec))
 
    # determine points per cluster and number of mother points
    if (!is.na(mother_points)){
@@ -492,9 +492,9 @@ sim_thomas_coords <- function(abund_vec,
                            xmin = xrange[1], xmax = xrange[2],
                            ymin = yrange[1], ymax = yrange[2])
    } else {
-      x <- runif(abund_vec[1], xrange[1], xrange[2])
-      y <- runif(abund_vec[1], yrange[1], yrange[2])
-      dat1 <- data.frame(x = x, y = y)
+      x1 <- runif(abund_vec[1], xrange[1], xrange[2])
+      y1 <- runif(abund_vec[1], yrange[1], yrange[2])
+      dat1 <- data.frame(x = x1, y = y1)
    }
 
    irange <- 1:cum_abund[1]
@@ -511,9 +511,9 @@ sim_thomas_coords <- function(abund_vec,
                               xmin = xrange[1], xmax = xrange[2],
                               ymin = yrange[1], ymax = yrange[2])
       } else {
-         x <- runif(abund_vec[ispec], xrange[1], xrange[2])
-         y <- runif(abund_vec[ispec], yrange[1], yrange[2])
-         dat1 <- data.frame(x = x, y = y)
+         x1 <- runif(abund_vec[ispec], xrange[1], xrange[2])
+         y1 <- runif(abund_vec[ispec], yrange[1], yrange[2])
+         dat1 <- data.frame(x = x1, y = y1)
       }
 
       irange <- (cum_abund[ispec-1] + 1):cum_abund[ispec]

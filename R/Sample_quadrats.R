@@ -47,78 +47,87 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
 
    if (quadrat_size < community_size){
 
-      if (method == "random"){
+      if (n_quadrats > 1){
 
-         xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-         ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+         if (method == "random"){
 
-         coords <- cbind(xpos,ypos)
-         min_dist <- sqrt(2*quadrat_size^2)
+            xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+            ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
 
-         if (avoid_overlap == T){
+            coords <- cbind(xpos,ypos)
+            min_dist <- sqrt(2*quadrat_size^2)
 
-            count <- 0
+            if (avoid_overlap == T){
 
-            while(min(dist(coords)) < min_dist && count <= 9999){
-               xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-               ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+               count <- 0
 
-               coords <- cbind(xpos,ypos)
-               count <- count + 1
+               while(min(dist(coords)) < min_dist && count <= 9999){
+                  xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+                  ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+
+                  coords <- cbind(xpos,ypos)
+                  count <- count + 1
+               }
+
+               if (count > 9999) stop("Cannot find a sampling layout with no overlap")
+
+            } else {
+               if (min(dist(coords)) < min_dist)
+                  warning("There are overlapping sampling squares in the design")
             }
+         } # end method == random
 
-            if (count > 9999) stop("Cannot find a sampling layout with no overlap")
+         if (method == "transect"){
 
-         } else {
-            if (min(dist(coords)) < min_dist)
+            xmin <- x0
+            ymin <- y0
+
+            xmax <- x0 + (n_quadrats - 1) * delta_x + quadrat_size
+            ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
+
+            if (xmin < comm$x_min_max[1] || xmax > comm$x_min_max[2])
+               stop ("x-extent of sampling desing is larger than landscape")
+
+            if (ymin < comm$y_min_max[1] || ymax > comm$y_min_max[2])
+               stop ("y-extent of sampling desing is larger than landscape")
+
+            xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
+            ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
+
+            coords <- cbind(xpos,ypos)
+            if (min(dist(coords)) < 0.9999*quadrat_size)
                warning("There are overlapping sampling squares in the design")
-         }
-      } # end method == random
+         } # end transect
 
-      if (method == "transect"){
+         if (method == "grid"){
 
-         xmin <- x0
-         ymin <- y0
+            grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
 
-         xmax <- x0 + (n_quadrats - 1) * delta_x + quadrat_size
-         ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
+            x1 <- seq(from = x0, by = delta_x, len = grid_dim)
+            y1 <- seq(from = y0, by = delta_y, len = grid_dim)
 
-         if (xmin < comm$x_min_max[1] || xmax > comm$x_min_max[2])
-            stop ("x-extent of sampling desing is larger than landscape")
+            if (min(x1) < comm$x_min_max[1] || max(x1) > comm$x_min_max[2])
+               stop ("x-extent of sampling desing is larger than landscape")
 
-         if (ymin < comm$y_min_max[1] || ymax > comm$y_min_max[2])
-            stop ("y-extent of sampling desing is larger than landscape")
+            if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
+               stop ("y-extent of sampling desing is larger than landscape")
 
-         xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
-         ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
+            coords <- expand.grid(xpos = x1, ypos = y1)
 
-         coords <- cbind(xpos,ypos)
-         if (min(dist(coords)) < 0.9999*quadrat_size)
-            warning("There are overlapping sampling squares in the design")
-      } # end transect
+            xpos <- coords$xpos[1:n_quadrats]
+            ypos <- coords$ypos[1:n_quadrats]
 
-      if (method == "grid"){
+            if (min(dist(coords)) < 0.9999*quadrat_size)
+               warning("There are overlapping sampling squares in the design")
 
-         grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
+         } # end grid
 
-         x1 <- seq(from = x0, by = delta_x, len = grid_dim)
-         y1 <- seq(from = y0, by = delta_y, len = grid_dim)
+      } else { # if n_quadrats == 1
 
-         if (min(x1) < comm$x_min_max[1] || max(x1) > comm$x_min_max[2])
-            stop ("x-extent of sampling desing is larger than landscape")
+         xpos <- runif(1, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+         ypos <- runif(1, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
 
-         if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
-            stop ("y-extent of sampling desing is larger than landscape")
-
-         coords <- expand.grid(xpos = x1, ypos = y1)
-
-         xpos <- coords$xpos[1:n_quadrats]
-         ypos <- coords$ypos[1:n_quadrats]
-
-         if (min(dist(coords)) < 0.9999*quadrat_size)
-            warning("There are overlapping sampling squares in the design")
-
-      } # end grid
+      }
 
       comm_tab <- mapply(abund_rect, xpos, ypos,
                         MoreArgs=list(xsize = quadrat_size, ysize = quadrat_size,
