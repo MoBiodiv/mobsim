@@ -37,7 +37,7 @@ is described by its xy-coordinates and a species identity label.
 
 \code{\link{sample_quadrats}}
 }
+
 \author{
 Felix May
 }
-

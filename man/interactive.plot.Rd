@@ -28,4 +28,3 @@ Key parameters to vary using the sliders are:
 interactive.plot()
 
 }
-

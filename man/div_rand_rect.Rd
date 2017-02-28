@@ -28,4 +28,3 @@ of a community
 \seealso{
 \code{\link{div_rect}}
 }
-

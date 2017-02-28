@@ -14,4 +14,3 @@ Plot diversity-area relationships}
 -----------------------------------------------------------------------------
 Plot diversity-area relationships
 }
-

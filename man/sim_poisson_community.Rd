@@ -41,4 +41,3 @@ plot(com1)
 \author{
 Felix May
 }
-

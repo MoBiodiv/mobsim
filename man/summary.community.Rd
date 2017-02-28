@@ -12,4 +12,3 @@
 \description{
 Print summary of spatial community object
 }
-

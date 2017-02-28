@@ -29,4 +29,3 @@ summary(sim_com1)
 \author{
 Felix May
 }
-

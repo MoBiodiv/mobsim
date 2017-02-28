@@ -32,4 +32,3 @@ Named vector with four values
 Get diversity indices including species richness, no. of endemics,
 Shannon and Simpson diversity for one rectangle subplot in the community
 }
-

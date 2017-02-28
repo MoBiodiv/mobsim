@@ -25,4 +25,3 @@ The expected number of species is calculated after Coleman 1982.
 Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
 Ecology 52, 577-586.
 }
-

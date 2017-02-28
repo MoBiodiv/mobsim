@@ -35,4 +35,3 @@ Coleman, B. D. et al. 1982. Randomness, area, and species richness. Ecology 63, 
 Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
 Ecology 52, 577-586.
 }
-

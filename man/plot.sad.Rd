@@ -4,7 +4,7 @@
 \alias{plot.sad}
 \title{Plot species abundance distribution}
 \usage{
-\method{plot}{sad}(abund, method = c("preston", "rank"))
+\method{plot}{sad}(abund, method = c("octave", "rank"))
 }
 \arguments{
 \item{abund}{}
@@ -14,4 +14,3 @@
 \description{
 Plot species abundance distribution
 }
-

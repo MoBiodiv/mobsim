@@ -32,4 +32,3 @@ legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
        col = 1:2, lwd = 2)#
 
 }
-

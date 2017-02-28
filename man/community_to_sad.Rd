@@ -12,4 +12,3 @@ community_to_sad(com)
 \description{
 Get species abundance distribution from community object
 }
-

@@ -117,10 +117,8 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
 #' @param method
 #'
 #' @export
-plot.sad <- function(abund, method = c("preston","rank"))
+plot.sad <- function(abund, method = c("octave","rank"))
 {
-   # require(untb)
-
    method <- match.arg(method)
 
    if (method == "rank")
@@ -128,8 +126,23 @@ plot.sad <- function(abund, method = c("preston","rank"))
            xlab="Species rank", ylab="Species abundance",
            main = "Rank-abundance curve", las = 1)
 
-   if (method == "preston"){
-      abund_dist <- untb::preston(untb::count(abund))
+   if (method == "octave"){
+
+      # code adopted from untb:preston()
+      max_abund <- max(abund)
+      n <- 1 + ceiling(log(max_abund)/log(2)) # number of abundance classes
+
+      if (n < 2) breaks <- c(0, 1)
+      else       breaks <- c(0, 2^(0:(n - 2)), max_abund)
+
+      r <- hist(abund, plot = FALSE, breaks = breaks, right = TRUE)
+      abund_dist <- r$counts
+
+      if (n <= 2) names(abund_dist) <- c("1","2")[1:n]
+      else        names(abund_dist) <- c("1", "2",
+                                         paste(breaks[-c(1:2, length(breaks))] + 1,
+                                          "-", breaks[-c(1:3)], sep = ""))
+
       barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
               xlab = "Abundance class", ylab ="No. of species",
               main = "Preston octave plot", las = 1)

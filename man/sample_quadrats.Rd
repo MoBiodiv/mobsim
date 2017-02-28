@@ -48,4 +48,3 @@ quadrat_area = 0.002, method = "grid")
 renyi(comm_mat1, hill = T)
 
 }
-

@@ -12,11 +12,10 @@ License: What license is it under?
 LazyData: TRUE
 Imports:
     Rcpp,
-    vegan,
-    untb
+    vegan
 LinkingTo: Rcpp
 Suggests:
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 URL: http://github.com/FelixMay/MoBspatial

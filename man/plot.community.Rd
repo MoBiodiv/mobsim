@@ -12,4 +12,3 @@
 \description{
 Plot spatial community object
 }
-

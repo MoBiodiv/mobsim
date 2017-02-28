@@ -275,8 +275,6 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
                        method = "bray", binary = F, plot = F)
 {
-   # require(vegan)
-
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
    prop_area <- prop_area[prop_area <= 1]

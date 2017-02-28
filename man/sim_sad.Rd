@@ -52,4 +52,3 @@ plot(abund1, method = "rank")
 \author{
 Felix May
 }
-

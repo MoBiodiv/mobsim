@@ -90,9 +90,6 @@ sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 plot(sim3)
 
 }
-\author{
-Felix May
-}
 \references{
 Morlon et al. 2008. A general framework for the distance--decay of similarity
 in ecological communities. Ecology Letters 11, 904-917.
@@ -103,4 +100,6 @@ CRC Press
 \seealso{
 \code{spatstat::rThomas()}
 }
-
+\author{
+Felix May
+}

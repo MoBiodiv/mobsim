@@ -37,4 +37,3 @@ points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
 \seealso{
 \code{\link{div_rand_rect}}, \code{\link{div_rect}}
 }
-

@@ -36,4 +36,3 @@ sim.com2 <- Sim.Thomas.Community(S = 100, N = 1000, sigma=0.02, cv = 1)
 SAC.plot1 <- SAC.plot(sim.com1, print=F)
 SAC.plot2 <- add.to.plot(sim.com2, plot.to.add=SAC.plot1, plot.type="SAC", col="red",print=T)
 }
-

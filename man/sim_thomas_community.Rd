@@ -47,10 +47,9 @@ com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, cv_abund = 1,
 plot(com1)
 
 }
-\author{
-Felix May
-}
 \seealso{
 \code{sim_sad}; \code{sim_thomas_coords}
 }
-
+\author{
+Felix May
+}

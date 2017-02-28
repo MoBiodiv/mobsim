@@ -39,4 +39,3 @@ plot(com1)
 summary(com1)
 
 }
-

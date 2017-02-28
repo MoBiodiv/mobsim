@@ -25,4 +25,3 @@ Integer vector with local species abundances
 Get local abundance distribution in rectangle bounded by x0, y0, x0 + xsize,
 y0 + ysize
 }
-
