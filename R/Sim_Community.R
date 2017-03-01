@@ -514,24 +514,26 @@ sim_thomas_coords <- function(abund_vec,
    x[irange] <- dat1$x
    y[irange] <- dat1$y
 
-   for (ispec in 2:s_local){
+   if (s_local > 1){
+      for (ispec in 2:s_local){
 
-      if (sigma_vec[ispec] < 2 * max_dim){
-         dat1 <- rThomas_rcpp(abund_vec[ispec],
-                              n_mother_points = n_mothers[ispec],
-                              sigma = sigma_vec[ispec],
-                              mu = points_per_cluster[ispec],
-                              xmin = xrange[1], xmax = xrange[2],
-                              ymin = yrange[1], ymax = yrange[2])
-      } else {
-         x1 <- runif(abund_vec[ispec], xrange[1], xrange[2])
-         y1 <- runif(abund_vec[ispec], yrange[1], yrange[2])
-         dat1 <- data.frame(x = x1, y = y1)
+         if (sigma_vec[ispec] < 2 * max_dim){
+            dat1 <- rThomas_rcpp(abund_vec[ispec],
+                                 n_mother_points = n_mothers[ispec],
+                                 sigma = sigma_vec[ispec],
+                                 mu = points_per_cluster[ispec],
+                                 xmin = xrange[1], xmax = xrange[2],
+                                 ymin = yrange[1], ymax = yrange[2])
+         } else {
+            x1 <- runif(abund_vec[ispec], xrange[1], xrange[2])
+            y1 <- runif(abund_vec[ispec], yrange[1], yrange[2])
+            dat1 <- data.frame(x = x1, y = y1)
+         }
+
+         irange <- (cum_abund[ispec-1] + 1):cum_abund[ispec]
+         x[irange] <- dat1$x
+         y[irange] <- dat1$y
       }
-
-      irange <- (cum_abund[ispec-1] + 1):cum_abund[ispec]
-      x[irange] <- dat1$x
-      y[irange] <- dat1$y
    }
 
    sim_dat1 <- community(x, y, id_spec, xrange, yrange)
