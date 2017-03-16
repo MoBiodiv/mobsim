@@ -10,7 +10,7 @@ The package includes functions to simulated species distributions in space with 
 Note MoBspatial includes efficient C++ code. Therefore the package Rcpp and a
 C++ compiler (e.g. Rtools for Windows) need to be installed first
 
-[https://github.com/MoBiodiv/MoBspatial](MoBspatial on GitHub)
+[MoBspatial on GitHub](https://github.com/MoBiodiv/MoBspatial)
 
 library(devtools)
 
