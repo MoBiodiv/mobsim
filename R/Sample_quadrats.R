@@ -140,8 +140,11 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
       ypos <- comm$y_min_max[1]
    }
 
-   comm_tab <- t(comm_tab)
-   rownames(comm_tab) <- paste("site", 1:nrow(comm_tab), sep = "")
+   spec_dat <- as.data.frame(t(comm_tab))
+   rownames(spec_dat) <- paste("site", 1:nrow(spec_dat), sep = "")
+
+   xy_dat <- data.frame(x = xpos, y = ypos)
+   rownames(xy_dat) <- rownames(spec_dat)
 
    # plot sampling design
    if (plot == TRUE){
@@ -150,7 +153,7 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
            col = adjustcolor("white", alpha.f = 0.6))
    }
 
-   return(comm_tab)
+   return(list(spec_dat = spec_dat, xy_dat = xy_dat))
 
 }
 
