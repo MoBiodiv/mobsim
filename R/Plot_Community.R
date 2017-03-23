@@ -41,7 +41,7 @@ spatial.plot <- function(sim.com, print=T){
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
-   spat.plot <- ggplot(sim.com$census, aes(X,Y, color=Species)) +
+   spat.plot <- ggplot(sim.com$census, aes(x,y, color=species)) +
       geom_point() +
       guides(color="none") +
       xlab("") +
@@ -57,8 +57,8 @@ SAD.plot <- function(sim.com, title="Species-abundance distribution",col="black"
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
-   SAD <- data.frame(specID = names(table(sim.com$census$Species)),
-                     abundance = as.integer(table(sim.com$census$Species)))
+   SAD <- data.frame(specID = names(table(sim.com$census$species)),
+                     abundance = as.integer(table(sim.com$census$species)))
 
    SAD.plot <- ggplot(data=SAD, aes(abundance)) +
       geom_histogram(bins=ceiling(max(SAD$abundance/20)), fill=paste(col)) +
@@ -74,11 +74,11 @@ SAC.plot <- function(sim.com, title="Species-accumulation curve", col="black", l
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
-   SAD <- data.frame(specID = names(table(sim.com$census$Species)),
-                     abundance = as.integer(table(sim.com$census$Species)))
-   SAC <- data.frame(ind=1:sum(SAD$abundance),SR=SAC(sim.com))
+   SAD <- data.frame(specID = names(table(sim.com$census$species)),
+                     abundance = as.integer(table(sim.com$census$species)))
+   SAC <- spec_sample_curve(sim.com)
 
-   SAC.plot <- ggplot(data=SAC,aes(x=ind,y=SR)) +
+   SAC.plot <- ggplot(data=SAC,aes(x=n,y=spec_accum)) +
       geom_line(color=paste(col), linetype=paste(lty), size=size) +
       xlab("# individuals sampled") +
       ylab("Species richness") +
@@ -90,24 +90,24 @@ SAC.plot <- function(sim.com, title="Species-accumulation curve", col="black", l
 }
 
 ##
-SAR.plot <- function(sim.com, title="Species-area relationship", col="black", lty="solid", size=1, add.ribbon=F, print=T){
+SAR.plot <- function(sim.com, title="Species-area relationship", col="black", lty="solid", size=1, print=T){
    if (class(sim.com)!="community")
       stop("sim.com is not of class 'community'.")
    require(ggplot2)
    prop.a <- c(0.01,seq(0.1, 1, by = 0.1)) # size of area samples in proportions of total area
    n <- 50 # number of samples used for each size of area
-   SAR <- data.frame(DivAR(sim.com, prop.A=prop.a, nsamples = n))
+   SAR <- divar(sim.com, prop_area = prop.a, n_samples = n)
 
-   SAR.plot <- ggplot(data=SAR,aes(x=propArea,y=meanSpec)) +
+   SAR.plot <- ggplot(data = SAR,aes(x = prop_area, y = species)) +
       geom_line(color=paste(col), linetype=paste(lty), size=size) +
       xlab("sampled area/total area") +
       ylab("Species richness") +
       ggtitle(paste(title)) +
       theme_biodiviz()
 
-   if(add.ribbon==T) {
-      SAR.plot <- SAR.plot + geom_ribbon(aes(ymin=meanSpec-1.96*sdSpec,ymax=meanSpec+1.96*sdSpec),alpha=0.3)
-      }
+   # if(add.ribbon==T) {
+   #    SAR.plot <- SAR.plot + geom_ribbon(aes(ymin=meanSpec-1.96*sdSpec,ymax=meanSpec+1.96*sdSpec),alpha=0.3)
+   #    }
 
    if(print==T) print(SAR.plot)
 
@@ -122,12 +122,12 @@ add.to.plot <- function(sim.com, plot.to.add, plot.type, col="red", lty="solid",
       stop("Unknown plot type. plot.type must be either 'SAD', 'SAC', or 'SAR'")
    require(ggplot2)
    if(plot.type=="SAD"){
-      SAD <- data.frame(specID = names(table(sim.com$census$Species)),
-                        abundance = as.integer(table(sim.com$census$Species)))
+      SAD <- data.frame(specID = names(table(sim.com$census$species)),
+                        abundance = as.integer(table(sim.com$census$species)))
       p <- plot.to.add + geom_histogram(data=SAD, aes(abundance), bins=ceiling(max(SAD$abundance/20)), fill=paste(col))
    }
    if(plot.type=="SAC"){
-      SAD <- data.frame(specID = names(table(sim.com$census$Species)),
+      SAD <- data.frame(specID = names(table(sim.com$census$species)),
                         abundance = as.integer(table(sim.com$census$Species)))
       SAC <- data.frame(ind=1:sum(SAD$abundance),SR=SAC(sim.com))
       p <- plot.to.add + geom_line(data=SAC,aes(x=ind,y=SR), color=paste(col), linetype=paste(lty), size=size)
@@ -175,7 +175,7 @@ interactive.plot <- function(){
 
    plot.sim.com.grid <- function(S.pool, S.max=s.max, N.pool, spat.agg, evenness, resolution, cell.id){
       set.seed(229376)
-      sim.com <- Sim.Thomas.Community(S = S.pool, N = N.pool, sigma=spat.agg, cv = evenness)
+      sim.com <- sim_thomas_community(s_pool = S.pool, n_sim = N.pool, sigma=spat.agg, cv_abund = evenness)
 
       # create the grid
       grid.rast <- raster(extent(c(0,1,0,1)), nrows=resolution, ncols=resolution)
@@ -190,7 +190,7 @@ interactive.plot <- function(){
       is.in <- is.in == 1
       sim.com.cell <- sim.com
       sim.com.cell$census <- sim.com.cell$census[is.in,]
-      sim.com.cell$census$Species <- factor(sim.com.cell$census$Species) # updating species factor levels of the community subset
+      sim.com.cell$census$species <- factor(sim.com.cell$census$species) # updating species factor levels of the community subset
 
       # prepare the grid and the cell for ggplot
       grid.poly.gg <- fortify(grid.poly)
