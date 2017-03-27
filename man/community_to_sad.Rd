@@ -4,11 +4,22 @@
 \alias{community_to_sad}
 \title{Get species abundance distribution from community object}
 \usage{
-community_to_sad(com)
+community_to_sad(comm)
 }
 \arguments{
-\item{com}{}
+\item{comm}{Community object}
+}
+\value{
+Object of class \code{sad}, which contains a named integer vector
+ with species abundances
 }
 \description{
 Get species abundance distribution from community object
+}
+\examples{
+sim1 <- sim_poisson_community(200, 20000, cv_abund = 2)
+sad1 <- community_to_sad(sim1)
+plot(sad1, method = "rank")
+plot(sad1, method = "octave")
+
 }

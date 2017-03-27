@@ -2,31 +2,30 @@
 % Please edit documentation in R/Sim_Community.R
 \name{community}
 \alias{community}
-\title{Create spatial community object.}
+\title{Create spatial community object}
 \usage{
 community(x, y, spec_id, xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{x}{numeric - x coordinates}
+\item{x, y}{Coordinates of individuals (numeric)}
 
-\item{y}{numeric - y coordinates}
+\item{spec_id}{Species names or IDs; can be integers, characters or factors}
 
-\item{spec_id}{character vector - species names or IDs. Can be integers, characters or factors}
+\item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
-\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
-
-\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
+\item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
 }
 \value{
-community object which includes three items:
+Community object which includes three items:
 \enumerate{
-   \item census - data.frame with three columns: X, Y and species names for each individual
-   \item x_min_max - extent of the community in x-direction
-   \item y_min_max - extent of the community in y-direction
+   \item census: data.frame with three columns: x, y, and species names for
+    each individual
+   \item x_min_max: extent of the community in x-direction
+   \item y_min_max: extent of the community in y-direction
 }
 }
 \description{
-Creates a spatial community object with a certain extent and with coordinates
+Creates a spatial community object with defined extent and with coordinates
 and species identities of all individuals in the community.
 }
 \examples{

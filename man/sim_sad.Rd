@@ -2,50 +2,43 @@
 % Please edit documentation in R/Sim_Community.R
 \name{sim_sad}
 \alias{sim_sad}
-\title{Simulate log-normal species abundance distributions.}
+\title{Simulate log-normal species abundance distributions}
 \usage{
-sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
+sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
 }
 \arguments{
-\item{s_pool}{integer - number of species in the pool}
+\item{s_pool}{Number of species in the pool (integer)}
 
-\item{n_sim}{integer - number of individuals in the simulate local community}
+\item{n_sim}{Number of individuals in the simulated community (integer)}
 
-\item{cv_abund}{numeric - coefficient of variation ( = sd/mean) of relative
+\item{cv_abund}{Coefficient of variation ( = sd/mean) of relative
 abundances. The higher \code{cv_abund}, the lower the evenness of the
 simulated community. This means with increasing \code{cv_abund} there are more
-rare and more dominant species.}
+rare and more dominant species (numeric)}
 
-\item{fix_s_sim}{logical - should the simulation constrain the number of
-species in the local community? This can result in deviations from mean and
-sd of local abundances from the theoretical distributions}
+\item{fix_s_sim}{Should the simulation constrain the number of
+species in the simulated local community? (logical)}
 }
 \value{
-List with five named items:
-\enumerate{
-    \item abund - simulated abundance vector in the local community
-    \item mean.theor - theoretical mean of the abundance distribution
-    \item sd.theor - theoretical standard deviation
-    \item mean.sim - simulated mean
-    \item sd.sim - simulated standard deviation
-}
+Object of class \code{sad}, which contains a named integer vector
+ with species abundances
 }
 \description{
-Simulate log-normal abundance data in a local community with fixed number of
-individuals (n_sim), number of species in the pool (s_pool), and coefficient
-of variation of relative abundances (cv_abund).
+Simulate abundance data from a log-normal distributions with defined number
+of species in the pool \code{s_pool}, defined number of individuals
+\code{n_sim}, and defined coefficient of variation of relative abundances
+\code{cv_abund}.
 }
 \details{
 When \code{fix_s_sim = FALSE} the species number in the local
-  community might deviate from \code{s_pool} due to sampling. When
+  community might deviate from \code{s_pool} due to stochastic sampling. When
   \code{fix_s_sim = TRUE} the local number of species will equal
-  \code{s_pool}, but this constraint can result in biases from the
-  theoretical parameters. Therefore the simulated distribution parameters are
-  provided as model output.
+  \code{s_pool}, but this constraint can result in systematic biases from the
+  theoretical distribution parameters defined by \code{cv_abund}.
 }
 \examples{
 abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
-plot(abund1, method = "preston")
+plot(abund1, method = "octave")
 plot(abund1, method = "rank")
 
 }

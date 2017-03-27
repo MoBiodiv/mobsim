@@ -2,15 +2,38 @@
 % Please edit documentation in R/Sim_Community.R
 \name{plot.sad}
 \alias{plot.sad}
-\title{Plot species abundance distribution}
+\title{Plot species abundance distributions}
 \usage{
 \method{plot}{sad}(abund, method = c("octave", "rank"))
 }
 \arguments{
-\item{abund}{}
+\item{abund}{Vector with species abundances (integer vector)}
 
-\item{method}{}
+\item{method}{Plotting method, partial match to \code{"octave"} or \code{"rank"}}
 }
 \description{
-Plot species abundance distribution
+Plot species abundance distributions
+}
+\details{
+With \code{method = "octave"} a histogram showing the number
+species in several abundance classes is generated. The abundance class
+are a simplified version of the "octaves" suggested by Prestion (1948), which
+are based on log2 binning. The first abundance class includes species
+with 1 individual, the second with 2, the third with 3-4, the fourth with 5-8, etc.
+
+With \code{method = "rank"} rank-abundance curve is generated with
+species abundance rank on the x-axis (descending) and species abundance on
+the y-axis (Hubbell 2001).
+}
+\examples{
+abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+plot(abund1, method = "octave")
+plot(abund1, method = "rank")
+
+}
+\references{
+Preston 1948. The Commonness, and rarity, of species. Ecology 29(3):254-283.
+
+Hubell 2001. The unified neutral theory of biodiversity and biogeography.
+Princeton University Press.
 }

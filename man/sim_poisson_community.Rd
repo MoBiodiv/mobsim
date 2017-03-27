@@ -8,22 +8,21 @@ sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_sim = F,
   xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{s_pool}{integer - number of species in the pool}
+\item{s_pool}{Number of species in the pool (integer)}
 
-\item{n_sim}{integer - number of individuals in the simulate local community}
+\item{n_sim}{Number of individuals in the simulated community (integer)}
 
-\item{cv_abund}{numeric - coefficient of variation ( = sd/mean) of relative
+\item{cv_abund}{Coefficient of variation ( = sd/mean) of relative
 abundances. The higher \code{cv_abund}, the lower the evenness of the
 simulated community. This means with increasing \code{cv_abund} there are more
-rare and more dominant species.}
+rare and more dominant species (numeric)}
 
-\item{fix_s_sim}{logical - should the simulation constrain the number of
-species in the local community? This can result in deviations from mean and
-sd of local abundances from the theoretical distributions}
+\item{fix_s_sim}{Should the simulation constrain the number of
+species in the simulated local community? (logical)}
 
-\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
+\item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
-\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
+\item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
 }
 \value{
 A community object as defined by \code{\link{community}}.

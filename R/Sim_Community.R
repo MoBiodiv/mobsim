@@ -1,46 +1,39 @@
-#' Simulate log-normal species abundance distributions.
+#' Simulate log-normal species abundance distributions
 #'
-#' Simulate log-normal abundance data in a local community with fixed number of
-#' individuals (n_sim), number of species in the pool (s_pool), and coefficient
-#' of variation of relative abundances (cv_abund).
+#' Simulate abundance data from a log-normal distributions with defined number
+#' of species in the pool \code{s_pool}, defined number of individuals
+#' \code{n_sim}, and defined coefficient of variation of relative abundances
+#' \code{cv_abund}.
 #'
-#' @param s_pool integer - number of species in the pool
-#' @param n_sim integer - number of individuals in the simulate local community
-#' @param cv_abund numeric - coefficient of variation ( = sd/mean) of relative
+#' @param s_pool Number of species in the pool (integer)
+#' @param n_sim  Number of individuals in the simulated community (integer)
+#' @param cv_abund Coefficient of variation ( = sd/mean) of relative
 #' abundances. The higher \code{cv_abund}, the lower the evenness of the
 #' simulated community. This means with increasing \code{cv_abund} there are more
-#' rare and more dominant species.
+#' rare and more dominant species (numeric)
 #'
-#' @param fix_s_sim logical - should the simulation constrain the number of
-#'   species in the local community? This can result in deviations from mean and
-#'   sd of local abundances from the theoretical distributions
+#' @param fix_s_sim Should the simulation constrain the number of
+#'   species in the simulated local community? (logical)
 #'
 #' @details When \code{fix_s_sim = FALSE} the species number in the local
-#'   community might deviate from \code{s_pool} due to sampling. When
+#'   community might deviate from \code{s_pool} due to stochastic sampling. When
 #'   \code{fix_s_sim = TRUE} the local number of species will equal
-#'   \code{s_pool}, but this constraint can result in biases from the
-#'   theoretical parameters. Therefore the simulated distribution parameters are
-#'   provided as model output.
+#'   \code{s_pool}, but this constraint can result in systematic biases from the
+#'   theoretical distribution parameters defined by \code{cv_abund}.
 #'
-#' @return List with five named items:
-#' \enumerate{
-#'     \item abund - simulated abundance vector in the local community
-#'     \item mean.theor - theoretical mean of the abundance distribution
-#'     \item sd.theor - theoretical standard deviation
-#'     \item mean.sim - simulated mean
-#'     \item sd.sim - simulated standard deviation
-#' }
+#' @return Object of class \code{sad}, which contains a named integer vector
+#'  with species abundances
 #'
 #' @author Felix May
 #'
 #' @examples
 #' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
-#' plot(abund1, method = "preston")
+#' plot(abund1, method = "octave")
 #' plot(abund1, method = "rank")
 #'
 #' @export
 #'
-sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
+sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
 {
    if (!is.numeric(s_pool) || s_pool <= 0)
       stop("s_pool has to be a positive integer number")
@@ -97,26 +90,39 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = F)
 
    }
 
-   # return(list(abund = abund.local,
-   #             mean.theor = n_sim/s_pool,
-   #             sd.theor   = n_sim/s_pool * cv_abund,
-   #             mean.sim   = mean(abund.local),
-   #             sd.sim     = sd(abund.local))
-   # )
-
-   class(abund_local) <- "sad"
+   class(abund_local) <- c("sad","integer")
    return(abund_local)
 }
 
-
-
-#' Plot species abundance distribution
+#' Plot species abundance distributions
 #'
-#' @param abund
+#' @param abund Vector with species abundances (integer vector)
 #'
-#' @param method
+#' @param method Plotting method, partial match to \code{"octave"} or \code{"rank"}
+#'
+#' @details With \code{method = "octave"} a histogram showing the number
+#' species in several abundance classes is generated. The abundance class
+#' are a simplified version of the "octaves" suggested by Prestion (1948), which
+#' are based on log2 binning. The first abundance class includes species
+#' with 1 individual, the second with 2, the third with 3-4, the fourth with 5-8, etc.
+#'
+#' With \code{method = "rank"} rank-abundance curve is generated with
+#' species abundance rank on the x-axis (descending) and species abundance on
+#' the y-axis (Hubbell 2001).
+#'
+#' @references
+#' Preston 1948. The Commonness, and rarity, of species. Ecology 29(3):254-283.
+#'
+#' Hubell 2001. The unified neutral theory of biodiversity and biogeography.
+#' Princeton University Press.
+#'
+#' @examples
+#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+#' plot(abund1, method = "octave")
+#' plot(abund1, method = "rank")
 #'
 #' @export
+#'
 plot.sad <- function(abund, method = c("octave","rank"))
 {
    method <- match.arg(method)
@@ -149,22 +155,22 @@ plot.sad <- function(abund, method = c("octave","rank"))
    }
 }
 
-#' Create spatial community object.
+#' Create spatial community object
 #'
-#' Creates a spatial community object with a certain extent and with coordinates
+#' Creates a spatial community object with defined extent and with coordinates
 #' and species identities of all individuals in the community.
 #'
-#' @param x numeric - x coordinates
-#' @param y numeric - y coordinates
-#' @param spec_id character vector - species names or IDs. Can be integers, characters or factors
-#' @param xrange numeric vector of length 2 - extent of the community in x-direction
-#' @param yrange numeric vector of length 2 - extent of the community in y-direction
+#' @param x,y Coordinates of individuals (numeric)
+#' @param spec_id Species names or IDs; can be integers, characters or factors
+#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
+#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
 #'
-#' @return community object which includes three items:
+#' @return Community object which includes three items:
 #' \enumerate{
-#'    \item census - data.frame with three columns: X, Y and species names for each individual
-#'    \item x_min_max - extent of the community in x-direction
-#'    \item y_min_max - extent of the community in y-direction
+#'    \item census: data.frame with three columns: x, y, and species names for
+#'     each individual
+#'    \item x_min_max: extent of the community in x-direction
+#'    \item y_min_max: extent of the community in y-direction
 #' }
 #'
 #' @examples
@@ -192,81 +198,95 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
    points <- data.frame(x = as.numeric(x), y = as.numeric(y),
                         species = as.factor(spec_id))
 
-   com <- list(census = points,
+   comm <- list(census = points,
                x_min_max = as.numeric(xrange[1:2]),
                y_min_max = as.numeric(yrange[1:2])
                )
 
-   class(com) <- "community"
+   class(comm) <- "community"
 
-   return(com)
+   return(comm)
 }
 
 #' Print summary of spatial community object
 #'
-#' @param com1
+#' @param comm Community object
 #'
 #' @export
 #'
-summary.community <- function(com1)
+summary.community <- function(comm)
 {
-   cat("No. of individuals: ", nrow(com1$census), "\n")
-   cat("No. of species: ", length(unique(com1$census$species)), "\n")
-   cat("x-extent: ", com1$x_min_max, "\n")
-   cat("y-extent: ", com1$y_min_max, "\n\n")
-   print(summary(com1$census))
+   cat("No. of individuals: ", nrow(comm$census), "\n")
+   cat("No. of species: ", length(unique(comm$census$species)), "\n")
+   cat("x-extent: ", comm$x_min_max, "\n")
+   cat("y-extent: ", comm$y_min_max, "\n\n")
+   print(summary(comm$census))
 }
 
 #' Plot spatial community object
 #'
-#' @param com1
-#' @param col
-#' @param pch
-#' @param pattern
-#' @param ...
+#' Plot positions and species identities of all individuals in a community object.
+#'
+#' @param comm Community object
+#' @param col Color vector to mark species identities
+#' @param pch Plotting character to mark speces identities
+#' @param ... Other parameters to \link[graphics]{plot}
+#'
+#' @examples
+#' sim1 <- sim_thomas_community(30, 500)
+#' plot(sim1)
 #'
 #' @export
 #'
-plot.community <- function(com1, col = NA, pch = NA, ...)
+plot.community <- function(comm, col = NA, pch = NA, ...)
 {
-   nspec <- length(table(com1$census$species))
+   nspec <- length(table(comm$census$species))
    if (is.na(col))  col <- rainbow(nspec)
    if (is.na(pch))  pch <- 19
 
-   plot(y ~ x, data = com1$census, xlim = com1$x_min_max, ylim = com1$y_min_max,
-        col = col[com1$census$species], pch = pch, las = 1, ...)
-
+   plot(y ~ x, data = comm$census, xlim = comm$x_min_max, ylim = comm$y_min_max,
+        col = col[comm$census$species], pch = pch, las = 1, ...)
 }
 
 #' Get species abundance distribution from community object
 #'
-#' @param com
+#' @param comm Community object
+#'
+#' @return Object of class \code{sad}, which contains a named integer vector
+#'  with species abundances
+#'
+#' @examples
+#' sim1 <- sim_poisson_community(200, 20000, cv_abund = 2)
+#' sad1 <- community_to_sad(sim1)
+#' plot(sad1, method = "rank")
+#' plot(sad1, method = "octave")
 #'
 #' @export
 #'
-community_to_sad <- function(com)
+community_to_sad <- function(comm)
 {
-   if (class(com) != "community")
+   if (class(comm) != "community")
       stop("community_to_sad requires a community object as input. See ?community.")
 
-   abund <- table(com$census$species)
+   abund <- table(comm$census$species)
    class(abund) <- "sad"
 
    return(abund)
 }
 
 
-#' Random spatial coordinates
+#' Simulate random spatial coordinates
 #'
 #' Add random spatial positions to a species abundance distribution.
 #'
-#' @param abund_vec integer vector with species abundances
-#' @param xrange numeric vector of length 2 - extent of the community in x-direction
-#' @param yrange numeric vector of length 2 - extent of the community in y-direction
+#' @param abund_vec Species abundance vector (integer)
+#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
+#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
 #'
 #' @return A community object as defined by \code{\link{community}}.
 #'
 #' @author Felix May
+#'
 #' @examples
 #' abund <- sim_sad(s_pool = 100, n_sim = 1000)
 #' sim_com1 <- sim_poisson_coords(abund)
@@ -301,8 +321,8 @@ sim_poisson_coords <- function(abund_vec,
 #' \code{\link{sim_sad}} and \code{\link{sim_poisson_coords}}
 #'
 #' @inheritParams sim_sad
-#' @param xrange numeric vector of length 2 - extent of the community in x-direction
-#' @param yrange numeric vector of length 2 - extent of the community in y-direction
+#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
+#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
 #'
 #' @return A community object as defined by \code{\link{community}}.
 
@@ -332,27 +352,26 @@ sim_poisson_community <- function(s_pool,
 }
 
 
-#' Clumped spatial coordinates
+#' Simulate clumped spatial coordinates
 #'
 #' Add clumped (aggregated) positions to a species abundance distribution.
 #' Clumping is simulated using a Thomas cluster process, also known as Poisson
 #' cluster process (Morlon et al. 2008, Wiegand & Moloney 2014)
 #'
-#' @param abund_vec integer vector with species abundances
+#' @param abund_vec Species abundance vector (integer)
 #'
-#' @param sigma numeric vector of length = 1 or length = 2. Mean displacement
-#' (along each coordinate axes) of a point from its mother point (= cluster centre).
-#' Therefore sigma correlates with cluster radius. When length(sigma) == 1
-#' all species have the same cluster radius.When length(sigma) == 2 a linear
-#' relationship between species-specific sigma values and log(relative abundance)
-#' is simulated. Thereby sigma[1] is the cluster parameter for the least abundant
-#' species and sigma[2] the cluster parameter for the most abundant species.
-#' When sigma of any species is more than twice as large as the largest
-#' plot dimension, than a random Poisson distribution is simulated, which is more
+#' @param sigma Mean displacement (along each coordinate axes) of a point from
+#' its mother point (= cluster centre). \code{Sigma} correlates with cluster
+#' extent. When \code{length(sigma) == length(abund_vec)}, each species
+#' receives a specific cluster extent. Otherwise, the first value of \code{sigma}
+#' is recycled and all species share the same cluster extent.
+#' When \code{sigma} of any species is more than twice as large as the largest
+#' plot dimension, a random Poisson distribution is simulated, which is more
 #' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds to the
-#' \code{scale} parameter of \code{\link[spatstat]{rThomas}}.
+#' \code{scale} parameter of the function \code{\link[spatstat]{rThomas}} from
+#' the R package \code{\link{spatstat}}.
 #'
-#' @param mother_points numeric - number of mother points (= cluster centres).
+#' @param mother_points Number of mother points (= cluster centres).
 #' If this is a single value, all species have the same number of clusters.
 #' For example \code{mother_points = 1} can be used to simulate only one cluster
 #' per species, which then represents the complete species range.
@@ -361,7 +380,7 @@ sim_poisson_community <- function(s_pool,
 #' number of clusters is determined from the abundance and the number of points
 #' per cluster (\code{cluster_points}).
 #'
-#' @param cluster_points numeric - mean number of points per cluster. If this is
+#' @param cluster_points Mean number of points per cluster. If this is
 #' a single value, species have the same average number of points per cluster.
 #' If this is a vector of the same length as \code{abund_vec}, each species has
 #' a specific mean number of points per cluster.  If no value is provided, the
@@ -369,22 +388,22 @@ sim_poisson_community <- function(s_pool,
 #' \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
 #' \code{mu} parameter of \code{\link[spatstat]{rThomas}}.
 #'
-#' @param xrange numeric vector of length 2 - extent of the community in x-direction
-#' @param yrange numeric vector of length 2 - extent of the community in y-direction
+#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
+#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
 #'
 #' @details To generate a Thomas cluster process of a single species this
-#' function uses a C++ re-implementation if the function
-#' \code{\link[spatstat]{rThomas}} in the package \code{spatstat}.
+#' function uses a C++ re-implementation of the function
+#' \code{\link[spatstat]{rThomas}} in the package \code{\link{spatstat}}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
 #' \code{mother_points}, and \code{cluster_points}. For every species the
-#' abundance has to be equal to the product of the number of clusters
-#' (\code{mother_points}) times the numbers of points per cluster
-#' (\code{mother_points}).
+#' abundance has to be equal to the number of clusters
+#' (\code{mother_points}) times the number of points per cluster
+#' (\code{cluster_points}).
 #'
 #' \deqn{abundance = mother_points * cluster_points}
 #'
-#' Accordingly, if one of the parameters is provided the other one is directly
+#' Accordingly, if one of the parameters is provided, the other one is directly
 #' calculated from the abundance. Values for \code{mother_points} override values
 #' for \code{cluster_points}. If none of the parameters is specified, it is assumed
 #' that for every species there is a similar number of clusters and of points
@@ -406,7 +425,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @author Felix May
 #'
-#' @seealso \code{spatstat::rThomas()}
+#' @seealso \code{\link[spatstat]{spatstat::rThomas()}}
 #'
 #' @examples
 #'
@@ -548,19 +567,21 @@ sim_thomas_coords <- function(abund_vec,
 #'
 #' @inheritParams sim_sad
 #'
-#' @param sigma numeric vector of length = 1 or length = 2. Mean displacement
-#' (along each coordinate axes) of a point from its mother point (=cluster centre).
+#' @param sigma Mean displacement (along each coordinate axes) of a point from
+#' its mother point (= cluster centre).
 #'
-#' @param mother_points numeric - number of mother points (= cluster centres).
-#' @param cluster_points numeric - mean number of points per cluster.
-
-#' @param xrange numeric vector of length 2 - extent of the community in x-direction
-#' @param yrange numeric vector of length 2 - extent of the community in y-direction
+#' @param mother_points Number of mother points (= cluster centres).
 #'
-#' @return A community object as defined by \code{\link{community}}.
+#' @param cluster_points Mean number of points per cluster.
 #'
-#' @seealso \code{sim_sad}; \code{sim_thomas_coords}
-
+#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
+#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
+#'
+#' @details See the documentations of \code{\link{sim_sad}} and
+#'  \code{\link{sim_thomas_coords}} for details.
+#'
+#' @return A community object as defined by \code{\link{community}}
+#'
 #' @author Felix May
 #'
 #' @examples

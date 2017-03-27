@@ -9,7 +9,7 @@ sample_quadrats(comm, n_quadrats = 10, quadrat_area = 0.01, plot = T,
   delta_y = 0.1)
 }
 \arguments{
-\item{comm}{Commünity object from which the samples are generated}
+\item{comm}{Community object from which the samples are generated}
 
 \item{n_quadrats}{Number of sampling quadrats}
 

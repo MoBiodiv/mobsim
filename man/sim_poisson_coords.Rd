@@ -2,16 +2,16 @@
 % Please edit documentation in R/Sim_Community.R
 \name{sim_poisson_coords}
 \alias{sim_poisson_coords}
-\title{Random spatial coordinates}
+\title{Simulate random spatial coordinates}
 \usage{
 sim_poisson_coords(abund_vec, xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{abund_vec}{integer vector with species abundances}
+\item{abund_vec}{Species abundance vector (integer)}
 
-\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
+\item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
-\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
+\item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
 }
 \value{
 A community object as defined by \code{\link{community}}.

@@ -2,27 +2,26 @@
 % Please edit documentation in R/Sim_Community.R
 \name{sim_thomas_coords}
 \alias{sim_thomas_coords}
-\title{Clumped spatial coordinates}
+\title{Simulate clumped spatial coordinates}
 \usage{
 sim_thomas_coords(abund_vec, sigma = 0.02, mother_points = NA,
   cluster_points = NA, xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
-\item{abund_vec}{integer vector with species abundances}
+\item{abund_vec}{Species abundance vector (integer)}
 
-\item{sigma}{numeric vector of length = 1 or length = 2. Mean displacement
-(along each coordinate axes) of a point from its mother point (= cluster centre).
-Therefore sigma correlates with cluster radius. When length(sigma) == 1
-all species have the same cluster radius.When length(sigma) == 2 a linear
-relationship between species-specific sigma values and log(relative abundance)
-is simulated. Thereby sigma[1] is the cluster parameter for the least abundant
-species and sigma[2] the cluster parameter for the most abundant species.
-When sigma of any species is more than twice as large as the largest
-plot dimension, than a random Poisson distribution is simulated, which is more
+\item{sigma}{Mean displacement (along each coordinate axes) of a point from
+its mother point (= cluster centre). \code{Sigma} correlates with cluster
+extent. When \code{length(sigma) == length(abund_vec)}, each species
+receives a specific cluster extent. Otherwise, the first value of \code{sigma}
+is recycled and all species share the same cluster extent.
+When \code{sigma} of any species is more than twice as large as the largest
+plot dimension, a random Poisson distribution is simulated, which is more
 efficient than a Thomas cluster process. The parameter \code{sigma} corresponds to the
-\code{scale} parameter of \code{\link[spatstat]{rThomas}}.}
+\code{scale} parameter of the function \code{\link[spatstat]{rThomas}} from
+the R package \code{\link{spatstat}}.}
 
-\item{mother_points}{numeric - number of mother points (= cluster centres).
+\item{mother_points}{Number of mother points (= cluster centres).
 If this is a single value, all species have the same number of clusters.
 For example \code{mother_points = 1} can be used to simulate only one cluster
 per species, which then represents the complete species range.
@@ -31,7 +30,7 @@ each species has a specific number of clusters. If no value is provided, the
 number of clusters is determined from the abundance and the number of points
 per cluster (\code{cluster_points}).}
 
-\item{cluster_points}{numeric - mean number of points per cluster. If this is
+\item{cluster_points}{Mean number of points per cluster. If this is
 a single value, species have the same average number of points per cluster.
 If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
@@ -39,9 +38,9 @@ number of points per cluster is determined from the abundance and from
 \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
 \code{mu} parameter of \code{\link[spatstat]{rThomas}}.}
 
-\item{xrange}{numeric vector of length 2 - extent of the community in x-direction}
+\item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
-\item{yrange}{numeric vector of length 2 - extent of the community in y-direction}
+\item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
 }
 \value{
 A community object as defined by \code{\link{community}}.
@@ -53,18 +52,18 @@ cluster process (Morlon et al. 2008, Wiegand & Moloney 2014)
 }
 \details{
 To generate a Thomas cluster process of a single species this
-function uses a C++ re-implementation if the function
-\code{\link[spatstat]{rThomas}} in the package \code{spatstat}.
+function uses a C++ re-implementation of the function
+\code{\link[spatstat]{rThomas}} in the package \code{\link{spatstat}}.
 
 There is an inherent link between the parameters \code{abund_vec},
 \code{mother_points}, and \code{cluster_points}. For every species the
-abundance has to be equal to the product of the number of clusters
-(\code{mother_points}) times the numbers of points per cluster
-(\code{mother_points}).
+abundance has to be equal to the number of clusters
+(\code{mother_points}) times the number of points per cluster
+(\code{cluster_points}).
 
 \deqn{abundance = mother_points * cluster_points}
 
-Accordingly, if one of the parameters is provided the other one is directly
+Accordingly, if one of the parameters is provided, the other one is directly
 calculated from the abundance. Values for \code{mother_points} override values
 for \code{cluster_points}. If none of the parameters is specified, it is assumed
 that for every species there is a similar number of clusters and of points
@@ -98,7 +97,7 @@ Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 CRC Press
 }
 \seealso{
-\code{spatstat::rThomas()}
+\code{\link[spatstat]{spatstat::rThomas()}}
 }
 \author{
 Felix May
