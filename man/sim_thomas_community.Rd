@@ -41,8 +41,8 @@ and clumped, i.e. aggregated, spatial coordinates. This function consecutively c
 \code{\link{sim_sad}} and \code{\link{sim_thomas_coords}}
 }
 \details{
-See the documentations of \code{\link{sim_sad}},
- \code{\link{sim_thomas_coords}} for details
+See the documentations of \code{\link{sim_sad}} and
+ \code{\link{sim_thomas_coords}} for details.
 }
 \examples{
 com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, cv_abund = 1,

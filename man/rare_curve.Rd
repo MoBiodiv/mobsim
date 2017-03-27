@@ -2,36 +2,33 @@
 % Please edit documentation in R/SAC_spatial.R
 \name{rare_curve}
 \alias{rare_curve}
-\title{species rarefaction curves}
+\title{Species rarefaction curve}
 \usage{
 rare_curve(abund_vec)
 }
 \arguments{
-\item{abund_vec}{integer vector with species abundance distribution}
-
-\item{method}{available methods are \code{"coleman"} or \code{"hurlbert"}.
-The species richness estimations of both methods quickly converge for larger
-numbers of individuals}
+\item{abund_vec}{Species abundance distribution of the community (integer vector)}
 }
 \value{
 Numeric Vector with expected species richness in samples of 1, 2, 3 ... n individuals
 }
 \description{
-Estimate expected species richness as a function of sample size
+Expected species richness as a function of sample size
+}
+\details{
+This function essentially evaluates \code{\link{spec_sample}} for
+sample sizes from 1 to \code{sum(abund_vec)}. It is similar to the function
+\code{\link[vegan]{rarecurve}} in the R package \code{\link{vegan}}.
 }
 \examples{
-sim_com1 <- SAD.lognorm(100, 10000)
-rc1 <- rare_curve(sim_com1$abund)
-rc2 <- rare_curve(sim_com1$abund, method = "hurlbert")
-
+sad1 <- sim_sad(100, 10000)
+rc1 <- rare_curve(sad1)
 plot(rc1, type = "l", log = "xy", xlab = "Sample size",
      ylab = "Expected species richness")
 lines(1:length(rc2), rc2, lty = 2, col = 2)
 
 }
 \references{
-Coleman, B. D. et al. 1982. Randomness, area, and species richness. Ecology 63, 1121-1133
-
-Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
-Ecology 52, 577-586.
+Gotelli & Colwell 2001. Quantifying biodiversity: procedures and pitfalls
+in the measurement and comparison of species richness. Ecology Letters 4, 379--391.
 }

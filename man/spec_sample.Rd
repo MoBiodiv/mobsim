@@ -2,26 +2,33 @@
 % Please edit documentation in R/SAC_spatial.R
 \name{spec_sample}
 \alias{spec_sample}
-\title{-----------------------------------------------------------------------------
-Sample species richness}
+\title{Sample species richness}
 \usage{
 spec_sample(abund_vec, n)
 }
 \arguments{
-\item{abund_vec}{integer vector - species abundance distribution of the community}
+\item{abund_vec}{Species abundance distribution of the community (integer vector)}
 
-\item{n}{single integer - sample size in number of individuals}
+\item{n}{Sample size in terms of number of individuals (integer)}
 }
 \value{
-expected number of species in n individuals
+Expected number of species in a sample of n individuals
 }
 \description{
-Expected species richness in a random sample of fixed size
+Expected species richness in a random sample of fixed size.
 }
 \details{
-The expected number of species is calculated after Coleman 1982.
+The expected number of species is calculated after Hurlbert 1971, Equation 3.
+
+\code{spec_sample} is similar to the function \code{\link[vegan]{rarefy}}
+in the R package \code{\link{vegan}}.
+}
+\examples{
+sad1 <- sim_sad(100, 1000)
+spec_sample(abund_vec = sad1, n = 20)
+
 }
 \references{
-Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and alternative parameters.
-Ecology 52, 577-586.
+Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and +
+alternative parameters. Ecology 52, 577-586.
 }

@@ -2,33 +2,46 @@
 % Please edit documentation in R/SAC_spatial.R
 \name{spec_sample_curve}
 \alias{spec_sample_curve}
-\title{-----------------------------------------------------------------------------
-Spatially-explicit species accumulation curve (SAC)}
+\title{Non-spatial and spatially-explicit species sampling curves}
 \usage{
 spec_sample_curve(comm, method = c("accumulation", "rarefaction"))
 }
 \arguments{
-\item{comm}{\code{\link{community}} object}
+\item{comm}{Community object}
+
+\item{method}{Partial match to \code{accumulation} or \code{rarefaction}. Also both
+methods can be included at the same time.}
 }
 \value{
-integer vector with expected species number when n neighbouring individuals
-         are sampled
+A dataframe with 2-3 columns. The first column indicates the sample
+size (numbers of individuals), and the second and third column indicate
+the expected species richness for spatial sampling (column: "spec_accum")
+and/or random sampling (column "spec_rarefied")
 }
 \description{
-The SAC is similar to the rarefaction curve, but samples of defined size
-always contain nearest-neighbour individuals. Accordingly the SAC is
-influenced by intraspecific aggregation, while the rarefaction curve is only
-driven by the species abundance distribution.
+Expected species richness as function of sample size (no. of individuals),
+when individuals are sampled randomly (rarefaction) or when nearest-neighbours
+are samples (accumulation).
+}
+\details{
+Non-spatial sampling corresponds to the species rarefaction curve, which only
+depends on the species abundance distribution and can thus be also calculated
+from abundance data (see \code{\link{rare_curve}}).
+
+In contrast the species-accumulation curve starts from a focal individual and
+only samples the nearest neighbours of the focal individual. The final
+species accumulation curves is calculated as the mean over the accumulation
+curves starting from all individuals.
+
+In contrast to the rarefaction curve the accumulation curve is not only
+influenced by the species abundance distribution, but also by the spatial
+distribution of individuals.
 }
 \examples{
-sim_com1 <- Sim.Thomas.Community(100, 1000)
-sac1 <- SAC(sim_com1)
-rare_curve1 <- rare_curve(table(sim_com1$census$Species))
+sim_com1 <- sim_thomas_community(s_pool = 100, n_sim = 1000)
+sac1 <- spec_sample_curve(sim_com1, method = c("rare","acc"))
 
-plot(sac1, type = "l", col = 2, xlab = "Sample size",
-      ylab = "Expected species richness")
-lines(1:length(rare_curve1), rare_curve1, col = 1)
-legend("bottomrigh",c("Rarefaction curve","Species accumulation curve"),
-       col = 1:2, lwd = 2)#
+head(sac1)
+plot(sac1)
 
 }
