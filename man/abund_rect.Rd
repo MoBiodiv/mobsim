@@ -3,18 +3,18 @@
 \name{abund_rect}
 \alias{abund_rect}
 \title{-----------------------------------------------------------------------------
-Local species abundance distribution}
+Get local species abundance distribution}
 \usage{
 abund_rect(x0, y0, xsize, ysize, comm)
 }
 \arguments{
 \item{x0}{x-coordinate of lower left corner}
 
-\item{y0}{x-coordinate of lower left corner}
+\item{y0}{y-coordinate of lower left corner}
 
-\item{xsize}{size of the subplot in x-direction}
+\item{xsize}{Size of the subplot in x-direction}
 
-\item{ysize}{size of the subplot in y-direction}
+\item{ysize}{Size of the subplot in y-direction}
 
 \item{comm}{\code{\link{community}} object}
 }

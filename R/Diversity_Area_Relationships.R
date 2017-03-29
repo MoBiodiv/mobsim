@@ -1,24 +1,49 @@
 
-#' Local diversity indices
+#' Get local diversity indices
 #'
 #' Get diversity indices including species richness, no. of endemics,
-#' Shannon and Simpson diversity for one rectangle subplot in the community
+#' Shannon and Simpson diversity for one rectangle subplot in the community.
 #'
 #' @param x0 x-coordinate of lower left corner
-#' @param y0 x-coordinate of lower left corner
-#' @param xsize size of the subplot in x-direction
-#' @param ysize size of the subplot in y-direction
+#' @param y0 y-coordinate of lower left corner
+#' @param xsize Size of the subplot in x-direction
+#' @param ysize Size of the subplot in y-direction
 #' @param comm \code{\link{community}} object
 #'
-#' @return Named vector with four values
+#' @return Named vector with six diversity indices
 #' \enumerate{
-#'    \item n_species - the number of species
-#'    \item n_endemics - the number of endemics
-#'    \item shannon - Shannon diversity index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
+#'    \item n_species: Number of species
+#'    \item n_endemics: Number of endemics
+#'    \item shannon: Shannon index index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
 #'    where \eqn{p_i} is the relative abundance of species i:
-#'    \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)
+#'    \item ens_shannon: Effective number of species (ENS) based on the Shannon index \eqn{\exp{H}}
+#'    \item simpson: Simpson index index (= probabiliy of interspecific encounter PIE)
 #'    defined as \eqn{D =  1 - \sum p_i^2}
+#'    \item ens_simpson: Effective number of species (ENS) based on the Simpson index \eqn{1/D}
+#'
 #' }
+#'
+#' @details The effective number of species is defined as the number of equally
+#' abundant species that produce the same value of a certain diversity index
+#' as an observed community (Jost 2006). According to Chao et al. 2014 and
+#' Chiu et al. 20 ENS_shannon
+#' can be interpreted as the number of common species and ENS_simpson as the
+#' number of dominant species in a community.
+#'
+#' @references
+#' Jost 2006. Entropy and diversity. Oikos, 113, 363–375.
+#'
+#' Chao et al. 2014. Rarefaction and extrapolation with Hill numbers: a framework
+#' for sampling and estimation in species diversity studies.
+#' Ecological Monographs, 84, 45–67.
+#'
+#' Hsieh et al. 2016. iNEXT: an R package for rarefaction and extrapolation of
+#' species diversity (Hill numbers). Methods Ecol Evol, 7, 1451–1456.
+
+#'
+#' @examples
+#' sim1 <- sim_poisson_community(100,1000)
+#' div_rect(0, 0, 0.3, 0.3, sim1)
 #'
 #' @export
 #'
@@ -44,7 +69,8 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 
    n <- sum(abund)
    if (n > 1)
-      simpson <- (n/(n-1)) * (1 - sum(relabund^2))
+      #simpson <- (n/(n-1)) * (1 - sum(relabund^2))
+      simpson <- 1- sum(relabund^2)
    else
       simpson <- NA
 
@@ -57,22 +83,33 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
             ))
 }
 
-#' -----------------------------------------------------------------------------
 #' Distribution of local diversity indices
 #'
-#' Get mean and sd of diversity indices in several equally sized subplots
-#' of a community
+#' Get mean and standard deviation of diversity indices in several equally
+#' sized subplots of a community
 #'
 #' @param prop_area Size of subplots as proportion of the total area
 #' @param comm \code{\link{community}} object
 #' @param n_rect Number of randomly located subplots
-#' @param exclude_zeros logical - should subplots without individuals be excluded?
+#' @param exclude_zeros Should subplots without individuals be excluded? (logical)
 #'
 #' @return Vector with mean and standard deviation of the following diversity
-#' indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
-#' (4) Simpson diversity
+#' indices:
+#' \enumerate{
+#'    \item Number of species
+#'    \item Number of endemics
+#'    \item Shannon index
+#'    \item ENS_shannon
+#'    \item Simpson index
+#'    \item ENS_simpson
+#' }
 #'
 #' @seealso \code{\link{div_rect}}
+#'
+#' @examples
+#' sim1 <- sim_poisson_community(100,1000)
+#' div_rand_rect(prop_area = 0.1, comm = sim1)
+#'
 #'
 #' @export
 #'
@@ -108,45 +145,49 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
    if (exclude_zeros == T)
       div_plots <- div_plots[, div_plots["n_species",] > 0]
 
-   return(c(species    = mean(div_plots["n_species",]),
-            # se_species      = sd(div_plots["n_species",]),
-            endemics     = mean(div_plots["n_endemics",]),
-            # se_end       = sd(div_plots["n_endemics",]),
-            shannon = mean(div_plots["shannon",]),
-            # sd_shannon   = sd(div_plots["shannon",]),
-            ens_shannon = mean(div_plots["ens_shannon",]),
-            # sd_ens_shannon   = sd(div_plots["ens_shannon",]),
-            simpson = mean(div_plots["simpson",], na.rm = T),
-            # sd_simpson   = sd(div_plots["simpson",], na.rm = T),
-            ens_simpson = mean(div_plots["ens_simpson",], na.rm = T)
-            # sd_ens_simpson   = sd(div_plots["ens_simpson",], na.rm = T))
-          )
+   return(c(m_species      = mean(div_plots["n_species",]),
+            sd_species     = sd(div_plots["n_species",]),
+            m_endemics     = mean(div_plots["n_endemics",]),
+            sd_endemics    = sd(div_plots["n_endemics",]),
+            m_shannon      = mean(div_plots["shannon",]),
+            sd_shannon     = sd(div_plots["shannon",]),
+            m_ens_shannon  = mean(div_plots["ens_shannon",]),
+            sd_ens_shannon = sd(div_plots["ens_shannon",]),
+            m_simpson      = mean(div_plots["simpson",], na.rm = T),
+            sd_simpson     = sd(div_plots["simpson",], na.rm = T),
+            m_ens_simpson  = mean(div_plots["ens_simpson",], na.rm = T),
+            sd_ens_simpson = sd(div_plots["ens_simpson",], na.rm = T)
+            )
    )
 }
 
-#' -----------------------------------------------------------------------------
 #' Diversity-area relationships
 #'
 #' Estimate diversity indices in subplots of different sizes. This includes the
 #' well-known species-area and endemics-area relationships.
 #'
-#' @param prop_area numeric vector with subplot sizes as proportion of the total area
+#' @param prop_area Subplot sizes as proportion of the total area (numeric)
 #' @param comm \code{\link{community}} object
-#' @param n_samples Number of randomly located subplots per subplot size
-#' @param exclude_zeros logical - should subplots without individuals be excluded?
+#' @param n_samples Number of randomly located subplots per subplot size (single integer)
+#' @param exclude_zeros Should subplots without individuals be excluded? (logical)
 #'
 #' @return Dataframe with the proportional area of the subplots and mean and
-#' standard deviation of the following diversity indices: (1) Number of species
-#' (2) Number of endemics (3) Shannon-diversity (4) Simpson diversity
+#' standard deviation of the following diversity indices:
+#' \enumerate{
+#'    \item Number of species
+#'    \item Number of endemics
+#'    \item Shannon index
+#'    \item ENS_shannon
+#'    \item Simpson index
+#'    \item ENS_simpson
+#' }
 #'
 #' @seealso \code{\link{div_rand_rect}}, \code{\link{div_rect}}
 #'
 #' @examples
-#' sim_com1 <- Sim.Thomas.Community(100, 1000)
-#' divar1 <- DivAR(sim_com1, prop_area = seq(0.01, 1.0, length = 20))
-#' plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
-#'      ylab = "No. of species", type = "b", ylim = c(0,100))
-#' points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+#' sim1 <- sim_thomas_community(100, 1000)
+#' divar1 <- divar(sim1, prop_area = seq(0.01, 1.0, length = 20))
+#' plot(divar1)
 #'
 #' @export
 #'
@@ -189,8 +230,8 @@ plot.divar <- function(divar)
    #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
 
    #Plot an empty graph and legend to get the size of the legend
-   max_spec <- max(divar$species)
-   plot(species ~ prop_area, data = divar, ylim = c(0, max_spec),
+   max_spec <- max(divar$m_species)
+   plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
         type = "n")
 
    my_legend_size <-legend("topright",
@@ -200,17 +241,17 @@ plot.divar <- function(divar)
 
    #custom ylim. Add the height of legend to upper bound of the range
    my_range <- c(0, max_spec)
-   my_range[2] <- 1.1*(my_range[2] + my_legend_size$rect$h)
+   my_range[2] <- 1.05*(my_range[2] + my_legend_size$rect$h)
 
    #draw the plot with custom ylim
-   plot(species ~ prop_area, data = divar, ylim = my_range,
+   plot(m_species ~ prop_area, data = divar, ylim = my_range,
         type = "n", las = 1,
         xlab = "Proportion of area sampled", ylab = "No. of species",
         main = "Diversity-area relationships")
-   lines(species ~ prop_area, data = divar, type = "b", col = 1)
-   lines(endemics ~ prop_area, data = divar, type = "b", col = 2)
-   lines(ens_shannon ~ prop_area, data = divar, type = "b", col = 3)
-   lines(ens_simpson ~ prop_area, data = divar, type = "b", col = 4)
+   lines(m_species ~ prop_area, data = divar, type = "b", col = 1)
+   lines(m_endemics ~ prop_area, data = divar, type = "b", col = 2)
+   lines(m_ens_shannon ~ prop_area, data = divar, type = "b", col = 3)
+   lines(m_ens_simpson ~ prop_area, data = divar, type = "b", col = 4)
 
    legend("topleft",legend = c("Species","Endemics",
                                "ENS Shannon (common species) ",
@@ -220,15 +261,15 @@ plot.divar <- function(divar)
 
 
 #' -----------------------------------------------------------------------------
-#' Local species abundance distribution
+#' Get local species abundance distribution
 #'
 #' Get local abundance distribution in rectangle bounded by x0, y0, x0 + xsize,
 #' y0 + ysize
 #'
 #' @param x0 x-coordinate of lower left corner
-#' @param y0 x-coordinate of lower left corner
-#' @param xsize size of the subplot in x-direction
-#' @param ysize size of the subplot in y-direction
+#' @param y0 y-coordinate of lower left corner
+#' @param xsize Size of the subplot in x-direction
+#' @param ysize Size of the subplot in y-direction
 #' @param comm \code{\link{community}} object
 #'
 #' @return Integer vector with local species abundances
@@ -329,7 +370,7 @@ plot.dist_decay <- function(dist_decay)
    lines(dist_decay$distance, pred_sim, col = "red")
 }
 
-# # -----------------------------------------------------------
+# -----------------------------------------------------------
 # abund.rand.rect <- function(prop_area = 0.25, community,
 #                             xext = c(0,1), yext=c(0,1))
 # {

@@ -2,33 +2,59 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{div_rect}
 \alias{div_rect}
-\title{Local diversity indices}
+\title{Get local diversity indices}
 \usage{
 div_rect(x0, y0, xsize, ysize, comm)
 }
 \arguments{
 \item{x0}{x-coordinate of lower left corner}
 
-\item{y0}{x-coordinate of lower left corner}
+\item{y0}{y-coordinate of lower left corner}
 
-\item{xsize}{size of the subplot in x-direction}
+\item{xsize}{Size of the subplot in x-direction}
 
-\item{ysize}{size of the subplot in y-direction}
+\item{ysize}{Size of the subplot in y-direction}
 
 \item{comm}{\code{\link{community}} object}
 }
 \value{
-Named vector with four values
+Named vector with six diversity indices
 \enumerate{
-   \item n_species - the number of species
-   \item n_endemics - the number of endemics
-   \item shannon - Shannon diversity index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
+   \item n_species: Number of species
+   \item n_endemics: Number of endemics
+   \item shannon: Shannon index index defined as \eqn{H = - \sum p_{i} * log(p_[i])},
    where \eqn{p_i} is the relative abundance of species i:
-   \item simpson - Simpson diversity index (= probabiliy of interspecific encounter PIE)
+   \item ens_shannon: Effective number of species (ENS) based on the Shannon index \eqn{\exp{H}}
+   \item simpson: Simpson index index (= probabiliy of interspecific encounter PIE)
    defined as \eqn{D =  1 - \sum p_i^2}
+   \item ens_simpson: Effective number of species (ENS) based on the Simpson index \eqn{1/D}
+
 }
 }
 \description{
 Get diversity indices including species richness, no. of endemics,
-Shannon and Simpson diversity for one rectangle subplot in the community
+Shannon and Simpson diversity for one rectangle subplot in the community.
+}
+\details{
+The effective number of species is defined as the number of equally
+abundant species that produce the same value of a certain diversity index
+as an observed community (Jost 2006). According to Chao et al. 2014 and
+Chiu et al. 20 ENS_shannon
+can be interpreted as the number of common species and ENS_simpson as the
+number of dominant species in a community.
+}
+\examples{
+sim1 <- sim_poisson_community(100,1000)
+div_rect(0, 0, 0.3, 0.3, sim1)
+
+}
+\references{
+Jost 2006. Entropy and diversity. Oikos, 113, 363–375.
+
+Chao et al. 2014. Rarefaction and extrapolation with Hill numbers: a framework
+for sampling and estimation in species diversity studies.
+Ecological Monographs, 84, 45–67.
+
+Hsieh et al. 2016. iNEXT: an R package for rarefaction and extrapolation of
+species diversity (Hill numbers). Methods Ecol Evol, 7, 1451–1456.
 }

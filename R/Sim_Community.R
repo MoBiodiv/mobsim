@@ -329,7 +329,7 @@ sim_poisson_coords <- function(abund_vec,
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- sim_poisson_community(S = 20, N = 500, cv = 1)
+#' com1 <- sim_poisson_community(s_pool = 20, n_sim = 500, cv_abund = 1)
 #' plot(com1)
 #'
 #' @export

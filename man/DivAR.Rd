@@ -2,8 +2,7 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{divar}
 \alias{divar}
-\title{-----------------------------------------------------------------------------
-Diversity-area relationships}
+\title{Diversity-area relationships}
 \usage{
 divar(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
   exclude_zeros = T)
@@ -11,27 +10,32 @@ divar(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 \arguments{
 \item{comm}{\code{\link{community}} object}
 
-\item{prop_area}{numeric vector with subplot sizes as proportion of the total area}
+\item{prop_area}{Subplot sizes as proportion of the total area (numeric)}
 
-\item{n_samples}{Number of randomly located subplots per subplot size}
+\item{n_samples}{Number of randomly located subplots per subplot size (single integer)}
 
-\item{exclude_zeros}{logical - should subplots without individuals be excluded?}
+\item{exclude_zeros}{Should subplots without individuals be excluded? (logical)}
 }
 \value{
 Dataframe with the proportional area of the subplots and mean and
-standard deviation of the following diversity indices: (1) Number of species
-(2) Number of endemics (3) Shannon-diversity (4) Simpson diversity
+standard deviation of the following diversity indices:
+\enumerate{
+   \item Number of species
+   \item Number of endemics
+   \item Shannon index
+   \item ENS_shannon
+   \item Simpson index
+   \item ENS_simpson
+}
 }
 \description{
 Estimate diversity indices in subplots of different sizes. This includes the
 well-known species-area and endemics-area relationships.
 }
 \examples{
-sim_com1 <- Sim.Thomas.Community(100, 1000)
-divar1 <- DivAR(sim_com1, prop_area = seq(0.01, 1.0, length = 20))
-plot(meanSpec ~ propArea, data = divar1, xlab = "Proportion of area",
-     ylab = "No. of species", type = "b", ylim = c(0,100))
-points(meanEnd ~ propArea, data = divar1, type = "b", col = 2)
+sim1 <- sim_thomas_community(100, 1000)
+divar1 <- divar(sim1, prop_area = seq(0.01, 1.0, length = 20))
+plot(divar1)
 
 }
 \seealso{
