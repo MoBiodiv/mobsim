@@ -2,8 +2,7 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{dist_decay}
 \alias{dist_decay}
-\title{------------------ -----------------------------------------------------------
-Distance decay}
+\title{Distance decay of similarity}
 \usage{
 dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
   binary = F, plot = F)
@@ -13,27 +12,24 @@ dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
 
 \item{prop_area}{Subplot size as proportion of the total area}
 
-\item{n_samples}{Number of randomly located subplots per subplot size}
+\item{n_samples}{Number of randomly located subplots}
 
 \item{method}{Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}}
 
-\item{binary}{Perform presence/absence standardization before analysis.}
+\item{binary}{Perform presence/absence standardization before analysis?
+See \code{\link[vegan]{vegdist}}}
 }
 \value{
-Dataframe with distances between subplots and the respective similarity
-indices
+Dataframe with distances between subplot pairs and the respective
+similarity indices
 }
 \description{
-Estimate pairwise similarities of abundance distributions of subplots as
+Estimate pairwise similarities of comunities in subplots as
 function of distance
 }
 \examples{
-sim_com1 <- Sim.Thomas.Community(100, 10000)
+sim_com1 <- sim_thomas_community(100, 10000)
 dd1 <- dist_decay(sim_com1)
-plot(similarity ~ distance, data = dd1)
-dd_loess <- loess(similarity ~ distance, data = dd1)
-new_dist <- data.frame(distance = seq(0.01,1,0.01))
-pred_dd <- predict(dd_loess, newdata = new_dist$distance)
-lines(new_dist$distance, pred_dd, lwd=2, col = "red")
+plot(dd1)
 
 }
