@@ -17,8 +17,8 @@ Plot species abundance distributions
 \details{
 With \code{method = "octave"} a histogram showing the number
 species in several abundance classes is generated. The abundance class
-are a simplified version of the "octaves" suggested by Prestion (1948), which
-are based on log2 binning. The first abundance class includes species
+are a simplified version of the "octaves" suggested by Preston (1948), which
+are based on log2-binning. The first abundance class includes species
 with 1 individual, the second with 2, the third with 3-4, the fourth with 5-8, etc.
 
 With \code{method = "rank"} rank-abundance curve is generated with

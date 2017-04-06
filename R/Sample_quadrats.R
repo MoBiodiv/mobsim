@@ -1,32 +1,35 @@
 #' Plot-based samples from a spatially-explicit census
 #'
 #' This function allows to sample quadratic subplots from a spatially-explicit
-#' community. The output format is a sites x species abundance table which is
-#' the classical data format used in community ecology. The table generated
+#' community. The output format are a sites x species abundance table and a
+#' sites x xy-coordinates table. The sites x species abundance is
+#' a classical data format used in community ecology. The table generated
 #' can be for instance be further analysed with the package \code{\link[vegan]}.
 #'
 #' @param comm Community object from which the samples are generated
 #' @param n_quadrats Number of sampling quadrats
 #' @param quadrat_area Area of the sampling quadrats
-#' @param plot Logical: should the sampling design be plotted?
+#' @param plot Should the sampling design be plotted? (logical)
 #' @param method Available methods are \code{"random", "transect", "grid"}
-#' @param avoid_overlap Logical: for the random sampling try to generate a design
-#' without overlap of quadrats
-#' @param x0, y0 Lower left corner of the first quadrat in transect and grid sampling
+#' @param avoid_overlap For the random sampling try to generate a design
+#' without overlap of quadrats (logical)
+#' @param x0,y0 Lower left corner of the first quadrat in transect and grid sampling
 #' @param delta_x Distance between consecutive quadrats in transect and grid sampling
 #' in x-direction (the distance between the left sides is measured)
 #' @param delta_y Distance between consecutive quadrats in transect and grid sampling
 #' in y-direction (the distance between the lower sides is measured)
 #'
-#' @return  A matrix with species abundances where the rows represents sampling
-#' quadrats and the columns represent species
+#' @return  A list with two items, \code{spec_dat} and \code{xy_dat}.
+#' \code{spec_dat} is a data.frame with sampling quadrats in rows and species abundances
+#' in columns, and \code{xy_dat} is a data.frame with sampling quadrats in rows
+#' and the xy-coordinates of the quadrats (lower left corner) in columns.
 #'
 #' @examples
 #' library(vegan)
-#' sim_com1 <- Sim.Poisson.Community(100, 10000)
+#' sim_com1 <- sim_poisson_community(100, 10000)
 #' comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
 #' quadrat_area = 0.002, method = "grid")
-#' renyi(comm_mat1, hill = T)
+#' renyi(comm_mat1$spec_dat, hill = T, scales = c(0,1,2))
 #'
 #' @export
 #'

@@ -37,10 +37,17 @@ of species in the pool \code{(s_pool)}, and number of individuals
 }
 \details{
 The function \code{sim_sad} provides a wrapper around the function
-  \code{\link[sads]{rsad}} from the R package \code{\link{sads}}.
+  \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
+  contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
+  define the number of individuals in the simulated community. This is
+  implemented by converting the abundance distribution simulated with
+  \code{\link[sads]{rsad}} into a relative abundance distribution. In a second
+  step the required no. of individuals \code{(n_sim)} is sampled from this
+  distribution (with replacement).
 
-
-
+  Please note that this might effect the interpretation of the parameters of
+  the underlying statistical distribution, e.g. the mean abundance will always
+  be \code{n_sim/n_pool} irrespective of the settings of \code{sad_coef}.
 
 When \code{fix_s_sim = FALSE} the species number in the local
   community might deviate from \code{s_pool} due to stochastic sampling. When

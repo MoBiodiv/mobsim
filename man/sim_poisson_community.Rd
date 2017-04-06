@@ -4,13 +4,25 @@
 \alias{sim_poisson_community}
 \title{Simulate community with random spatial positions.}
 \usage{
-sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_sim = F,
+sim_poisson_community(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma",
+  "geom", "ls", "mzsm", "nbinom", "pareto", "poilog", "power", "volkov",
+  "powbend", "weibull"), sad_coef = list(cv_abund = 1), fix_s_sim = FALSE,
   xrange = c(0, 1), yrange = c(0, 1))
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}
 
 \item{n_sim}{Number of individuals in the simulated community (integer)}
+
+\item{sad_type}{Root name of community sad distribution - e.g., lnorm for
+  the lognormal distribution (\code{\link[stats]{rlnorm}});
+  geom for the geometric distribution \code{\link[stats]{rlnorm}}),
+  or ls for the log-series distribution \code{\link[sads]{rls}}).
+
+  See \code{\link[sads]{rsad}} for all options. (character)}
+
+\item{sad_coef}{List with named arguments to be passed to the probability
+function defined by the argument \code{sad_type}.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}
@@ -28,7 +40,8 @@ and random spatial coordinates. This function consecutively calls
 \code{\link{sim_sad}} and \code{\link{sim_poisson_coords}}
 }
 \examples{
-com1 <- sim_poisson_community(s_pool = 20, n_sim = 500, cv_abund = 1)
+com1 <- sim_poisson_community(s_pool = 20, n_sim = 500, sad_type = "lnorm",
+sad_coef = list("meanlog" = 2, "sdlog" = 1))
 plot(com1)
 
 }

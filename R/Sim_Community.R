@@ -22,7 +22,17 @@
 #'   species in the simulated local community? (logical)
 #'
 #' @details The function \code{sim_sad} provides a wrapper around the function
-#'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}.
+#'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
+#'   contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
+#'   define the number of individuals in the simulated community. This is
+#'   implemented by converting the abundance distribution simulated with
+#'   \code{\link[sads]{rsad}} into a relative abundance distribution. In a second
+#'   step the required no. of individuals \code{(n_sim)} is sampled from this
+#'   distribution (with replacement).
+#'
+#'   Please note that this might effect the interpretation of the parameters of
+#'   the underlying statistical distribution, e.g. the mean abundance will always
+#'   be \code{n_sim/n_pool} irrespective of the settings of \code{sad_coef}.
 #'
 #' When \code{fix_s_sim = FALSE} the species number in the local
 #'   community might deviate from \code{s_pool} due to stochastic sampling. When
@@ -31,6 +41,7 @@
 #'   theoretical distribution parameters. Generally, with \code{fix_s_sim = TRUE}
 #'   additional very rare species will be added to the community, while the abundance
 #'   of the most common ones is reduced to keep the defined number of individuals.
+#'
 #'
 #' @return Object of class \code{sad}, which contains a named integer vector
 #'  with species abundances
@@ -338,21 +349,27 @@ sim_poisson_coords <- function(abund_vec,
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- sim_poisson_community(s_pool = 20, n_sim = 500, cv_abund = 1)
+#' com1 <- sim_poisson_community(s_pool = 20, n_sim = 500, sad_type = "lnorm",
+#' sad_coef = list("meanlog" = 2, "sdlog" = 1))
 #' plot(com1)
 #'
 #' @export
 #'
 sim_poisson_community <- function(s_pool,
                                   n_sim,
-                                  cv_abund = 1,
-                                  fix_s_sim = F,
+                                  sad_type = c("lnorm","bs", "gamma", "geom", "ls",
+                                               "mzsm","nbinom", "pareto", "poilog", "power",
+                                               "volkov","powbend", "weibull"),
+                                  sad_coef = list("cv_abund" = 1),
+                                  fix_s_sim = FALSE,
                                   xrange= c(0,1),
                                   yrange = c(0,1)
                                   )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
-                       fix_s_sim = fix_s_sim)
+   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
+                   sad_type = sad_type,
+                   sad_coef = sad_coef,
+                   fix_s_sim = fix_s_sim)
    abund_vec <- sim1
 
    sim_dat <- sim_poisson_coords(abund_vec = abund_vec,
@@ -594,16 +611,19 @@ sim_thomas_coords <- function(abund_vec,
 #' @author Felix May
 #'
 #' @examples
-#' com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, cv_abund = 1,
+#' com1 <- sim_thomas_community(s_pool = 20, n_sim = 500, sad_type = "lnorm",
+#'                              sad_coef = list("meanlog" = 2, "sdlog" = 1),
 #'                              sigma = 0.01)
 #' plot(com1)
 #'
 #' @export
 #'
-sim_thomas_community <- function(s_pool,
-                                 n_sim,
-                                 cv_abund = 1,
-                                 fix_s_sim = F,
+sim_thomas_community <- function(s_pool, n_sim,
+                                 sad_type = c("lnorm","bs", "gamma", "geom", "ls",
+                                              "mzsm","nbinom", "pareto", "poilog", "power",
+                                              "volkov","powbend", "weibull"),
+                                 sad_coef = list("cv_abund" = 1),
+                                 fix_s_sim = FALSE,
                                  sigma = 0.02,
                                  cluster_points = NA,
                                  mother_points = NA,
@@ -611,8 +631,10 @@ sim_thomas_community <- function(s_pool,
                                  yrange = c(0,1)
                                  )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim, cv_abund = cv_abund,
-                       fix_s_sim = fix_s_sim)
+   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
+                   sad_type = sad_type,
+                   sad_coef = sad_coef,
+                   fix_s_sim = fix_s_sim)
    abund_vec <- sim1
 
    sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
