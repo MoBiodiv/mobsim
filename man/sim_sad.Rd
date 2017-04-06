@@ -2,19 +2,26 @@
 % Please edit documentation in R/Sim_Community.R
 \name{sim_sad}
 \alias{sim_sad}
-\title{Simulate log-normal species abundance distributions}
+\title{Simulate species abundance distributions}
 \usage{
-sim_sad(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
+sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
+  "mzsm", "nbinom", "pareto", "poilog", "power", "volkov", "powbend",
+  "weibull"), sad_coef = list(cv_abund = 1), fix_s_sim = FALSE)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}
 
 \item{n_sim}{Number of individuals in the simulated community (integer)}
 
-\item{cv_abund}{Coefficient of variation ( = sd/mean) of relative
-abundances. The higher \code{cv_abund}, the lower the evenness of the
-simulated community. This means with increasing \code{cv_abund} there are more
-rare and more dominant species (numeric)}
+\item{sad_type}{Root name of community sad distribution - e.g., lnorm for
+  the lognormal distribution (\code{\link[stats]{rlnorm}});
+  geom for the geometric distribution \code{\link[stats]{rlnorm}}),
+  or ls for the log-series distribution \code{\link[sads]{rls}}).
+
+  See \code{\link[sads]{rsad}} for all options. (character)}
+
+\item{sad_coef}{List with named arguments to be passed to the probability
+function defined by the argument \code{sad_type}.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}
@@ -24,20 +31,28 @@ Object of class \code{sad}, which contains a named integer vector
  with species abundances
 }
 \description{
-Simulate abundance data from a log-normal distributions with defined number
-of species in the pool \code{s_pool}, defined number of individuals
-\code{n_sim}, and defined coefficient of variation of relative abundances
-\code{cv_abund}.
+Simulate species abundance with user-defined number
+of species in the pool \code{(s_pool)}, and number of individuals
+\code{(n_sim)} in the simulated community.
 }
 \details{
+The function \code{sim_sad} provides a wrapper around the function
+  \code{\link[sads]{rsad}} from the R package \code{\link{sads}}.
+
+
+
+
 When \code{fix_s_sim = FALSE} the species number in the local
   community might deviate from \code{s_pool} due to stochastic sampling. When
   \code{fix_s_sim = TRUE} the local number of species will equal
   \code{s_pool}, but this constraint can result in systematic biases from the
-  theoretical distribution parameters defined by \code{cv_abund}.
+  theoretical distribution parameters. Generally, with \code{fix_s_sim = TRUE}
+  additional very rare species will be added to the community, while the abundance
+  of the most common ones is reduced to keep the defined number of individuals.
 }
 \examples{
-abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+ sad_coef = list("meanlog" = 2, "sdlog" = 1))
 plot(abund1, method = "octave")
 plot(abund1, method = "rank")
 

@@ -12,11 +12,6 @@ sim_poisson_community(s_pool, n_sim, cv_abund = 1, fix_s_sim = F,
 
 \item{n_sim}{Number of individuals in the simulated community (integer)}
 
-\item{cv_abund}{Coefficient of variation ( = sd/mean) of relative
-abundances. The higher \code{cv_abund}, the lower the evenness of the
-simulated community. This means with increasing \code{cv_abund} there are more
-rare and more dominant species (numeric)}
-
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}
 

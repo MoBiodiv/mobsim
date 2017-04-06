@@ -1,25 +1,36 @@
-#' Simulate log-normal species abundance distributions
+#' Simulate species abundance distributions
 #'
-#' Simulate abundance data from a log-normal distributions with defined number
-#' of species in the pool \code{s_pool}, defined number of individuals
-#' \code{n_sim}, and defined coefficient of variation of relative abundances
-#' \code{cv_abund}.
+#' Simulate species abundance with user-defined number
+#' of species in the pool \code{(s_pool)}, and number of individuals
+#' \code{(n_sim)} in the simulated community.
 #'
 #' @param s_pool Number of species in the pool (integer)
+#'
 #' @param n_sim  Number of individuals in the simulated community (integer)
-#' @param cv_abund Coefficient of variation ( = sd/mean) of relative
-#' abundances. The higher \code{cv_abund}, the lower the evenness of the
-#' simulated community. This means with increasing \code{cv_abund} there are more
-#' rare and more dominant species (numeric)
+#'
+#' @param sad_type Root name of community sad distribution - e.g., lnorm for
+#'   the lognormal distribution (\code{\link[stats]{rlnorm}});
+#'   geom for the geometric distribution \code{\link[stats]{rlnorm}}),
+#'   or ls for the log-series distribution \code{\link[sads]{rls}}).
+#'
+#'   See \code{\link[sads]{rsad}} for all options. (character)
+#'
+#' @param sad_coef List with named arguments to be passed to the probability
+#'   function defined by the argument \code{sad_type}.
 #'
 #' @param fix_s_sim Should the simulation constrain the number of
 #'   species in the simulated local community? (logical)
 #'
-#' @details When \code{fix_s_sim = FALSE} the species number in the local
+#' @details The function \code{sim_sad} provides a wrapper around the function
+#'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}.
+#'
+#' When \code{fix_s_sim = FALSE} the species number in the local
 #'   community might deviate from \code{s_pool} due to stochastic sampling. When
 #'   \code{fix_s_sim = TRUE} the local number of species will equal
 #'   \code{s_pool}, but this constraint can result in systematic biases from the
-#'   theoretical distribution parameters defined by \code{cv_abund}.
+#'   theoretical distribution parameters. Generally, with \code{fix_s_sim = TRUE}
+#'   additional very rare species will be added to the community, while the abundance
+#'   of the most common ones is reduced to keep the defined number of individuals.
 #'
 #' @return Object of class \code{sad}, which contains a named integer vector
 #'  with species abundances
@@ -27,13 +38,19 @@
 #' @author Felix May
 #'
 #' @examples
-#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+#'  sad_coef = list("meanlog" = 2, "sdlog" = 1))
 #' plot(abund1, method = "octave")
 #' plot(abund1, method = "rank")
 #'
 #' @export
-#'
-sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
+
+sim_sad <- function(s_pool, n_sim,
+                    sad_type = c("lnorm","bs", "gamma", "geom", "ls",
+                                 "mzsm","nbinom", "pareto", "poilog", "power",
+                                 "volkov","powbend", "weibull"),
+                    sad_coef = list("cv_abund" = 1),
+                    fix_s_sim = FALSE)
 {
    if (!is.numeric(s_pool) || s_pool <= 0)
       stop("s_pool has to be a positive integer number")
@@ -45,53 +62,45 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
    if (n_sim %% as.integer(n_sim) > 0)
       warning("n_sim is rounded to the nearest integer")
 
+
    s_pool <- round(s_pool, digits = 0)
    n_sim <- round(n_sim, digits = 0)
 
-   if (fix_s_sim == T)
+   sad_type <- match.arg(sad_type)
+
+   # allow compatibility with older version of sim_sad
+   if (sad_type == "lnorm" & names(sad_coef)[1] == "cv_abund"){
       mean_abund <- n_sim/s_pool
-   else
-      mean_abund <- 100
+      sd_abund <-  mean_abund * sad_coef$cv_abund
+      sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
+      mu1 <- log(mean_abund) - sigma1^2/2
+      sad_coef <- list("meanlog" = mu1, "sdlog" = sigma1)
+   }
 
-   sd_abund <- mean_abund * cv_abund
+   abund1 <- sads::rsad(S = s_pool, frac = 1, sad = sad_type, coef = sad_coef, zeroes = T)
+   rel_abund <- abund1/sum(abund1)
 
-   sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
-   mu1 <- log(mean_abund) - sigma1^2/2
+   sample_vec <- sample(x = length(rel_abund), size = n_sim, replace = T, prob = rel_abund)
+   abund2 <- as.numeric(sort(table(sample_vec), decreasing = T))
 
-   if (fix_s_sim == T){
-
-      n <- 0
-      while (n < n_sim){
-         abund1 <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
-         abund_local <- round(abund1)
-         abund_local[abund_local == 0] <- 1
-         n <- sum(abund_local)
-      }
+   if (fix_s_sim == T & length(abund2) < s_pool){
+      s_diff <- s_pool - length(abund2)
+      abund2 <- c(abund2, rep(1, s_diff))
+      n <- sum(abund2)
 
       #randomly remove individuals until target level is reached
       while (n > n_sim){
-         relabund <- abund_local/sum(abund_local)
+         rel_abund <- abund2/sum(abund2)
          # draw proportional to relative abundance
-         irand <- sample(1:s_pool, size = 1, prob = relabund)
-         if (abund_local[irand] > 1) abund_local[irand] <- abund_local[irand]-1
-         n <- sum(abund_local)
+         irand <- sample(1:s_pool, size = 1, prob = rel_abund)
+         if (abund2[irand] > 1) abund2[irand] <- abund2[irand] - 1
+         n <- sum(abund2)
       }
-
-      abund_local <- sort(abund_local, decreasing = T)
-      names(abund_local) <- paste("species", 1:length(abund_local), sep = "")
-
-   } else {
-
-      abund_pool <- rlnorm(s_pool, meanlog = mu1, sdlog = sigma1)
-      relabund_pool <- sort(abund_pool/sum(abund_pool), decreasing = T)
-      abund_local <- table(sample(1:s_pool, n_sim, replace = T,
-                                  prob = relabund_pool))
-      names(abund_local) <- paste("species", names(abund_local), sep = "")
-
    }
 
-   class(abund_local) <- c("sad","integer")
-   return(abund_local)
+   names(abund2) <- paste("species", 1:length(abund2), sep = "")
+   class(abund2) <- c("sad","integer")
+   return(abund2)
 }
 
 #' Plot species abundance distributions
@@ -102,8 +111,8 @@ sim_sad <- function(s_pool, n_sim, cv_abund = 1, fix_s_sim = FALSE)
 #'
 #' @details With \code{method = "octave"} a histogram showing the number
 #' species in several abundance classes is generated. The abundance class
-#' are a simplified version of the "octaves" suggested by Prestion (1948), which
-#' are based on log2 binning. The first abundance class includes species
+#' are a simplified version of the "octaves" suggested by Preston (1948), which
+#' are based on log2-binning. The first abundance class includes species
 #' with 1 individual, the second with 2, the third with 3-4, the fourth with 5-8, etc.
 #'
 #' With \code{method = "rank"} rank-abundance curve is generated with
