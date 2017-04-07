@@ -23,7 +23,9 @@ with a cluster size of `sigma = 0.05`.
 
 ```{r}
 library(MoBspatial)
-sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 500, sigma = 0.05)
+sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 500, sad_type = "lnorm",
+                                 sad_coef = list("meanlog" = 2, "sdlog" = 1),
+                                 sigma = 0.05)
 ```
 
 Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
@@ -40,13 +42,12 @@ str(sim_dat1)
 ## Species abundance distribution
 
 A fundamental non-spatial pattern of a community is the abundance distribution,
-i.e. the distribution of commonness and rarity in a community. For the abundance
-distribution there is no function in `MoBspatial`, but you easily get the 
-abundance distribution by counting the number of individuals of each species using
-the R standard function `table()`
+i.e. the distribution of commonness and rarity in a community. The abundance
+distribution can be extracted from a community object using the function 
+`communtiy_to_sad()`
 
 ```{r}
-abund <- table(sim_dat1$census$species)
+abund1 <- community_to_sad(sim_dat1)
 ```
 
 A standard plot in community ecology is the *rank-abundance plot* where the 
@@ -54,8 +55,7 @@ abundance of each species is plotted vs. its rank from highest to lowest abundan
 As a standard log-scaling is used for the abundance axis in this plot.
 
 ```{r, fig.width = 5, fig.height = 5}
-plot(sort(as.numeric(abund), decreasing = T), type="b", log="y",
-     xlab="Species rank", ylab="Species abundance")
+plot(abund1, method = "rank")
 ```
 
 Of course the abundance distribution can be also visualized as a histogram. 
@@ -63,18 +63,11 @@ By tradition for the binning of species abundances logarithms with base 2 are us
 following the suggestion of Preston (1948).
 This means the first abundance class includes species with just one invididual,
 the second class with two individuals, the third class with 3-4, the fourth with
-5-8 etc.
+5-8 etc. These abundance classes are called "octaves".
 
-This binning method can be easily implemented using the R package [untb](https://CRAN.R-project.org/package=untb) by
-Robin Hankin. 
 
 ```{r, fig.width = 5, fig.height = 5}
-library(untb)
-abund_dist <- preston(count(abund))
-abund_dist
-
-barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
-        xlab = "Abundance class", ylab ="No. of species")
+plot(abund1, method = "octave")
 ```
 
 ## Rarefaction curve
@@ -83,14 +76,12 @@ Another important biodiversity pattern is the *rarefaction-curve*, which estimat
 how the number of observed species increases with sample size of individuals.
 The rarefaction curve assumes that individuals are sampled randomly and
 independently (Gotelli & Colwell 2001). The rarefaction curve only depends on 
-the abundance distribution of species and therefore the function of MoBspatial only
-requires species abundances as argument.
+the abundance distribution of species.
 
 ```{r, fig.width = 5, fig.height = 5}
-rc1 <- rare_curve(abund)
-str(rc1)
-plot(species ~ n, data = rc1, type = "l", xlab = "No. of individuals sampled",
-     ylab = " Expected no. of species")
+rare1 <- spec_sample_curve(sim_dat1, method = "rarefaction")
+str(rare1)
+plot(rare1)
 ```
 
 # Spatial patterns
@@ -112,29 +103,35 @@ or regularity of conspecific individuals (i.e. individuals of the same species).
 Therefore the species-accumulation curves requires individuals positions in addition
 to the abundances.
 
+Due to the close relationship of the accumulation and rarefaction curves they are
+calculated and plotted with the same function.
+
 It is comprehensive to plot the rarefaction and the species-accumulation curve
 together. The difference between the two curves indicates aggregation or regularity
 of conspecifics.
 
 ```{r, fig.width = 5, fig.height = 5}
-sac1 <- accum_curve(sim_dat1)
-plot(1:length(rc1), rc1, type = "l", xlab = "No. of individuals sampled",
-     ylab = " Expected no. of species")
-lines(1:length(sac1), sac1, col = "red")
-legend("bottomright", legend = c("Rarefaction","Accumulation"), col = 1:2, lwd = 2)
+spec_curves1 <- spec_sample_curve(sim_dat1, method = c("accumulation", "rarefaction"))
+plot(spec_curves1)
 ```
 
 ## Diversity-area relationships
 
 The most well-known spatial biodiversity pattern is the *species-area relationship* 
-(SAR). In MoBspatial the function `DiVAR` (diversity-area relationships) calculates
+(SAR). In MoBspatial the function `divar` (diversity-area relationships) calculates
 the species richness in randomly located subplots (quadrats or rectangles) of 
-different sizes. However, the function `DiVAR` calculates additional indices,
+different sizes. However, the function `divar` calculates additional indices,
 including the Shannon and Simpson diversity indices for each subplot, as well
 as the number of endemic species, which are the species that *only* occur within, 
 but not outside the subplot. Documentation for the Shannon and Simpson diversity
 indices can be found in the package [vegan](https://cran.r-project.org/package=vegan)
-in the function `?diversity`. 
+in the function `?diversity`.
+
+For the Shannon and Simpson diversity indices also the corresponding *Effective
+Number of Species (ENS)* is calculated (Jost 2006). This measure corresponds
+to the species number in a community of *equally abundant species*, which results
+in the same Shannon and Simpson indices as the observed community (with unequal)
+abundances.
 
 The endemics-area relationship (EAR) has been suggested as important tool to
 investigate the consequences of habitat loss for biodiversity (He & Hubbell 2011,
@@ -147,13 +144,10 @@ subplot_size <- c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5,
 divar1 <- divar(sim_dat1, prop_area = subplot_size)
 head(divar1)
 ```
-Plot SAR and EAR
+
 
 ```{r, fig.width = 5, fig.height = 5}
-plot(mean_spec ~ prop_area, data = divar1, type = "b", ylim = c(0, 30),
-     xlab = "Proportion of area", ylab = "No. of species")
-lines(mean_end ~ prop_area, data = divar1, type = "b", col = 2)
-legend("topleft",c("SAR","EAR"), col = 1:2, lwd = 2)
+plot(divar1)
 ```
 
 ## Distance decay of community similarity
@@ -169,13 +163,10 @@ The function `dist_decay` makes use of the function `vegdist` from the package
 Here is a demonstration how the distance decay can be estimated and visualized
 
 ```{r,fig.width=5, fig.height=5}
-dd <- dist_decay(sim_dat1, prop_area = 0.05, n_samples = 30, method = "jaccard")
-head(dd)
+dd1 <- dist_decay(sim_dat1, prop_area = 0.05, n_samples = 30, method = "jaccard")
+head(dd1)
 
-plot(similarity ~ distance, data = dd, xlab = "Distance", ylab = "Similarity")
-dd.loess <- loess(similarity ~ distance, data = dd)
-pred.sim <- predict(dd.loess)
-lines(dd$distance, pred.sim, lwd=2)
+plot(dd1)
 ```
 
 
@@ -189,8 +180,10 @@ the measurement and comparison of species richness. Ecology Letters 4: 379–391
 3. He & Hubbell 2001. Species-area relationships always overestimate extinction
 rates from habitat loss. Nature 473:368–371
 
-4. Keil et al. 2015. On the decline of biodiversity due to area loss. 
+4. Jost 2006. Entropy and diversity. Oikos, 113:363–375.
+
+5. Keil et al. 2015. On the decline of biodiversity due to area loss. 
 Nature communications 6.
 
-5. Morlon et al. 2008. A general framework for the distance–decay of similarity in ecological communities.
+6. Morlon et al. 2008. A general framework for the distance–decay of similarity in ecological communities.
 Ecology Letters 9:904–917.
