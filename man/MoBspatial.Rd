@@ -13,15 +13,15 @@ is described by its xy-coordinates and a species identity label.
 \section{Functions to simulate species abundances and distributions}{
 
 
-\code{\link{SAD.lognorm}}
+\code{\link{sim_sad}}
 
-\code{\link{Sim.Poisson.Coords}}
+\code{\link{sim_poisson_coords}}
 
-\code{\link{Sim.Thomas.Coords}}
+\code{\link{sim_thomas_coords}}
 
-\code{\link{Sim.Poisson.Community}}
+\code{\link{sim_poisson_community}}
 
-\code{\link{Sim.Thomas.Community}}
+\code{\link{sim_thomas_community}}
 }
 
 \section{Functions to analyse species abundances and distributions}{
@@ -29,15 +29,15 @@ is described by its xy-coordinates and a species identity label.
 
 \code{\link{rare_curve}}
 
-\code{\link{SAC}}
+\code{\link{spec_sample_curve}}
 
-\code{\link{DivAR}}
+\code{\link{divar}}
 
 \code{\link{dist_decay}}
 
 \code{\link{sample_quadrats}}
 }
+
 \author{
 Felix May
 }
-

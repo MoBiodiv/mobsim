@@ -6,8 +6,8 @@ using namespace Rcpp;
 // the function is an efficient re-implementation of the rThomas function from the spatstat package
 
 // [[Rcpp::export]]
-DataFrame rThomas_rcpp(int nPoints,
-                       int nMotherPoints,
+DataFrame rThomas_rcpp(int n_points,
+                       int n_mother_points,
                        double sigma,
                        double mu,     //mean number of points per cluster,
                        double xmin = 0,
@@ -17,7 +17,7 @@ DataFrame rThomas_rcpp(int nPoints,
 )
 {
    //simulate mother points
-   //double kappa = nPoints/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
+   //double kappa = n_points/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
 
    // double expand = 4.0*sigma;
    //
@@ -29,34 +29,34 @@ DataFrame rThomas_rcpp(int nPoints,
    //
    // double lambda_mother = kappa * (xmax2 - xmin2) * (ymax2 - ymin2);
 
-   NumericVector xpoints(nPoints);
-   NumericVector ypoints(nPoints);
+   NumericVector xpoints(n_points);
+   NumericVector ypoints(n_points);
 
    NumericVector xmother;
    NumericVector ymother;
 
    RNGScope scope;
 
-   //int nMotherPoints = as<int>(rpois(1, lambda_mother));
-   //int nMotherPoints = as<int>(rpois(1, kappa));
+   //int n_mother_points = as<int>(rpois(1, lambda_mother));
+   //int n_mother_points = as<int>(rpois(1, kappa));
 
-   if (nMotherPoints > 0){
+   if (n_mother_points > 0){
 
-      // xmother = runif(nMotherPoints, xmin2, xmax2);
-      // ymother = runif(nMotherPoints, ymin2, ymax2);
-      xmother = runif(nMotherPoints, xmin, xmax);
-      ymother = runif(nMotherPoints, ymin, ymax);
+      // xmother = runif(n_mother_points, xmin2, xmax2);
+      // ymother = runif(n_mother_points, ymin2, ymax2);
+      xmother = runif(n_mother_points, xmin, xmax);
+      ymother = runif(n_mother_points, ymin, ymax);
 
       double xnew, ynew;
       int imother;
 
       NumericVector dxy(2);
 
-      for (int ipoint = 0; ipoint < nPoints; ++ipoint){
+      for (int ipoint = 0; ipoint < n_points; ++ipoint){
 
          do {
 
-            imother = as<int>(runif(1, 0, nMotherPoints));
+            imother = as<int>(runif(1, 0, n_mother_points));
 
             dxy = rnorm(2, 0.0, sigma);
             xnew = xmother[imother] + dxy[0];
@@ -67,15 +67,15 @@ DataFrame rThomas_rcpp(int nPoints,
          xpoints[ipoint] = xnew;
          ypoints[ipoint] = ynew;
       }
-   } // end if nMotherPoints > 0
+   } // end if n_mother_points > 0
 
    else {
-      xpoints = runif(nPoints, xmin, xmax);
-      ypoints = runif(nPoints, ymin, ymax);
+      xpoints = runif(n_points, xmin, xmax);
+      ypoints = runif(n_points, ymin, ymax);
    }
 
-   DataFrame xydat = DataFrame::create(_["X"] = xpoints,
-                                       _["Y"] = ypoints);
+   DataFrame xydat = DataFrame::create(_["x"] = xpoints,
+                                       _["y"] = ypoints);
 
    return(xydat);
 }

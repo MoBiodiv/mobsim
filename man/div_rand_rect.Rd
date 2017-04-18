@@ -4,27 +4,39 @@
 \alias{div_rand_rect}
 \title{Distribution of local diversity indices}
 \usage{
-div_rand_rect(prop.A = 0.25, comm, nrect = 100, exclude_zeros = F)
+div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = F)
 }
 \arguments{
-\item{prop.A}{Size of subplots as proportion of the total area}
+\item{prop_area}{Size of subplots as proportion of the total area}
 
 \item{comm}{\code{\link{community}} object}
 
-\item{nrect}{Number of randomly located subplots}
+\item{n_rect}{Number of randomly located subplots}
 
-\item{exclude_zeros}{logical - should subplots without individuals be excluded?}
+\item{exclude_zeros}{Should subplots without individuals be excluded? (logical)}
 }
 \value{
 Vector with mean and standard deviation of the following diversity
-indices: (1) Number of species (2) Number of endemics (3) Shannon-diversity
-(4) Simpson diversity
+indices:
+\enumerate{
+   \item Number of species
+   \item Number of endemics
+   \item Shannon index
+   \item ENS_shannon
+   \item Simpson index
+   \item ENS_simpson
+}
 }
 \description{
-Get mean and sd of diversity indices in several equally sized subplots
-of a community
+Get mean and standard deviation of diversity indices in several equally
+sized subplots of a community
+}
+\examples{
+sim1 <- sim_poisson_community(100,1000)
+div_rand_rect(prop_area = 0.1, comm = sim1)
+
+
 }
 \seealso{
 \code{\link{div_rect}}
 }
-

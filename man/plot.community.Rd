@@ -4,9 +4,22 @@
 \alias{plot.community}
 \title{Plot spatial community object}
 \usage{
-\method{plot}{community}(com1, col = NA, pch = NA, ...)
+\method{plot}{community}(comm, col = NA, pch = NA, ...)
+}
+\arguments{
+\item{comm}{Community object}
+
+\item{col}{Color vector to mark species identities}
+
+\item{pch}{Plotting character to mark speces identities}
+
+\item{...}{Other parameters to \link[graphics]{plot}}
 }
 \description{
-Plot spatial community object
+Plot positions and species identities of all individuals in a community object.
 }
+\examples{
+sim1 <- sim_thomas_community(30, 500)
+plot(sim1)
 
+}

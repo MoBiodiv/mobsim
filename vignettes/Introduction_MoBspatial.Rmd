@@ -69,45 +69,47 @@ these components.
 
 ## Simulate abundances
 
-* Function `SAD.lognorm()`
+* Function `sim_sad()`
 * Choose
-    + Number of species `S.pool`
-    + Number of individuals `N.local`
+    + Number of species `s_pool`
+    + Number of individuals `n_sim`
+    + Type of the species abundance distribution `sad_type` e.g. log-normal
+    (`sad_type = "lnorm"`) or log-series (`sad_type = "ls"`)
     + Evenness of species abundance described by coefficient of variation of relative
-    abundances `cv.abund`. Note the `cv.abund` is *inversely* related to evenness.
+    abundances `cv_abund`. Note the `cv_abund` is *inversely* related to evenness.
     cv is defined as standard deviation / mean abundance.
     
 ```{r}
-sim1 <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 0.0)
-sim2 <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 1.0)
-sim3 <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 2.0)
+abund1 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 0.5))
+abund2 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 1.0))
+abund3 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 2.0))
 ```
 
 ```{r}
-str(sim1)
+str(abund1)
 ```
 
 With fixed local species richness
 
 ```{r}
-sim1a <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 0.0, fixS.local = T)
-sim2a <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 1.0, fixS.local = T)
-sim3a <- SAD.lognorm(S.pool = 100, N.local = 1000, cv.abund = 2.0, fixS.local = T)
+abund1a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 0.5), fix_s_sim = T)
+abund2a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 1.0), fix_s_sim = T)
+abund3a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 2.0), fix_s_sim = T)
 ```
 
 ```{r}
-str(sim1a)
+str(abund1a)
 ```
 
 ### Plotting abundance distributions
 
 #### Rank-abundance plots
-
-```{r}
-abund1 <- sort(sim1$abund, decreasing = T)
-abund2 <- sort(sim2$abund, decreasing = T)
-abund3 <- sort(sim3$abund, decreasing = T)
-```
 
 ```{r, fig.width = 5, fig.height = 5}
 plot(as.numeric(abund1), type="b", log="y",
@@ -138,9 +140,9 @@ hist(abund3, xlab = "Abundance", ylab = "No. of species")
 
 ```{r}
 library(untb)
-sad1 <- preston(abund1, n = 9)
-sad2 <- preston(abund2, n = 9)
-sad3 <- preston(abund3, n = 9)
+sad1 <- preston(count(abund1), n = 9)
+sad2 <- preston(count(abund2), n = 9)
+sad3 <- preston(count(abund3), n = 9)
 
 sad1
 ```
@@ -170,8 +172,8 @@ Spatial poisson process:
 * Random distribution
 
 ```{r}
-abund1 <- SAD.lognorm(S.pool = 10, N.local = 100)$abund
-com1 <- Sim.Poisson.Coords(abund.vec = abund1, xrange = c(0,1), yrange = c(0,1))
+abund1 <- sim_sad(s_pool = 10, n_sim = 100)
+com1 <- sim_poisson_coords(abund_vec = abund1, xrange = c(0,1), yrange = c(0,1))
 ```
 
 Explore the community object
@@ -194,7 +196,7 @@ plot(com1)
    and number of offspring points
 
 ```{r}
-com2 <- Sim.Thomas.Coords(abund.vec = abund1, sigma = 0.02)
+com2 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02)
 ```
 
 
@@ -205,7 +207,7 @@ plot(com2)
 **Change cluster radius**
 
 ```{r, fig.width = 10, fig.height = 5}
-com2a <- Sim.Thomas.Coords(abund.vec = abund1, sigma = 0.05)
+com2a <- sim_thomas_coords(abund_vec = abund1, sigma = 0.05)
 par(mfrow = c(1,2))
 plot(com2)
 plot(com2a)
@@ -214,7 +216,7 @@ plot(com2a)
 **Change number of mother points**
 
 ```{r, fig.width = 10, fig.height = 5}
-com2b <- Sim.Thomas.Coords(abund.vec = abund1, sigma = 0.02, mother.points = 1)
+com2b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
 par(mfrow = c(1,2))
 plot(com2)
 plot(com2b)
@@ -223,7 +225,7 @@ plot(com2b)
 **Change number of points per cluster**
 
 ```{r, fig.width = 10, fig.height = 5}
-com2c <- Sim.Thomas.Coords(abund.vec = abund1, sigma = 0.02, cluster.points = 10)
+com2c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 10)
 par(mfrow = c(1,2))
 plot(com2)
 plot(com2c)
@@ -234,13 +236,13 @@ plot(com2c)
 ### Poisson process
 
 ```{r}
-com3 <- Sim.Poisson.Community(S.pool = 100, N.local = 500)
+com3 <- sim_poisson_community(s_pool = 100, n_sim = 500)
 ```
 
 ### Thomas process
 
 ```{r}
-com4 <- Sim.Thomas.Community(S.pool = 100, N.local = 500, sigma = 0.05)
+com4 <- sim_thomas_community(s_pool = 100, n_sim = 500, sigma = 0.05)
 ```
 
 ```{r, fig.width = 10, fig.height = 5}

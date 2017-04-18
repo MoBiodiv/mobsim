@@ -11,12 +11,12 @@ Description: The package includes functions to simulated species distributions i
 License: What license is it under?
 LazyData: TRUE
 Imports:
-    Rcpp (>= 0.12.5),
+    Rcpp,
     vegan,
+    sads
 LinkingTo: Rcpp
 Suggests:
-    rmarkdown,
-    untb
+    rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 URL: http://github.com/FelixMay/MoBspatial
