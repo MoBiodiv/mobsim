@@ -88,6 +88,10 @@ plot(sim2)
 sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 plot(sim3)
 
+# With large sigma the distribution will be essentially random (see Details)
+sim4 <- sim_thomas_coords(abund, sigma = 10)
+plot(sim4)
+
 }
 \references{
 Morlon et al. 2008. A general framework for the distance--decay of similarity

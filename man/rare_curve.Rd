@@ -21,11 +21,10 @@ sample sizes from 1 to \code{sum(abund_vec)}. It is similar to the function
 \code{\link[vegan]{rarecurve}} in the R package \code{\link{vegan}}.
 }
 \examples{
-sad1 <- sim_sad(100, 10000)
+sad1 <- sim_sad(100, 2000, sad_type = "lnorm", sad_coef = list("meanlog" = 2,
+                                                                "sdlog" = 1))
 rc1 <- rare_curve(sad1)
-plot(rc1, type = "l", log = "xy", xlab = "Sample size",
-     ylab = "Expected species richness")
-lines(1:length(rc2), rc2, lty = 2, col = 2)
+plot(rc1, type = "l", xlab = "Sample size", ylab = "Expected species richness")
 
 }
 \references{

@@ -52,11 +52,10 @@ spec_sample <- function(abund_vec, n)
 #' in the measurement and comparison of species richness. Ecology Letters 4, 379--391.
 #'
 #' @examples
-#' sad1 <- sim_sad(100, 10000)
+#' sad1 <- sim_sad(100, 2000, sad_type = "lnorm", sad_coef = list("meanlog" = 2,
+#'                                                                 "sdlog" = 1))
 #' rc1 <- rare_curve(sad1)
-#' plot(rc1, type = "l", log = "xy", xlab = "Sample size",
-#'      ylab = "Expected species richness")
-#' lines(1:length(rc2), rc2, lty = 2, col = 2)
+#' plot(rc1, type = "l", xlab = "Sample size", ylab = "Expected species richness")
 #'
 #' @export
 #'

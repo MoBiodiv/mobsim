@@ -467,6 +467,10 @@ sim_poisson_community <- function(s_pool,
 #' sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 #' plot(sim3)
 #'
+#' # With large sigma the distribution will be essentially random (see Details)
+#' sim4 <- sim_thomas_coords(abund, sigma = 10)
+#' plot(sim4)
+#'
 #' @export
 #'
 sim_thomas_coords <- function(abund_vec,
