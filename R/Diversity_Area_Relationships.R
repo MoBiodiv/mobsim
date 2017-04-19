@@ -31,14 +31,14 @@
 #' number of dominant species in a community.
 #'
 #' @references
-#' Jost 2006. Entropy and diversity. Oikos, 113, 363–375.
+#' Jost 2006. Entropy and diversity. Oikos, 113, 363-375.
 #'
 #' Chao et al. 2014. Rarefaction and extrapolation with Hill numbers: a framework
 #' for sampling and estimation in species diversity studies.
-#' Ecological Monographs, 84, 45–67.
+#' Ecological Monographs, 84, 45-67.
 #'
 #' Hsieh et al. 2016. iNEXT: an R package for rarefaction and extrapolation of
-#' species diversity (Hill numbers). Methods Ecol Evol, 7, 1451–1456.
+#' species diversity (Hill numbers). Methods Ecol Evol, 7, 1451-1456.
 
 #'
 #' @examples
@@ -229,19 +229,21 @@ plot.divar <- function(divar)
 {
    #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
 
-   #Plot an empty graph and legend to get the size of the legend
+   # #Plot an empty graph and legend to get the size of the legend
    max_spec <- max(divar$m_species)
-   plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
-        type = "n")
-
-   my_legend_size <-legend("topright",
-                           legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
-                           lwd = 2, plot = FALSE)
-   dev.off()
+   # plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
+   #      type = "n")
+   #
+   # my_legend_size <-legend("topright",
+   #                         legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
+   #                         lwd = 2, plot = FALSE)
+   # dev.off()
 
    #custom ylim. Add the height of legend to upper bound of the range
    my_range <- c(0, max_spec)
-   my_range[2] <- 1.05*(my_range[2] + my_legend_size$rect$h)
+   #my_range[2] <- 1.05*(my_range[2] + my_legend_size$rect$h)
+   my_range[2] <- 1.3 * my_range[2]
+
 
    #draw the plot with custom ylim
    plot(m_species ~ prop_area, data = divar, ylim = my_range,

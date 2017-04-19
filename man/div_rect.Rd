@@ -49,12 +49,12 @@ div_rect(0, 0, 0.3, 0.3, sim1)
 
 }
 \references{
-Jost 2006. Entropy and diversity. Oikos, 113, 363–375.
+Jost 2006. Entropy and diversity. Oikos, 113, 363-375.
 
 Chao et al. 2014. Rarefaction and extrapolation with Hill numbers: a framework
 for sampling and estimation in species diversity studies.
-Ecological Monographs, 84, 45–67.
+Ecological Monographs, 84, 45-67.
 
 Hsieh et al. 2016. iNEXT: an R package for rarefaction and extrapolation of
-species diversity (Hill numbers). Methods Ecol Evol, 7, 1451–1456.
+species diversity (Hill numbers). Methods Ecol Evol, 7, 1451-1456.
 }
