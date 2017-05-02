@@ -1,4 +1,4 @@
-#' MoBspatial: A package for spatial analysis of scale-dependent biodiversity changes.
+#' mobsim: A package for spatial analysis of scale-dependent biodiversity changes.
 #'
 #' The package includes functions to simulate species distributions in space
 #' as well as for the analysis of spatially-explicit data, where each individual
@@ -33,9 +33,9 @@
 #'
 #' @docType package
 #'
-#' @name MoBspatial
+#' @name mobsim
 NULL
 
-#' @useDynLib MoBspatial
+#' @useDynLib mobsim
 #' @importFrom Rcpp sourceCpp
 NULL

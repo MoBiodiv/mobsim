@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // sSAC1_C
 NumericVector sSAC1_C(NumericVector x, NumericVector y, IntegerVector id_spec);
-RcppExport SEXP MoBspatial_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
+RcppExport SEXP mobsim_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // rThomas_rcpp
 DataFrame rThomas_rcpp(int n_points, int n_mother_points, double sigma, double mu, double xmin, double xmax, double ymin, double ymax);
-RcppExport SEXP MoBspatial_rThomas_rcpp(SEXP n_pointsSEXP, SEXP n_mother_pointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
+RcppExport SEXP mobsim_rThomas_rcpp(SEXP n_pointsSEXP, SEXP n_mother_pointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

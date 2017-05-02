@@ -1,5 +1,5 @@
 ---
-title: "Introduction to MoBspatial"
+title: "Introduction to mobsim"
 author: "Felix May"
 date: "`r Sys.Date()`"
 output:
@@ -7,24 +7,24 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Introduction to MoBspatial}
+  %\VignetteIndexEntry{Introduction to mobsim}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# Installing MoBspatial
+# Installing mobsim
 
-The package `MoBspatial` is available on GitHub and you can freely download 
+The package `mobsim` is available on GitHub and you can freely download 
 the code there.
 
-[MoBspatial on GitHub](https://github.com/MoBiodiv/MoBspatial)
+[mobsim on GitHub](https://github.com/MoBiodiv/mobsim)
 
 However, when you just want to use the package it is more easy to install the 
 package directly from GitHub using the package `devtools`.
 
 ## Prerequistes
 
-`MoBspatial` includes efficient C++ code that is integrated with R using the 
+`mobsim` includes efficient C++ code that is integrated with R using the 
 package `Rcpp`. Therefore you have to install the latest version of Rcpp 
 from CRAN with install.packages("Rcpp").
 
@@ -42,18 +42,18 @@ in the free online book *Advanced R* by Hadley Wickham
 
 ```{r, eval = F}
 library(devtools)
-install_github("MoBiodiv/MoBspatial", build_vignettes = T)
+install_github("MoBiodiv/mobsim", build_vignettes = T)
 ```
 
 ```{r}
-library(MoBspatial)
+library(mobsim)
 ```
 
 ## Getting help
 
 ```{r, eval = F}
-?MoBspatial
-browseVignettes("MoBspatial")
+?mobsim
+browseVignettes("mobsim")
 ```
 
 # Simulating communities
@@ -64,7 +64,7 @@ Biodiversity in any sampling area depends on three components
 2. The relative abundances of species
 3. The spatial distribution of species
 
-`MoBspatial` provides functions to simulate communities and control for all 
+`mobsim` provides functions to simulate communities and control for all 
 these components.
 
 ## Simulate abundances

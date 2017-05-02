@@ -34,7 +34,7 @@ For this purpose we first simulate a reference community. We assume a random
 distribution of species in sapce, so we can use the function `sim_poisson_community`:
 
 ```{r, fig.width = 5, fig.height = 5}
-library(MoBspatial)
+library(mobsim)
 
 S0 <- 100
 N0 <- 1000
@@ -79,7 +79,7 @@ by overlapping curves, which end at different numbers of individuals.
 
 The second simulated change represents a reduction of the evenness of the species
 abundance distribution, i.e. there are more very rare and more very common
-species than in the reference community. In `MoBspatial` there is the argument
+species than in the reference community. In `mobsim` there is the argument
 `cv_abund` in the simulation functions, which is the coefficient of variation (cv)
 of species abundances. The higher the cv the lower the evenness and vice versa.
 We also use the argument `fix_s_local= T` to simulate a community with exactly S0

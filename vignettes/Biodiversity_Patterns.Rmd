@@ -13,7 +13,7 @@ vignette: >
 ---
 
 This introduction shows the list of biodiversity patterns that can be analysed
-using `MoBspatial`. In this vignette the patterns are evaluated on a simulated
+using `mobsim`. In this vignette the patterns are evaluated on a simulated
 data set, but of cause the same patterns can be also derived from real data.
 
 # Simulate and explore data
@@ -22,7 +22,7 @@ First, we generate community data by simulating 500 individuals from 30 species
 with a cluster size of `sigma = 0.05`.
 
 ```{r}
-library(MoBspatial)
+library(mobsim)
 sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 500, sad_type = "lnorm",
                                  sad_coef = list("meanlog" = 2, "sdlog" = 1),
                                  sigma = 0.05)
@@ -86,9 +86,9 @@ plot(rare1)
 
 # Spatial patterns
 
-As indicated by the name of the package the main strengths of MoBspatial are the
+As indicated by the name of the package the main strengths of mobsim are the
 simulation and analysis of *spatial* biodiversity patterns. In the following all
-functions for spatial pattern evaluation included in MoBspatial are introduced.
+functions for spatial pattern evaluation included in mobsim are introduced.
 
 ## Species-accumulation curve
 
@@ -118,7 +118,7 @@ plot(spec_curves1)
 ## Diversity-area relationships
 
 The most well-known spatial biodiversity pattern is the *species-area relationship* 
-(SAR). In MoBspatial the function `divar` (diversity-area relationships) calculates
+(SAR). In mobsim the function `divar` (diversity-area relationships) calculates
 the species richness in randomly located subplots (quadrats or rectangles) of 
 different sizes. However, the function `divar` calculates additional indices,
 including the Shannon and Simpson diversity indices for each subplot, as well
@@ -135,7 +135,7 @@ abundances.
 
 The endemics-area relationship (EAR) has been suggested as important tool to
 investigate the consequences of habitat loss for biodiversity (He & Hubbell 2011,
-Keil et al. 2015). For the evaluation of SAR and EAR using MoBspatial a vector
+Keil et al. 2015). For the evaluation of SAR and EAR using mobsim a vector
 with subplot sizes as proportion of the total community size has to be defined
 
 ```{r}
@@ -152,7 +152,7 @@ plot(divar1)
 
 ## Distance decay of community similarity
 
-The last spatial pattern provided by MoBspatial is the *distance decay of
+The last spatial pattern provided by mobsim is the *distance decay of
 community similarity*, which quantifies how quickly the similarity in species
 composition between two subplots decreases with the distance between two subplots.
 
