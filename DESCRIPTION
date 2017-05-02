@@ -1,4 +1,4 @@
-Package: MoBspatial
+Package: mobsim
 Type: Package
 Title: Spatial analysis of scale-dependent biodiversity changes
 Version: 0.0.0.9000
@@ -8,7 +8,7 @@ Description: The package includes functions to simulated species distributions i
     with controlled abundance distributions as well as controlled intraspecific
     aggregation. For analysis there are functions for species rarefaction and
     accumulation curves, species-area relationships and endemics-area relationships.
-License: What license is it under?
+License: GPL3
 LazyData: TRUE
 Imports:
     Rcpp,
@@ -19,4 +19,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
-URL: http://github.com/FelixMay/MoBspatial
+URL: http://github.com/FelixMay/mobsim
