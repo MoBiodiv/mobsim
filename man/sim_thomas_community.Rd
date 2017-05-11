@@ -17,13 +17,23 @@ sim_thomas_community(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma",
 
 \item{sad_type}{Root name of community sad distribution - e.g., lnorm for
   the lognormal distribution (\code{\link[stats]{rlnorm}});
-  geom for the geometric distribution \code{\link[stats]{rlnorm}}),
+  geom for the geometric distribution \code{\link[stats]{rgeom}}),
   or ls for the log-series distribution \code{\link[sads]{rls}}).
 
   See \code{\link[sads]{rsad}} for all options. (character)}
 
 \item{sad_coef}{List with named arguments to be passed to the probability
-function defined by the argument \code{sad_type}.}
+  function defined by the argument \code{sad_type}. The parameter names
+  are given in the respective distribution functions. See e.g.
+  \code{\link[sads]{rls}} for the parameters of the log-series, or
+  \code{\link[stats]{rlnorm}} for the parameters of the log-normal
+  distribution.
+
+  In \code{mobsim} the log-normal distribution can alternatively be
+  parameterized by the coefficient of variation of the abundances
+  \code{cv_abund}, which is the standard deviation of abundances divided by
+  the mean abundance (no. of individuals / no. of species). \code{cv_abund}
+  is this negatively correlated with community evenness.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}

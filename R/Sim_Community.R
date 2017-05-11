@@ -10,13 +10,24 @@
 #'
 #' @param sad_type Root name of community sad distribution - e.g., lnorm for
 #'   the lognormal distribution (\code{\link[stats]{rlnorm}});
-#'   geom for the geometric distribution \code{\link[stats]{rlnorm}}),
+#'   geom for the geometric distribution (\code{\link[stats]{rgeom}}),
 #'   or ls for the log-series distribution \code{\link[sads]{rls}}).
 #'
 #'   See \code{\link[sads]{rsad}} for all options. (character)
 #'
 #' @param sad_coef List with named arguments to be passed to the probability
-#'   function defined by the argument \code{sad_type}.
+#'   function defined by the argument \code{sad_type}. The parameter names
+#'   are given in the respective distribution functions. See e.g.
+#'   \code{\link[sads]{rls}} for the parameters of the log-series, or
+#'   \code{\link[stats]{rlnorm}} for the parameters of the log-normal
+#'   distribution.
+#'
+#'   In \code{mobsim} the log-normal distribution can alternatively be
+#'   parameterized by the coefficient of variation of the abundances
+#'   \code{cv_abund}, which is the standard deviation of abundances divided by
+#'   the mean abundance (no. of individuals / no. of species). \code{cv_abund}
+#'   is thus negatively correlated with the evenness of the species abundance
+#'   distribution.
 #'
 #' @param fix_s_sim Should the simulation constrain the number of
 #'   species in the simulated local community? (logical)
@@ -50,7 +61,7 @@
 #'
 #' @examples
 #' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
-#'  sad_coef = list("meanlog" = 2, "sdlog" = 1))
+#'  sad_coef = list("cv_abund" = 1))
 #' plot(abund1, method = "octave")
 #' plot(abund1, method = "rank")
 #'
@@ -265,7 +276,7 @@ plot.community <- function(comm, col = NA, pch = NA, ...)
    if (is.na(pch))  pch <- 19
 
    plot(y ~ x, data = comm$census, xlim = comm$x_min_max, ylim = comm$y_min_max,
-        col = col[comm$census$species], pch = pch, las = 1, ...)
+        col = col[comm$census$species], pch = pch, las = 1, asp = 1, ...)
 }
 
 #' Get species abundance distribution from community object
