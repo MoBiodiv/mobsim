@@ -65,7 +65,8 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                   hc_mod <- list(cif = "hardcore", par = list(beta = n_quadrats, hc = min_dist),
                                  w = spatstat::owin(c(0, 1 - quadrat_size), c(0, 1 - quadrat_size)))
                   hc_points <- spatstat::rmh(model = hc_mod, start=list(n.start = n_quadrats),
-                                             control=list(p = 1, nrep = 1e6))
+                                             control=list(p = 1, nrep = 1e6),
+                                             saveinfo = F, verbose = F)
                   xpos <- hc_points$x
                   ypos <- hc_points$y
 
