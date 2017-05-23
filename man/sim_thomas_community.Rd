@@ -17,7 +17,7 @@ sim_thomas_community(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma",
 
 \item{sad_type}{Root name of community sad distribution - e.g., lnorm for
   the lognormal distribution (\code{\link[stats]{rlnorm}});
-  geom for the geometric distribution \code{\link[stats]{rgeom}}),
+  geom for the geometric distribution (\code{\link[stats]{rgeom}}),
   or ls for the log-series distribution \code{\link[sads]{rls}}).
 
   See \code{\link[sads]{rsad}} for all options. (character)}
@@ -33,7 +33,8 @@ sim_thomas_community(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma",
   parameterized by the coefficient of variation of the abundances
   \code{cv_abund}, which is the standard deviation of abundances divided by
   the mean abundance (no. of individuals / no. of species). \code{cv_abund}
-  is this negatively correlated with community evenness.}
+  is thus negatively correlated with the evenness of the species abundance
+  distribution.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}

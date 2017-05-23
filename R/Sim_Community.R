@@ -89,35 +89,40 @@ sim_sad <- function(s_pool, n_sim,
    n_sim <- round(n_sim, digits = 0)
 
    sad_type <- match.arg(sad_type)
+   
+   if (s_pool > 1){
 
-   # allow compatibility with older version of sim_sad
-   if (sad_type == "lnorm" & names(sad_coef)[1] == "cv_abund"){
-      mean_abund <- n_sim/s_pool
-      sd_abund <-  mean_abund * sad_coef$cv_abund
-      sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
-      mu1 <- log(mean_abund) - sigma1^2/2
-      sad_coef <- list("meanlog" = mu1, "sdlog" = sigma1)
-   }
-
-   abund1 <- sads::rsad(S = s_pool, frac = 1, sad = sad_type, coef = sad_coef, zeroes = T)
-   rel_abund <- abund1/sum(abund1)
-
-   sample_vec <- sample(x = length(rel_abund), size = n_sim, replace = T, prob = rel_abund)
-   abund2 <- as.numeric(sort(table(sample_vec), decreasing = T))
-
-   if (fix_s_sim == T & length(abund2) < s_pool){
-      s_diff <- s_pool - length(abund2)
-      abund2 <- c(abund2, rep(1, s_diff))
-      n <- sum(abund2)
-
-      #randomly remove individuals until target level is reached
-      while (n > n_sim){
-         rel_abund <- abund2/sum(abund2)
-         # draw proportional to relative abundance
-         irand <- sample(1:s_pool, size = 1, prob = rel_abund)
-         if (abund2[irand] > 1) abund2[irand] <- abund2[irand] - 1
-         n <- sum(abund2)
+      # allow compatibility with older version of sim_sad
+      if (sad_type == "lnorm" & names(sad_coef)[1] == "cv_abund"){
+         mean_abund <- n_sim/s_pool
+         sd_abund <-  mean_abund * sad_coef$cv_abund
+         sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 +1))
+         mu1 <- log(mean_abund) - sigma1^2/2
+         sad_coef <- list("meanlog" = mu1, "sdlog" = sigma1)
       }
+   
+      abund1 <- sads::rsad(S = s_pool, frac = 1, sad = sad_type, coef = sad_coef, zeroes = T)
+      rel_abund <- abund1/sum(abund1)
+   
+      sample_vec <- sample(x = length(rel_abund), size = n_sim, replace = T, prob = rel_abund)
+      abund2 <- as.numeric(sort(table(sample_vec), decreasing = T))
+   
+      if (fix_s_sim == T & length(abund2) < s_pool){
+         s_diff <- s_pool - length(abund2)
+         abund2 <- c(abund2, rep(1, s_diff))
+         n <- sum(abund2)
+   
+         #randomly remove individuals until target level is reached
+         while (n > n_sim){
+            rel_abund <- abund2/sum(abund2)
+            # draw proportional to relative abundance
+            irand <- sample(1:s_pool, size = 1, prob = rel_abund)
+            if (abund2[irand] > 1) abund2[irand] <- abund2[irand] - 1
+            n <- sum(abund2)
+         }
+      }
+   }  else { # end if(s_pool > 1)
+      abund2 <- n_sim
    }
 
    names(abund2) <- paste("species", 1:length(abund2), sep = "")

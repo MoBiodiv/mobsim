@@ -33,7 +33,7 @@
 #'
 #' @export
 #'
-sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
+sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                             plot = T, method = "random",
                             avoid_overlap = F,
                             x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1)
@@ -52,32 +52,53 @@ sample_quadrats <- function(comm, n_quadrats = 10, quadrat_area = 0.01,
 
       if (n_quadrats > 1){
 
+         min_dist <- sqrt(2*quadrat_area)
+
          if (method == "random"){
-
-            xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-            ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
-
-            coords <- cbind(xpos,ypos)
-            min_dist <- sqrt(2*quadrat_size^2)
 
             if (avoid_overlap == T){
 
-               count <- 0
 
-               while(min(dist(coords)) < min_dist && count <= 9999){
-                  xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-                  ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+               if (requireNamespace("spatstat", quietly = TRUE)){
+
+                  # Hard core process:
+                  hc_mod <- list(cif = "hardcore", par = list(beta = n_quadrats, hc = min_dist),
+                                 w = spatstat::owin(c(0, 1 - quadrat_size), c(0, 1 - quadrat_size)))
+                  hc_points <- spatstat::rmh(model = hc_mod, start=list(n.start = n_quadrats),
+                                             control=list(p = 1, nrep = 1e6))
+                  xpos <- hc_points$x
+                  ypos <- hc_points$y
 
                   coords <- cbind(xpos,ypos)
-                  count <- count + 1
+                  if (min(dist(coords)) < min_dist)
+                     warning("There are overlapping sampling squares in the design. Use less quadrats or smaller quadrat area.")
+               } else {
+
+                  count <- 0
+
+                  while(min(dist(coords)) < min_dist && count <= 999){
+                     xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+                     ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+
+                     coords <- cbind(xpos,ypos)
+                     count <- count + 1
+                  }
+
+                  if (count > 999) warning("Cannot find a sampling layout with no overlap.
+                                            Install the package spatstat for an improved method for non-overlapping squares,
+                                            Use less quadrats or smaller quadrat area, or set avoid_overlap to FALSE.")
+
                }
 
-               if (count > 9999) stop("Cannot find a sampling layout with no overlap")
-
             } else {
-               if (min(dist(coords)) < min_dist)
+               xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+               ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+
+               coords <- cbind(xpos,ypos)
+               if (min(dist(coords)) < 0.9999*quadrat_size)
                   warning("There are overlapping sampling squares in the design")
             }
+
          } # end method == random
 
          if (method == "transect"){
