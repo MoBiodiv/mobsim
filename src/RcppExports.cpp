@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // sSAC1_C
 NumericVector sSAC1_C(NumericVector x, NumericVector y, IntegerVector id_spec);
-RcppExport SEXP mobsim_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
+RcppExport SEXP _mobsim_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // rThomas_rcpp
 DataFrame rThomas_rcpp(int n_points, int n_mother_points, double sigma, double mu, double xmin, double xmax, double ymin, double ymax);
-RcppExport SEXP mobsim_rThomas_rcpp(SEXP n_pointsSEXP, SEXP n_mother_pointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
+RcppExport SEXP _mobsim_rThomas_rcpp(SEXP n_pointsSEXP, SEXP n_mother_pointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -35,4 +35,15 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(rThomas_rcpp(n_points, n_mother_points, sigma, mu, xmin, xmax, ymin, ymax));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_mobsim_sSAC1_C", (DL_FUNC) &_mobsim_sSAC1_C, 3},
+    {"_mobsim_rThomas_rcpp", (DL_FUNC) &_mobsim_rThomas_rcpp, 8},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_mobsim(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
