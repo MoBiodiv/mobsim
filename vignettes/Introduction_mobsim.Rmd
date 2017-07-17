@@ -148,7 +148,8 @@ sad1
 ```
 
 ```{r, fig.width = 5, fig.height = 5}
-class_names <- c("1","2","3-4","5-8","9-16","17-32","33-64",">64")
+class_names <- c("1","2","3-4","5-8","9-16","17-32","33-64","64-128","128-256",">256")
+class_names <- class_names[1:nrow(sad1)]
 barplot(height = sad2$Freq, names.arg = class_names,
         xlab = "Abundance class", ylab ="No. of species", col = 2)
 ```
