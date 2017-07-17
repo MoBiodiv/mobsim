@@ -139,24 +139,25 @@ hist(abund3, xlab = "Abundance", ylab = "No. of species")
 * Fourth class: 5-8 individuals
 
 ```{r}
-library(untb)
-sad1 <- preston(count(abund1), n = 9)
-sad2 <- preston(count(abund2), n = 9)
-sad3 <- preston(count(abund3), n = 9)
+oct_max <- ceiling(log2(max(c(abund1, abund2, abund3))))
+sad1 <- sads::octav(as.numeric(abund1), oct = 0:oct_max)
+sad2 <- sads::octav(as.numeric(abund2), oct = 0:oct_max)
+sad3 <- sads::octav(as.numeric(abund3), oct = 0:oct_max)
 
 sad1
 ```
 
 ```{r, fig.width = 5, fig.height = 5}
-barplot(height = as.numeric(sad2), names.arg = names(sad1),
+class_names <- c("1","2","3-4","5-8","9-16","17-32","33-64",">64")
+barplot(height = sad2$Freq, names.arg = class_names,
         xlab = "Abundance class", ylab ="No. of species", col = 2)
 ```
 
 ```{r, fig.width = 5, fig.height = 5}
 
-abund_mat <- rbind(sad1, sad2, sad3)
+abund_mat <- rbind(sad1$Freq, sad2$Freq, sad3$Freq)
 
-barplot(height = abund_mat, names.arg = names(sad1), beside = T,
+barplot(height = abund_mat, names.arg = class_names, beside = T,
         xlab = "Abundance class", ylab ="No. of species", col = 1:3)
 ```
 
