@@ -13,26 +13,28 @@ sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
 
 \item{n_sim}{Number of individuals in the simulated community (integer)}
 
-\item{sad_type}{Root name of community sad distribution - e.g., lnorm for
-  the lognormal distribution (\code{\link[stats]{rlnorm}});
-  geom for the geometric distribution (\code{\link[stats]{rgeom}}),
-  or ls for the log-series distribution \code{\link[sads]{rls}}).
+\item{sad_type}{Root name of the species abundance distribution model of the
+  species pool (character) - e.g., "lnorm" for the lognormal distribution
+  (\code{\link[stats]{rlnorm}}); "geom" for the geometric distribution
+  (\code{\link[stats]{rgeom}}), or "ls" for Fisher's log-series distribution
+  (\code{\link[sads]{rls}}).
 
-  See \code{\link[sads]{rsad}} for all options. (character)}
+  See the table in \strong{Details} below, or \code{\link[sads]{rsad}}
+  for all SAD model options.}
 
-\item{sad_coef}{List with named arguments to be passed to the probability
-  function defined by the argument \code{sad_type}. The parameter names
-  are given in the respective distribution functions. See e.g.
-  \code{\link[sads]{rls}} for the parameters of the log-series, or
-  \code{\link[stats]{rlnorm}} for the parameters of the log-normal
-  distribution.
+\item{sad_coef}{List with named arguments to be passed to the distribution
+  function defined by the argument \code{sad_type}. An overview of parameter
+  names is given in the table below.
 
-  In \code{mobsim} the log-normal distribution can alternatively be
-  parameterized by the coefficient of variation of the abundances
-  \code{cv_abund}, which is the standard deviation of abundances divided by
-  the mean abundance (no. of individuals / no. of species). \code{cv_abund}
-  is thus negatively correlated with the evenness of the species abundance
-  distribution.}
+  In \code{mobsim} the log-normal and the Poisson log-normal distributions
+  can alternatively be parameterized by the coefficient of variation (cv)
+  of the relative abundances in the species pool. Accordingly, \code{cv_abund}
+  is the standard deviation of abundances divided by the mean abundance
+  (no. of individuals / no. of species). \code{cv_abund} is thus negatively
+  correlated with the evenness of the species abundance distribution.
+
+  Please note that the parameters \emph{mu} and \sigma{sigma} are not equal
+  to the mean and standard deviation of the log-normal distribution.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}
@@ -42,37 +44,100 @@ Object of class \code{sad}, which contains a named integer vector
  with species abundances
 }
 \description{
-Simulate species abundance with user-defined number
-of species in the pool \code{(s_pool)}, and number of individuals
-\code{(n_sim)} in the simulated community.
+Simulate species abundance distribution (SAD) of a local community with
+user-defined number of species and relative abundance distribution in the pool,
+and user-defined number of individuals in the simulated local community.
 }
 \details{
-The function \code{sim_sad} provides a wrapper around the function
+The function \code{sim_sad} was built using code of the function
   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
   contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
-  define the number of individuals in the simulated community. This is
-  implemented by converting the abundance distribution simulated with
-  \code{\link[sads]{rsad}} into a relative abundance distribution. In a second
-  step the required no. of individuals \code{(n_sim)} is sampled from this
-  distribution (with replacement).
+  define the number of individuals in the simulated local community. This is
+  implemented by converting the abundance distribution simulated based on
+  \code{\link[sads]{rsad}} into a relative abundance distribution. This
+  relative abundance distribution is considered as the species pool for the
+  local community. In a second step the required no. of individuals \code{(n_sim)}
+  is sampled (with replacement) from this relative abundance distribution.
 
   Please note that this might effect the interpretation of the parameters of
   the underlying statistical distribution, e.g. the mean abundance will always
   be \code{n_sim/n_pool} irrespective of the settings of \code{sad_coef}.
 
-When \code{fix_s_sim = FALSE} the species number in the local
+  When \code{fix_s_sim = FALSE} the species number in the local
   community might deviate from \code{s_pool} due to stochastic sampling. When
   \code{fix_s_sim = TRUE} the local number of species will equal
   \code{s_pool}, but this constraint can result in systematic biases from the
   theoretical distribution parameters. Generally, with \code{fix_s_sim = TRUE}
   additional very rare species will be added to the community, while the abundance
   of the most common ones is reduced to keep the defined number of individuals.
+
+  Here is an overview of all available models (\code{sad_type}) and their
+  respective coefficients (\code{sad_coef}). Further information is provided
+  by the documentation of the specific functions that can be accesses by the
+  links. Please note that the coefficient \code{cv_abund} for the log-normal
+  and Poisson log-normal model are onyl available within \code{mobsim}.
+
+\tabular{lllll}{
+   \strong{SAD function} \tab \strong{Distribution name} \tab \strong{coef #1} \tab \strong{coef #2} \tab \strong{coef #3} \cr
+   \code{\link[sads]{rbs}} \tab Mac-Arthur's brokenstick \tab N \tab S \tab \cr
+   \code{\link[stats]{rgamma}} \tab Gamma distribution \tab shape \tab rate \tab scale \cr
+   \code{\link[stats]{rgeom}} \tab Geometric distribution \tab prob \tab \tab \cr
+   \code{\link[stats]{rlnorm}} \tab	Log-normal distributions \tab	meanlog \tab sdlog \tab cv_abund \cr
+   \code{\link[sads]{rls}} \tab Fisher's log-series distribution \tab N \tab alpha \tab \cr
+   \code{\link[sads]{rmzsm}} \tab Metacommunity zero-sum multinomial \tab J \tab theta \tab \cr
+   \code{\link[stats]{rnbinom}} \tab Negative binomial distribution \tab size \tab	prob \tab mu \cr
+   \code{\link[sads]{rpareto}} \tab Pareto distribution \tab shape \tab scale \tab \cr
+   \code{\link[sads]{rpoilog}} \tab Poisson-lognormal distribution \tab	mu	 \tab sigma \tab cv_abund \cr
+   \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
+   \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
+   \code{\link[sads]{rvolkov}} \tab Neutral theory distribution by Volkov et al. \tab theta \tab	m \tab J \cr
+   \code{\link[sads]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
+}
 }
 \examples{
-abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
- sad_coef = list("cv_abund" = 1))
-plot(abund1, method = "octave")
-plot(abund1, method = "rank")
+#Simulate log-normal species abundance distribution
+sad_lnorm1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+                      sad_coef = list("meanlog" = 5, "sdlog" = 0.5))
+plot(sad1_lnorm, method = "octave")
+plot(sad1_lnorm, method = "rank")
+
+# Alternative parameterization of the log-normal distribution
+sad_lnorm2 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+                      sad_coef = list("cv_abund" = 0.5))
+plot(sad2_lnorm, method = "octave")
+
+# Fix species richness in the simulation by adding rare species
+sad_lnorm3a <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
+                       sad_coef = list("cv_abund" = 5), fix_s_sim = T)
+sad_lnorm3b <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
+                       sad_coef = list("cv_abund" = 5))
+
+plot(sad_lnorm3a, method = "rank")
+points(1:length(sad_lnorm3b), sad_lnorm3b, type = "b", col = 2)
+legend("topright", c("fix_s_sim = TRUE","fix_s_sim = FALSE"),
+       col = 1:2, pch = 1)
+
+# Different important SAD models
+
+# Fisher's log-series
+sad_logseries <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "ls",
+                         sad_coef = list("N" = 1e5, "alpha" = 20))
+
+# Poisson log-normal
+sad_poilog <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "poilog",
+                      sad_coef = list("mu" = 5, "sig" = 0.5))
+
+# Mac-Arthur's broken stick
+sad_broken_stick <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "bs",
+                            sad_coef = list("N" = 1e5, "S" = 100))
+
+# Plot all SADs together as rank-abundance curves
+plot(sad_logseries, method = "rank")
+lines(1:length(sad_lnorm2), sad_lnorm2, type = "b", col = 2)
+lines(1:length(sad_poilog), sad_poilog, type = "b", col = 3)
+lines(1:length(sad_broken_stick), sad_broken_stick, type = "b", col = 4)
+legend("topright", c("Log-series","Log-normal","Poisson log-normal","Broken stick"),
+       col = 1:4, pch = 1)
 
 }
 \author{
