@@ -4,7 +4,7 @@
 \alias{plot.sad}
 \title{Plot species abundance distributions}
 \usage{
-plot.sad(abund, method = c("octave", "rank"))
+\method{plot}{sad}(abund, method = c("octave", "rank"))
 }
 \arguments{
 \item{abund}{Vector with species abundances (integer vector)}

@@ -10,15 +10,15 @@ Description: The package includes functions to simulated species distributions i
     accumulation curves, species-area relationships and endemics-area relationships.
 License: GPL3
 LazyData: TRUE
-Depends:
-    sads
 Imports:
     Rcpp,
-    vegan
+    vegan,
+    sads
 LinkingTo: Rcpp
 Suggests:
     rmarkdown,
-    spatstat
+    spatstat,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 URL: http://github.com/FelixMay/mobsim

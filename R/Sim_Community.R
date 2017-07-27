@@ -139,7 +139,6 @@ sim_sad <- function(s_pool, n_sim,
                     sad_coef = list("cv_abund" = 1),
                     fix_s_sim = FALSE)
 {
-
    sad_type <- match.arg(sad_type)
 
    if (!is.numeric(n_sim) || n_sim <= 0)
@@ -191,7 +190,11 @@ sim_sad <- function(s_pool, n_sim,
       }
 
       # Generates the "community"
-      sadr <- get(paste("r", sad_type, sep=""), mode = "function")
+      if (sad_type %in% c("gamma","geom","lnorm","nbinom")){
+         sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "stats")
+      } else {
+         sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "sads")
+      }
       abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
       abund_pool <- abund_pool[abund_pool > 0]

@@ -5,19 +5,6 @@
 
 using namespace Rcpp;
 
-// sSAC1_C
-NumericVector sSAC1_C(NumericVector x, NumericVector y, IntegerVector id_spec);
-RcppExport SEXP _mobsim_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type id_spec(id_specSEXP);
-    rcpp_result_gen = Rcpp::wrap(sSAC1_C(x, y, id_spec));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rThomas_rcpp
 DataFrame rThomas_rcpp(int n_points, int n_mother_points, double sigma, double mu, double xmin, double xmax, double ymin, double ymax);
 RcppExport SEXP _mobsim_rThomas_rcpp(SEXP n_pointsSEXP, SEXP n_mother_pointsSEXP, SEXP sigmaSEXP, SEXP muSEXP, SEXP xminSEXP, SEXP xmaxSEXP, SEXP yminSEXP, SEXP ymaxSEXP) {
@@ -36,10 +23,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sSAC1_C
+NumericVector sSAC1_C(NumericVector x, NumericVector y, IntegerVector id_spec);
+RcppExport SEXP _mobsim_sSAC1_C(SEXP xSEXP, SEXP ySEXP, SEXP id_specSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type id_spec(id_specSEXP);
+    rcpp_result_gen = Rcpp::wrap(sSAC1_C(x, y, id_spec));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_mobsim_sSAC1_C", (DL_FUNC) &_mobsim_sSAC1_C, 3},
     {"_mobsim_rThomas_rcpp", (DL_FUNC) &_mobsim_rThomas_rcpp, 8},
+    {"_mobsim_sSAC1_C", (DL_FUNC) &_mobsim_sSAC1_C, 3},
     {NULL, NULL, 0}
 };
 
