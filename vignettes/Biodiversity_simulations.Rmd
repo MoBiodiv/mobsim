@@ -1,0 +1,255 @@
+---
+title: "Introduction to mobsim"
+author: "Felix May"
+date: "`r Sys.Date()`"
+output:
+ rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Introduction to mobsim}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Installing mobsim
+
+The package `mobsim` is available on GitHub and you can freely download 
+the code there.
+
+[mobsim on GitHub](https://github.com/MoBiodiv/mobsim)
+
+However, when you just want to use the package it is more easy to install the 
+package directly from GitHub using the package `devtools`.
+
+## Prerequistes
+
+`mobsim` includes efficient C++ code that is integrated with R using the 
+package `Rcpp`. Therefore you have to install the latest version of Rcpp 
+from CRAN with install.packages("Rcpp").
+
+You’ll also need a working C++ compiler. To get it:
+
+* On Windows, install [Rtools](https://cran.r-project.org/bin/windows/Rtools/Rtools34.exe)
+* On Mac, install Xcode from the app store.
+* On Linux, sudo apt-get install r-base-dev or similar.
+
+When you are interested furthere in `Rcpp` a good introduction is available at
+in the free online book *Advanced R* by Hadley Wickham
+(http://adv-r.had.co.nz/Rcpp.html)
+
+##Installation
+
+```{r, eval = F}
+library(devtools)
+install_github("MoBiodiv/mobsim", build_vignettes = T)
+```
+
+```{r}
+library(mobsim)
+```
+
+## Getting help
+
+```{r, eval = F}
+?mobsim
+browseVignettes("mobsim")
+```
+
+# Simulating communities
+
+Biodiversity in any sampling area depends on three components
+
+1. The total number of individuals
+2. The relative abundances of species
+3. The spatial distribution of species
+
+`mobsim` provides functions to simulate communities and control for all 
+these components.
+
+## Simulate abundances
+
+* Function `sim_sad()`
+* Choose
+    + Number of species `s_pool`
+    + Number of individuals `n_sim`
+    + Type of the species abundance distribution `sad_type` e.g. log-normal
+    (`sad_type = "lnorm"`) or log-series (`sad_type = "ls"`)
+    + Evenness of species abundance described by coefficient of variation of relative
+    abundances `cv_abund`. Note the `cv_abund` is *inversely* related to evenness.
+    cv is defined as standard deviation / mean abundance.
+    
+```{r}
+abund1 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 0.5))
+abund2 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 1.0))
+abund3 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("cv_abund" = 2.0))
+```
+
+```{r}
+str(abund1)
+```
+
+With fixed local species richness
+
+```{r}
+abund1a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 0.5), fix_s_sim = T)
+abund2a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 1.0), fix_s_sim = T)
+abund3a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
+                sad_coef = list("meanlog" = 2, "sdlog" = 2.0), fix_s_sim = T)
+```
+
+```{r}
+str(abund1a)
+```
+
+### Plotting abundance distributions
+
+#### Rank-abundance plots
+
+```{r, fig.width = 5, fig.height = 5}
+plot(as.numeric(abund1), type="b", log="y",
+     xlab="Species rank", ylab="Species abundance", ylim = c(1, 200))
+lines(1:length(abund2), as.numeric(abund2), col = 2, type = "b")
+lines(1:length(abund3), as.numeric(abund3), col = 3, type = "b")
+```
+
+**How would a perfectly even community look like?**
+
+#### Species abundance distributions
+
+**Normal histogram**
+
+```{r, fig.width = 8, fig.height = 8}
+par(mfrow = c(2,2))
+hist(abund1, xlab = "Abundance", ylab = "No. of species")
+hist(abund2, xlab = "Abundance", ylab = "No. of species")
+hist(abund3, xlab = "Abundance", ylab = "No. of species")
+```
+
+**Preston binning method**
+
+* First class: 1 individual
+* Second class: 2 individuals
+* Third class: 3-4 individuals
+* Fourth class: 5-8 individuals
+
+```{r}
+oct_max <- ceiling(log2(max(c(abund1, abund2, abund3))))
+sad1 <- sads::octav(as.numeric(abund1), oct = 0:oct_max)
+sad2 <- sads::octav(as.numeric(abund2), oct = 0:oct_max)
+sad3 <- sads::octav(as.numeric(abund3), oct = 0:oct_max)
+
+sad1
+```
+
+```{r, fig.width = 5, fig.height = 5}
+class_names <- c("1","2","3-4","5-8","9-16","17-32","33-64","64-128","128-256",">256")
+class_names <- class_names[1:nrow(sad1)]
+barplot(height = sad2$Freq, names.arg = class_names,
+        xlab = "Abundance class", ylab ="No. of species", col = 2)
+```
+
+```{r, fig.width = 5, fig.height = 5}
+
+abund_mat <- rbind(sad1$Freq, sad2$Freq, sad3$Freq)
+
+barplot(height = abund_mat, names.arg = class_names, beside = T,
+        xlab = "Abundance class", ylab ="No. of species", col = 1:3)
+```
+
+## Simulate spatial distribution
+
+### Adding spatial coordinates to an abundance distribution
+
+#### Random positions
+
+Spatial poisson process: 
+
+* Constant density of individuals in space
+* Random distribution
+
+```{r}
+abund1 <- sim_sad(s_pool = 10, n_sim = 100)
+com1 <- sim_poisson_coords(abund_vec = abund1, xrange = c(0,1), yrange = c(0,1))
+```
+
+Explore the community object
+
+```{r}
+class(com1)
+str(com1)
+summary(com1)
+```
+
+```{r, fig.width = 5, fig.height = 5}
+plot(com1)
+```
+
+#### Aggregated positions
+
+* Thomas process
+   + Poisson distribution of mother points
+   + Clustering of offspring points around mother points with cluster size `sigma`
+   and number of offspring points
+
+```{r}
+com2 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02)
+```
+
+
+```{r, fig.width = 5, fig.height = 5}
+plot(com2)
+```
+
+**Change cluster radius**
+
+```{r, fig.width = 10, fig.height = 5}
+com2a <- sim_thomas_coords(abund_vec = abund1, sigma = 0.05)
+par(mfrow = c(1,2))
+plot(com2)
+plot(com2a)
+```
+
+**Change number of mother points**
+
+```{r, fig.width = 10, fig.height = 5}
+com2b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
+par(mfrow = c(1,2))
+plot(com2)
+plot(com2b)
+```
+
+**Change number of points per cluster**
+
+```{r, fig.width = 10, fig.height = 5}
+com2c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 10)
+par(mfrow = c(1,2))
+plot(com2)
+plot(com2c)
+```
+
+## Simulate abundances and distributions at the same time
+
+### Poisson process
+
+```{r}
+com3 <- sim_poisson_community(s_pool = 100, n_sim = 500)
+```
+
+### Thomas process
+
+```{r}
+com4 <- sim_thomas_community(s_pool = 100, n_sim = 500, sigma = 0.05)
+```
+
+```{r, fig.width = 10, fig.height = 5}
+par(mfrow = c(1,2))
+plot(com3)
+plot(com4)
+```
+

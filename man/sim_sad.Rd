@@ -98,13 +98,13 @@ The function \code{sim_sad} was built using code of the function
 #Simulate log-normal species abundance distribution
 sad_lnorm1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
                       sad_coef = list("meanlog" = 5, "sdlog" = 0.5))
-plot(sad1_lnorm, method = "octave")
-plot(sad1_lnorm, method = "rank")
+plot(sad_lnorm1, method = "octave")
+plot(sad_lnorm1, method = "rank")
 
 # Alternative parameterization of the log-normal distribution
 sad_lnorm2 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
                       sad_coef = list("cv_abund" = 0.5))
-plot(sad2_lnorm, method = "octave")
+plot(sad_lnorm2, method = "octave")
 
 # Fix species richness in the simulation by adding rare species
 sad_lnorm3a <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",

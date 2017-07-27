@@ -19,14 +19,14 @@ the code there.
 
 [mobsim on GitHub](https://github.com/MoBiodiv/mobsim)
 
-However, when you just want to use the package it is more easy to install the 
+However, when you just want to use the package, it is more easy to install the 
 package directly from GitHub using the package `devtools`.
 
 ## Prerequistes
 
 `mobsim` includes efficient C++ code that is integrated with R using the 
 package `Rcpp`. Therefore you have to install the latest version of Rcpp 
-from CRAN with install.packages("Rcpp").
+from CRAN before installing `mobsim`.
 
 You’ll also need a working C++ compiler. To get it:
 
@@ -34,18 +34,16 @@ You’ll also need a working C++ compiler. To get it:
 * On Mac, install Xcode from the app store.
 * On Linux, sudo apt-get install r-base-dev or similar.
 
-When you are interested furthere in `Rcpp` a good introduction is available at
-in the free online book *Advanced R* by Hadley Wickham
-(http://adv-r.had.co.nz/Rcpp.html)
-
 ##Installation
+
+Here is the code to install `mobsim` from GitHub
 
 ```{r, eval = F}
 library(devtools)
 install_github("MoBiodiv/mobsim", build_vignettes = T)
 ```
 
-```{r}
+```{r, message=FALSE}
 library(mobsim)
 ```
 
@@ -56,200 +54,258 @@ library(mobsim)
 browseVignettes("mobsim")
 ```
 
-# Simulating communities
+# An example application of mobsim
 
-Biodiversity in any sampling area depends on three components
+This vignettes shows on example application of `mobsim` to illustrate the concepts
+and functionality incorporated in the package. The example deals with the detection
+of biodiversity changes in a landscape. Specifically, we address the question
+of how inference on biodiversity changes depends on the biodiversity measures
+used as well as the spatial scale of sampling.
 
-1. The total number of individuals
-2. The relative abundances of species
-3. The spatial distribution of species
+The key idea of `mobsim` is to use controlled simulations to assess these changes.
+In this example, we assume that a hypothetical biodiversity driver, e.g. 
+an invasive species, pollution, or climate change reduces only the total number
+of individuals in a landscape, but does not change the species abundance distribution
+and the spatial distribution of species.
 
-`mobsim` provides functions to simulate communities and control for all 
-these components.
+In a first step, we simulate communities, which reflect thess assumptions. In a 
+second step, we generate virtual data sets by sampling the simulated communities, and
+in the third step we analyse these data in a similar way, as we would analyse real
+field data.
 
-## Simulate abundances
+## Simulating communities
 
-* Function `sim_sad()`
-* Choose
-    + Number of species `s_pool`
-    + Number of individuals `n_sim`
-    + Type of the species abundance distribution `sad_type` e.g. log-normal
-    (`sad_type = "lnorm"`) or log-series (`sad_type = "ls"`)
-    + Evenness of species abundance described by coefficient of variation of relative
-    abundances `cv_abund`. Note the `cv_abund` is *inversely* related to evenness.
-    cv is defined as standard deviation / mean abundance.
-    
-```{r}
-abund1 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("cv_abund" = 0.5))
-abund2 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("cv_abund" = 1.0))
-abund3 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("cv_abund" = 2.0))
-```
+We simulate two communities that have the same species richness (`s_pool`) and
+Poisson log-normal species abundance distribution (SAD) (, specified by`sad_type`
+and `sad_coef`) of the species pool, and the same intraspecific aggregation
+of species with cluster size parameter `sigma`. The two communities only differ
+in the total number of individuals (`n_sim`).
 
 ```{r}
-str(abund1)
+sim_n_high <- sim_thomas_community(s_pool = 200, n_sim = 20000, sad_type = "poilog",
+                                   sad_coef = list("cv_abund" = 1), sigma = 0.02)
+
+sim_n_low <- sim_thomas_community(s_pool = 200, n_sim = 10000, sad_type = "poilog",
+                                   sad_coef = list("cv_abund" = 1), sigma = 0.02)
 ```
 
-With fixed local species richness
+The function `sim_thomas_community` generates community objects that can be 
+conveniently summarised and plotted. The community object includes the xy-coordinates
+and species identities of all simulated individuals.
 
 ```{r}
-abund1a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("meanlog" = 2, "sdlog" = 0.5), fix_s_sim = T)
-abund2a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("meanlog" = 2, "sdlog" = 1.0), fix_s_sim = T)
-abund3a <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
-                sad_coef = list("meanlog" = 2, "sdlog" = 2.0), fix_s_sim = T)
+summary(sim_n_high)
+summary(sim_n_low)
 ```
 
-```{r}
-str(abund1a)
-```
-
-### Plotting abundance distributions
-
-#### Rank-abundance plots
-
-```{r, fig.width = 5, fig.height = 5}
-plot(as.numeric(abund1), type="b", log="y",
-     xlab="Species rank", ylab="Species abundance", ylim = c(1, 200))
-lines(1:length(abund2), as.numeric(abund2), col = 2, type = "b")
-lines(1:length(abund3), as.numeric(abund3), col = 3, type = "b")
-```
-
-**How would a perfectly even community look like?**
-
-#### Species abundance distributions
-
-**Normal histogram**
-
-```{r, fig.width = 8, fig.height = 8}
-par(mfrow = c(2,2))
-hist(abund1, xlab = "Abundance", ylab = "No. of species")
-hist(abund2, xlab = "Abundance", ylab = "No. of species")
-hist(abund3, xlab = "Abundance", ylab = "No. of species")
-```
-
-**Preston binning method**
-
-* First class: 1 individual
-* Second class: 2 individuals
-* Third class: 3-4 individuals
-* Fourth class: 5-8 individuals
-
-```{r}
-oct_max <- ceiling(log2(max(c(abund1, abund2, abund3))))
-sad1 <- sads::octav(as.numeric(abund1), oct = 0:oct_max)
-sad2 <- sads::octav(as.numeric(abund2), oct = 0:oct_max)
-sad3 <- sads::octav(as.numeric(abund3), oct = 0:oct_max)
-
-sad1
-```
-
-```{r, fig.width = 5, fig.height = 5}
-class_names <- c("1","2","3-4","5-8","9-16","17-32","33-64","64-128","128-256",">256")
-class_names <- class_names[1:nrow(sad1)]
-barplot(height = sad2$Freq, names.arg = class_names,
-        xlab = "Abundance class", ylab ="No. of species", col = 2)
-```
-
-```{r, fig.width = 5, fig.height = 5}
-
-abund_mat <- rbind(sad1$Freq, sad2$Freq, sad3$Freq)
-
-barplot(height = abund_mat, names.arg = class_names, beside = T,
-        xlab = "Abundance class", ylab ="No. of species", col = 1:3)
-```
-
-## Simulate spatial distribution
-
-### Adding spatial coordinates to an abundance distribution
-
-#### Random positions
-
-Spatial poisson process: 
-
-* Constant density of individuals in space
-* Random distribution
-
-```{r}
-abund1 <- sim_sad(s_pool = 10, n_sim = 100)
-com1 <- sim_poisson_coords(abund_vec = abund1, xrange = c(0,1), yrange = c(0,1))
-```
-
-Explore the community object
-
-```{r}
-class(com1)
-str(com1)
-summary(com1)
-```
-
-```{r, fig.width = 5, fig.height = 5}
-plot(com1)
-```
-
-#### Aggregated positions
-
-* Thomas process
-   + Poisson distribution of mother points
-   + Clustering of offspring points around mother points with cluster size `sigma`
-   and number of offspring points
-
-```{r}
-com2 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02)
-```
-
-
-```{r, fig.width = 5, fig.height = 5}
-plot(com2)
-```
-
-**Change cluster radius**
-
-```{r, fig.width = 10, fig.height = 5}
-com2a <- sim_thomas_coords(abund_vec = abund1, sigma = 0.05)
+```{r, fig.width=7.2, fig.height=4.1}
 par(mfrow = c(1,2))
-plot(com2)
-plot(com2a)
+plot(sim_n_high)
+plot(sim_n_low)
 ```
 
-**Change number of mother points**
+## Analysis of spatially-explicit community data
 
-```{r, fig.width = 10, fig.height = 5}
-com2b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
-par(mfrow = c(1,2))
-plot(com2)
-plot(com2b)
-```
-
-**Change number of points per cluster**
-
-```{r, fig.width = 10, fig.height = 5}
-com2c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 10)
-par(mfrow = c(1,2))
-plot(com2)
-plot(com2c)
-```
-
-## Simulate abundances and distributions at the same time
-
-### Poisson process
+The package `mobsim` offers functions to generate important biodiversity patterns
+from spatially-explicit community objects, for instance the well-known species-
+area relationship (SAR). The SAR is generated by nested subsampling of the
+community with samples of different sizes. To generate the SAR, the function
+`divar` (diversity-area relationships) is used, which requires a vector
+of sampling areas, specified as proportion of the total area. Here, we use
+an approximatley log-scaled sampling area vector.
 
 ```{r}
-com3 <- sim_poisson_community(s_pool = 100, n_sim = 500)
+area <- c(0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1)
+sar_n_high <- divar(sim_n_high, prop_area = area)
+sar_n_low <- divar(sim_n_low, prop_area = area)
+
+names(sar_n_high)
 ```
 
-### Thomas process
+For each sampling size, the function calculated mean and standard deviation
+of several biodiversity indices. For the SAR, we plot the mean species richness
+vs. sampling area.
+
+```{r, fig.width=5, fig.height=5}
+plot(m_species ~ prop_area, data = sar_n_high, type = "b", log = "xy", ylim = c(2,200),
+     xlab = "Proportion of area sampled.", ylab = "No. of species",
+     main = "Species-area relationship")
+lines(m_species ~ prop_area, data = sar_n_low, type = "b", col = "red")
+legend("bottomright",c("N high","N low"), col = 1:2, pch = 1)
+```
+
+We see that there are more species in the landscape with less individuals across
+most scales. However, the curves converge as soon as 50% or more of the landscape
+are sampled.
+
+In contrast to the simulated communities, where we have full information about
+all indivivuals in the landscape, in reality we only have data from local samples,
+e.g. plots, traps, etc.. In the following it is illustrated, how `mobsim` can
+be used to simulate the sampling process.
+
+## Sampling spatially-explicit community data
+
+The function `sample_quadrats` distributes sampling quadrats of user defined
+number (`n_quadrats`) and size (`quadrat_area`) in a landscape and returns the
+species abundancce in each square. The user can choose different spatial sampling
+design. Here, we use a random distribution of the sampling squares.
+
+First, we use many small samples:
+
+```{r, fig.width=7.2, fig.height=4.1}
+par(mfrow = c(1,2))
+samples_S_n_high <- sample_quadrats(sim_n_high, n_quadrats = 100,
+                                        quadrat_area = 0.001, method = "random",
+                                        avoid_overlap = T)
+samples_S_n_low <- sample_quadrats(sim_n_low, n_quadrats = 100,
+                                       quadrat_area = 0.001, method = "random",
+                                       avoid_overlap = T)
+```
+
+Second, we use less, but larger samples, that in total cover the same area than
+the many small samples.
+
+```{r, fig.width=7.2, fig.height=4.1}
+par(mfrow = c(1,2))
+samples_L_n_high <- sample_quadrats(sim_n_high, n_quadrats = 10,
+                                  quadrat_area = 0.01, method = "random",
+                                  avoid_overlap = T)
+samples_L_n_low <- sample_quadrats(sim_n_low, n_quadrats = 10,
+                                  quadrat_area = 0.01, method = "random",
+                                  avoid_overlap = T)
+```
+
+The function `sample_quadrats` return two objects: (i) a community matrix
+with quadrats in rows, species in columns and the abundance of every species in
+the respective cell. The second object includes the positions of the sampling
+squares in the landscapes.
 
 ```{r}
-com4 <- sim_thomas_community(s_pool = 100, n_sim = 500, sigma = 0.05)
+dim(samples_L_n_high$spec_dat)
+head(samples_L_n_high$spec_dat)[,1:5]
+
+dim(samples_L_n_high$spec_dat)
+head(samples_L_n_high$xy_dat)
 ```
 
-```{r, fig.width = 10, fig.height = 5}
-par(mfrow = c(1,2))
-plot(com3)
-plot(com4)
+
+## Analysis of plot-based community data
+
+The community matrix can now be analysed just as ecologist will analyse field data.
+A software package that is perfectly suited for this and smoothly integrates
+with mobsim is [vegan](https://CRAN.R-project.org/package=vegan). 
+
+Here, we use `vegan` calculate the the species richness, the Shannon- and Simpson-
+diversity indices for both landscapes and for both sampling scales.
+
+### Small scale analysis
+
+First, we analyse the small-scale samples:
+
+```{r, message=F}
+library(vegan)
+S_n_high <- specnumber(samples_S_n_high$spec_dat)
+S_n_low <- specnumber(samples_S_n_low$spec_dat)
+
+Shannon_n_low <- diversity(samples_S_n_high$spec_dat, index = "shannon")
+Shannon_n_high <- diversity(samples_S_n_low$spec_dat, index = "shannon")
+
+Simpson_n_low <- diversity(samples_S_n_high$spec_dat, index = "simpson")
+Simpson_n_high <- diversity(samples_S_n_low$spec_dat, index = "simpson")
 ```
+
+The three biodiversity indices are combined into one dataframe and can then
+be conveniently analysed using boxplots.
+
+```{r}
+div_dat_S <- data.frame(N = rep(c("N high","N low"), each = length(S_n_high)),
+                        S = c(S_n_high, S_n_low),
+                        Shannon = c(Shannon_n_high, Simpson_n_low),
+                        Simpson = c(Simpson_n_high, Simpson_n_low))
+```
+
+```{r, fig.width=7.2, fig.height=3.1}
+par(mfrow = c(1,3))
+boxplot(S ~ N, data = div_dat_S, ylab = "Species richness")
+boxplot(Shannon ~ N, data = div_dat_S, ylab = "Shannon diversity")
+boxplot(Simpson ~ N, data = div_dat_S, ylab = "Simpson diversity")
+```
+
+We see that on average the species richness and the Shannon-diversity are reduced
+in the landscape with low total abundance, while surprisingly Simpson-diversity
+is slightly higher with less individuals.
+
+Since the different diversity indices have different absolute values, we calculate
+relative changes of the mean values as diversity changes effect size.
+The relative change is defined as
+
+$$  relEff = \frac{diversity(N = low) - diversity(N = high)}{diversity(N = high)} $$
+
+Accordingly, a relative effect of -0.5 means that diversity is reduced by 50%, while
+a positive value means diversity increases by the reduction of total abundance.
+A value of zero indicates no change.
+
+```{r}
+mean_div_S <- aggregate(div_dat_S[,2:4], by = list(div_dat_S$N), FUN = mean)
+relEff_S <- (mean_div_S[mean_div_S$Group.1 == "N low", 2:4] -  mean_div_S[mean_div_S$Group.1 == "N high", 2:4])/
+             mean_div_S[mean_div_S$Group.1 == "N high", 2:4]
+relEff_S
+```
+
+
+
+These results indicate that species richness and Shannon decrease, while
+Simpson surprisingly increases due to the reduction of total abundance. Since
+the Simpson-index mainly measures the evenness of species abundances rather than
+the number of species, this indicates that at the small scale local abundance
+distributions decrease in the number of species, but increase in their evenness.
+
+### Large scale analysis
+
+Now we repeat this analysis using the large samples:
+
+```{r}
+S_n_high <- specnumber(samples_L_n_high$spec_dat)
+S_n_low <- specnumber(samples_L_n_low$spec_dat)
+
+Shannon_n_low <- diversity(samples_L_n_high$spec_dat, index = "shannon")
+Shannon_n_high <- diversity(samples_L_n_low$spec_dat, index = "shannon")
+
+Simpson_n_low <- diversity(samples_L_n_high$spec_dat, index = "simpson")
+Simpson_n_high <- diversity(samples_L_n_low$spec_dat, index = "simpson")
+```
+
+
+```{r}
+div_dat_L <- data.frame(N = rep(c("N high","N low"), each = length(S_n_high)),
+                        S = c(S_n_high, S_n_low),
+                        Shannon = c(Shannon_n_high, Simpson_n_low),
+                        Simpson = c(Simpson_n_high, Simpson_n_low))
+```
+
+```{r, fig.width=7.2, fig.height=3.1}
+par(mfrow = c(1,3))
+boxplot(S ~ N, data = div_dat_L, ylab = "Species richness")
+boxplot(Shannon ~ N, data = div_dat_L, ylab = "Shannon diversity")
+boxplot(Simpson ~ N, data = div_dat_L, ylab = "Simpson diversity")
+```
+
+```{r}
+mean_div_L <- aggregate(div_dat_L[,2:4], by = list(div_dat_L$N), FUN = mean)
+relEff_L <- (mean_div_L[mean_div_S$Group.1 == "N low", 2:4] -  mean_div_L[mean_div_L$Group.1 == "N high", 2:4])/
+             mean_div_L[mean_div_S$Group.1 == "N high", 2:4]
+```
+
+### Compare results across scales
+
+Finally, we compare the diversity effect sizes also across the scales.
+
+```{r}
+relEff_S
+relEff_L
+```
+We that that there are differences, both among indices within the same scale,
+as shown above, but also across scales. At the larger scale there is a stronger
+negative effect of shannon diversity, while the positive change in Simpson
+diversity disappears. 
 

@@ -5,7 +5,7 @@
 \title{-----------------------------------------------------------------------------
 Plot diversity-area relationships}
 \usage{
-\method{plot}{divar}(divar)
+plot.divar(divar)
 }
 \arguments{
 \item{divar}{}

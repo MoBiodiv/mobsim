@@ -10,10 +10,11 @@ Description: The package includes functions to simulated species distributions i
     accumulation curves, species-area relationships and endemics-area relationships.
 License: GPL3
 LazyData: TRUE
+Depends:
+    sads
 Imports:
     Rcpp,
-    vegan,
-    sads
+    vegan
 LinkingTo: Rcpp
 Suggests:
     rmarkdown,
