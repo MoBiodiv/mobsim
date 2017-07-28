@@ -33,7 +33,7 @@ sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
   (no. of individuals / no. of species). \code{cv_abund} is thus negatively
   correlated with the evenness of the species abundance distribution.
 
-  Please note that the parameters \emph{mu} and \sigma{sigma} are not equal
+  Please note that the parameters \emph{mu} and \emph{sigma} are not equal
   to the mean and standard deviation of the log-normal distribution.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
@@ -91,7 +91,7 @@ The function \code{sim_sad} was built using code of the function
    \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
    \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
    \code{\link[sads]{rvolkov}} \tab Neutral theory distribution by Volkov et al. \tab theta \tab	m \tab J \cr
-   \code{\link[sads]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
+   \code{\link[stats]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
 }
 }
 \examples{

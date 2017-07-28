@@ -26,7 +26,8 @@ species abundance rank on the x-axis (descending) and species abundance on
 the y-axis (Hubbell 2001).
 }
 \examples{
-abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+                  sad_coef = list("cv_abund" = 1))
 plot(abund1, method = "octave")
 plot(abund1, method = "rank")
 

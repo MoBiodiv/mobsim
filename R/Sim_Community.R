@@ -28,7 +28,7 @@
 #'   (no. of individuals / no. of species). \code{cv_abund} is thus negatively
 #'   correlated with the evenness of the species abundance distribution.
 #'
-#'   Please note that the parameters \emph{mu} and \sigma{sigma} are not equal
+#'   Please note that the parameters \emph{mu} and \emph{sigma} are not equal
 #'   to the mean and standard deviation of the log-normal distribution.
 #'
 #' @param fix_s_sim Should the simulation constrain the number of
@@ -76,7 +76,7 @@
 #'    \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
 #'    \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
 #'    \code{\link[sads]{rvolkov}} \tab Neutral theory distribution by Volkov et al. \tab theta \tab	m \tab J \cr
-#'    \code{\link[sads]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
+#'    \code{\link[stats]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
 #'}
 #'
 #'
@@ -99,7 +99,7 @@
 #'
 #' # Fix species richness in the simulation by adding rare species
 #' sad_lnorm3a <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
-#'                        sad_coef = list("cv_abund" = 5), fix_s_sim = T)
+#'                        sad_coef = list("cv_abund" = 5), fix_s_sim = TRUE)
 #' sad_lnorm3b <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
 #'                        sad_coef = list("cv_abund" = 5))
 #'
@@ -190,7 +190,7 @@ sim_sad <- function(s_pool, n_sim,
       }
 
       # Generates the "community"
-      if (sad_type %in% c("gamma","geom","lnorm","nbinom")){
+      if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")){
          sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "stats")
       } else {
          sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "sads")
@@ -201,12 +201,12 @@ sim_sad <- function(s_pool, n_sim,
       rel_abund_pool <- abund_pool/sum(abund_pool)
 
       sample_vec <- sample(x = length(rel_abund_pool),
-                           size = n_sim, replace = T,
+                           size = n_sim, replace = TRUE,
                            prob = rel_abund_pool)
 
-      abund2 <- as.numeric(sort(table(sample_vec), decreasing = T))
+      abund2 <- as.numeric(sort(table(sample_vec), decreasing = TRUE))
 
-      if (fix_s_sim == T & length(abund2) < s_pool){
+      if (fix_s_sim == TRUE & length(abund2) < s_pool){
          s_diff <- s_pool - length(abund2)
          abund2 <- c(abund2, rep(1, s_diff))
          n <- sum(abund2)
@@ -252,7 +252,8 @@ sim_sad <- function(s_pool, n_sim,
 #' Princeton University Press.
 #'
 #' @examples
-#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, cv_abund = 1)
+#' abund1 <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "lnorm",
+#'                   sad_coef = list("cv_abund" = 1))
 #' plot(abund1, method = "octave")
 #' plot(abund1, method = "rank")
 #'
@@ -263,7 +264,7 @@ plot.sad <- function(abund, method = c("octave","rank"))
    method <- match.arg(method)
 
    if (method == "rank")
-      plot(sort(as.numeric(abund), decreasing = T), type="b", log="y", las = 1,
+      plot(sort(as.numeric(abund), decreasing = TRUE), type="b", log="y", las = 1,
            xlab="Species rank", ylab="Species abundance",
            main = "Rank-abundance curve", las = 1)
 
@@ -321,7 +322,7 @@ plot.sad <- function(abund, method = c("octave","rank"))
 #'
 community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
-   if (length(xrange) < 2 | length(yrange) < 2) ("Érror: missing ranges for x or y!")
+   if (length(xrange) < 2 | length(yrange) < 2) ("Error: missing ranges for x or y!")
 
    if (xrange[1] > min(x)) return("Error: Inappropriate ranges for x!")
    if (xrange[2] < max(x)) return("Error: Inappropriate ranges for x!")
@@ -391,7 +392,8 @@ plot.community <- function(comm, col = NA, pch = NA, ...)
 #'  with species abundances
 #'
 #' @examples
-#' sim1 <- sim_poisson_community(200, 20000, cv_abund = 2)
+#' sim1 <- sim_poisson_community(s_pool = 200, n_sim = 20000, sad_type = "lnorm",
+#'                               sad_coef = list("cv_abund" = 2))
 #' sad1 <- community_to_sad(sim1)
 #' plot(sad1, method = "rank")
 #' plot(sad1, method = "octave")
@@ -558,7 +560,7 @@ sim_poisson_community <- function(s_pool,
 #' @return A community object as defined by \code{\link{community}}.
 #'
 #' @references
-#' Morlon et al. 2008. A general framework for the distance--decay of similarity
+#' Morlon et al. 2008. A general framework for the distance-decay of similarity
 #' in ecological communities. Ecology Letters 11, 904-917.
 #'
 #' Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
@@ -566,7 +568,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @author Felix May
 #'
-#' @seealso \code{\link[spatstat]{spatstat::rThomas()}}
+#' @seealso \code{\link[spatstat]{rThomas}}
 #'
 #' @examples
 #'

@@ -7,10 +7,11 @@ test_that("classes are correct", {
    expect_is(sim_poisson_community(100, 1000), "community")
    expect_is(sim_thomas_coords(sad1), "community")
    expect_is(sim_thomas_community(100, 1000), "community")
+   expect_is(community(runif(100), runif(100), rep("specA",100)), "community")
+   expect_is(community_to_sad(sim_poisson_community(100,1000)), "sad")
 })
 
 test_that("species richness and abundance are correct", {
-
    sad1 <- sim_sad(100,1000, fix_s_sim = T)
    expect_equal(length(sad1), 100)
    expect_equal(sum(sad1), 1000)

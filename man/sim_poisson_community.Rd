@@ -34,7 +34,7 @@ sim_poisson_community(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma",
   (no. of individuals / no. of species). \code{cv_abund} is thus negatively
   correlated with the evenness of the species abundance distribution.
 
-  Please note that the parameters \emph{mu} and \sigma{sigma} are not equal
+  Please note that the parameters \emph{mu} and \emph{sigma} are not equal
   to the mean and standard deviation of the log-normal distribution.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of

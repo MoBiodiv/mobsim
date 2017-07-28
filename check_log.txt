@@ -1,0 +1,377 @@
+==> devtools::check()
+
+Updating mobsim documentation
+Loading mobsim
+Re-compiling mobsim
+"C:/PROGRA~1/R/R-34~1.1/bin/x64/R" --no-site-file --no-environ --no-save  \
+--no-restore --quiet CMD INSTALL "C:\FelixMay\MoBiodiv\mobsim"  \
+--library="C:\Users\fm28towy\AppData\Local\Temp\RtmpQlizkj\devtools_install_1bec6fa32f25"  \
+--no-R --no-data --no-help --no-demo --no-inst --no-docs --no-exec  \
+--no-multiarch --no-test-load
+
+* installing *source* package 'mobsim' ...
+** libs
+c:/Rtools/mingw_64/bin/g++  -I"C:/PROGRA~1/R/R-34~1.1/include" -DNDEBUG  -I"C:/Users/fm28towy/Documents/R/win-library/3.4/Rcpp/include"   -I"d:/Compiler/gcc-4.9.3/local330/include"     -O2 -Wall  -mtune=core2 -c RcppExports.cpp -o RcppExports.o
+c:/Rtools/mingw_64/bin/g++  -I"C:/PROGRA~1/R/R-34~1.1/include" -DNDEBUG  -I"C:/Users/fm28towy/Documents/R/win-library/3.4/Rcpp/include"   -I"d:/Compiler/gcc-4.9.3/local330/include"     -O2 -Wall  -mtune=core2 -c SAC_spatial.cpp -o SAC_spatial.o
+c:/Rtools/mingw_64/bin/g++  -I"C:/PROGRA~1/R/R-34~1.1/include" -DNDEBUG  -I"C:/Users/fm28towy/Documents/R/win-library/3.4/Rcpp/include"   -I"d:/Compiler/gcc-4.9.3/local330/include"     -O2 -Wall  -mtune=core2 -c rThomas_rcpp.cpp -o rThomas_rcpp.o
+c:/Rtools/mingw_64/bin/g++ -shared -s -static-libgcc -o mobsim.dll tmp.def RcppExports.o SAC_spatial.o rThomas_rcpp.o -Ld:/Compiler/gcc-4.9.3/local330/lib/x64 -Ld:/Compiler/gcc-4.9.3/local330/lib -LC:/PROGRA~1/R/R-34~1.1/bin/x64 -lR
+installing to C:/Users/fm28towy/AppData/Local/Temp/RtmpQlizkj/devtools_install_1bec6fa32f25/mobsim/libs/x64
+* DONE (mobsim)
+Setting env vars --------------------------------------------------------------
+   CFLAGS  : -Wall -pedantic
+CXXFLAGS: -Wall -pedantic
+Building mobsim ---------------------------------------------------------------
+   "C:/PROGRA~1/R/R-34~1.1/bin/x64/R" --no-site-file --no-environ --no-save  \
+--no-restore --quiet CMD build "C:\FelixMay\MoBiodiv\mobsim"  \
+--no-resave-data --no-manual
+
+* checking for file 'C:\FelixMay\MoBiodiv\mobsim/DESCRIPTION' ... OK
+* preparing 'mobsim':
+   * checking DESCRIPTION meta-information ... OK
+* cleaning src
+* installing the package to build vignettes
+* creating vignettes ... OK
+* cleaning src
+* checking for LF line-endings in source and make files
+* checking for empty or unneeded directories
+* building 'mobsim_0.0.0.9000.tar.gz'
+
+Setting env vars --------------------------------------------------------------
+   _R_CHECK_CRAN_INCOMING_ : FALSE
+_R_CHECK_FORCE_SUGGESTS_: FALSE
+Checking mobsim ---------------------------------------------------------------
+   "C:/PROGRA~1/R/R-34~1.1/bin/x64/R" --no-site-file --no-environ --no-save  \
+--no-restore --quiet CMD check  \
+"C:\Users\fm28towy\AppData\Local\Temp\RtmpQlizkj/mobsim_0.0.0.9000.tar.gz"  \
+--as-cran --timings --no-manual
+
+* using log directory 'C:/FelixMay/MoBiodiv/mobsim.Rcheck'
+* using R version 3.4.1 (2017-06-30)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* using options '--no-manual --as-cran'
+* checking for file 'mobsim/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'mobsim' version '0.0.0.9000'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'mobsim' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking 'build' directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... NOTE
+Non-standard file/directory found at top level:
+   'LICENSE.txt'
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* loading checks for arch 'i386'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+* loading checks for arch 'x64'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... WARNING
+summary:
+   function(object, ...)
+      summary.community:
+   function(comm)
+
+      plot:
+   function(x, ...)
+      plot.community:
+   function(comm, col, pch, ...)
+
+      plot:
+   function(x, ...)
+      plot.dist_decay:
+   function(dist_decay)
+
+      plot:
+   function(x, ...)
+      plot.divar:
+   function(divar)
+
+      plot:
+   function(x, ...)
+      plot.sad:
+   function(abund, method)
+
+      plot:
+   function(x, ...)
+      plot.spec_sample_curve:
+   function(curve)
+
+      See section 'Generic functions and methods' in the 'Writing R
+Extensions' manual.
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+dist_decay: no visible global function definition for 'runif'
+dist_decay: no visible global function definition for 'dist'
+div_rand_rect: no visible global function definition for 'runif'
+div_rand_rect: no visible global function definition for 'sd'
+plot.community: no visible global function definition for 'rainbow'
+plot.community: no visible global function definition for 'plot'
+plot.dist_decay: no visible global function definition for 'plot'
+plot.dist_decay: no visible global function definition for 'loess'
+plot.dist_decay: no visible global function definition for 'predict'
+plot.dist_decay: no visible global function definition for 'lines'
+plot.divar: no visible global function definition for 'plot'
+plot.divar: no visible global function definition for 'lines'
+plot.divar: no visible global function definition for 'legend'
+plot.sad: no visible global function definition for 'plot'
+plot.sad: no visible global function definition for 'hist'
+plot.sad: no visible global function definition for 'barplot'
+plot.spec_sample_curve: no visible global function definition for
+'plot'
+plot.spec_sample_curve: no visible global function definition for
+'lines'
+plot.spec_sample_curve: no visible global function definition for
+'legend'
+sample_quadrats: no visible global function definition for 'dist'
+sample_quadrats: no visible global function definition for 'runif'
+sample_quadrats: no visible global function definition for 'rect'
+sample_quadrats: no visible global function definition for
+'adjustcolor'
+sim_poisson_coords: no visible global function definition for 'runif'
+sim_sad: no visible global function definition for 'Svolkov'
+sim_sad: no visible global function definition for 'getFromNamespace'
+sim_thomas_coords: no visible global function definition for 'runif'
+Undefined global functions or variables:
+   Svolkov adjustcolor barplot dist getFromNamespace hist legend lines
+loess plot predict rainbow rect runif sd
+Consider adding
+importFrom("grDevices", "adjustcolor", "rainbow")
+importFrom("graphics", "barplot", "hist", "legend", "lines", "plot",
+           "rect")
+importFrom("stats", "dist", "loess", "predict", "runif", "sd")
+importFrom("utils", "getFromNamespace")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... WARNING
+Missing link or links in documentation object 'sim_thomas_coords.Rd':
+   'spatstat'
+
+See section 'Cross-references' in the 'Writing R Extensions' manual.
+
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'dist_decay'
+'plot'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking Rd contents ... WARNING
+Argument items with no description in Rd object 'plot.divar':
+   'divar'
+
+* checking for unstated dependencies in examples ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking compiled code ... NOTE
+File 'mobsim/libs/x64/mobsim.dll':
+   Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See 'Writing portable packages' in the 'Writing R Extensions' manual.
+WARNING
+'qpdf' is needed for checks on size reduction of PDFs
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... OK
+* checking examples ...
+** running examples for arch 'i386' ... ERROR
+Running examples in 'mobsim-Ex.R' failed
+The error most likely occurred in:
+
+   > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sample_quadrats
+   > ### Title: Plot-based samples from a spatially-explicit census
+   > ### Aliases: sample_quadrats
+   >
+   > ### ** Examples
+   >
+   > library(vegan)
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.4-3
+> sim_com1 <- sim_poisson_community(100, 10000)
+> comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
+                               + quadrat_area = 0.002, method = "grid")
+> renyi(comm_mat1$spec_dat, hill = T, scales = c(0,1,2))
+Error in renyi(comm_mat1$spec_dat, hill = T, scales = c(0, 1, 2)) :
+   T used instead of TRUE
+Execution halted
+** running examples for arch 'x64' ... ERROR
+Running examples in 'mobsim-Ex.R' failed
+The error most likely occurred in:
+
+   > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sample_quadrats
+   > ### Title: Plot-based samples from a spatially-explicit census
+   > ### Aliases: sample_quadrats
+   >
+   > ### ** Examples
+   >
+   > library(vegan)
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.4-3
+> sim_com1 <- sim_poisson_community(100, 10000)
+> comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
+                               + quadrat_area = 0.002, method = "grid")
+> renyi(comm_mat1$spec_dat, hill = T, scales = c(0,1,2))
+Error in renyi(comm_mat1$spec_dat, hill = T, scales = c(0, 1, 2)) :
+   T used instead of TRUE
+Execution halted
+* checking for unstated dependencies in 'tests' ... OK
+* checking tests ...
+** running tests for arch 'i386' ...
+Running 'testthat.R' OK
+** running tests for arch 'x64' ...
+
+Running 'testthat.R'
+OK
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... OK
+* checking re-building of vignette outputs ... OK
+* DONE
+Status: 2 ERRORs, 5 WARNINGs, 3 NOTEs
+
+See
+'C:/FelixMay/MoBiodiv/mobsim.Rcheck/00check.log'
+for details.
+
+checking examples ...
+** running examples for arch 'i386' ... ERROR
+Running examples in 'mobsim-Ex.R' failed
+The error most likely occurred in:
+
+   > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sample_quadrats
+   > ### Title: Plot-based samples from a spatially-explicit census
+   > ### Aliases: sample_quadrats
+   >
+   ... 25 lines ...
+> library(vegan)
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.4-3
+> sim_com1 <- sim_poisson_community(100, 10000)
+> comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
+                               + quadrat_area = 0.002, method = "grid")
+> renyi(comm_mat1$spec_dat, hill = T, scales = c(0,1,2))
+Error in renyi(comm_mat1$spec_dat, hill = T, scales = c(0, 1, 2)) :
+   T used instead of TRUE
+Execution halted
+
+checking S3 generic/method consistency ... WARNING
+summary:
+   function(object, ...)
+      summary.community:
+   function(comm)
+
+      plot:
+   function(x, ...)
+      plot.community:
+   function(comm, col, pch, ...)
+      ... 13 lines ...
+function(x, ...)
+   plot.sad:
+   function(abund, method)
+
+      plot:
+   function(x, ...)
+      plot.spec_sample_curve:
+   function(curve)
+
+      See section 'Generic functions and methods' in the 'Writing R
+Extensions' manual.
+
+checking Rd cross-references ... WARNING
+Missing link or links in documentation object 'sim_thomas_coords.Rd':
+   'spatstat'
+
+See section 'Cross-references' in the 'Writing R Extensions' manual.
+
+
+checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'dist_decay'
+'plot'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+
+checking Rd contents ... WARNING
+Argument items with no description in Rd object 'plot.divar':
+   'divar'
+
+
+checking top-level files ... NOTE
+Non-standard file/directory found at top level:
+   'LICENSE.txt'
+
+checking R code for possible problems ... NOTE
+dist_decay: no visible global function definition for 'runif'
+dist_decay: no visible global function definition for 'dist'
+div_rand_rect: no visible global function definition for 'runif'
+div_rand_rect: no visible global function definition for 'sd'
+plot.community: no visible global function definition for 'rainbow'
+plot.community: no visible global function definition for 'plot'
+plot.dist_decay: no visible global function definition for 'plot'
+plot.dist_decay: no visible global function definition for 'loess'
+plot.dist_decay: no visible global function definition for 'predict'
+... 22 lines ...
+sim_thomas_coords: no visible global function definition for 'runif'
+Undefined global functions or variables:
+   Svolkov adjustcolor barplot dist getFromNamespace hist legend lines
+loess plot predict rainbow rect runif sd
+Consider adding
+importFrom("grDevices", "adjustcolor", "rainbow")
+importFrom("graphics", "barplot", "hist", "legend", "lines", "plot",
+           "rect")
+importFrom("stats", "dist", "loess", "predict", "runif", "sd")
+importFrom("utils", "getFromNamespace")
+to your NAMESPACE file.
+
+checking compiled code ... NOTE
+File 'mobsim/libs/x64/mobsim.dll':
+   Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See 'Writing portable packages' in the 'Writing R Extensions' manual.
+WARNING
+'qpdf' is needed for checks on size reduction of PDFs
+R CMD check results
+1 error  | 4 warnings | 3 notes
+
+R CMD check succeeded

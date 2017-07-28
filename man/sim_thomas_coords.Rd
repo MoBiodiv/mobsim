@@ -94,14 +94,14 @@ plot(sim4)
 
 }
 \references{
-Morlon et al. 2008. A general framework for the distance--decay of similarity
+Morlon et al. 2008. A general framework for the distance-decay of similarity
 in ecological communities. Ecology Letters 11, 904-917.
 
 Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 CRC Press
 }
 \seealso{
-\code{\link[spatstat]{spatstat::rThomas()}}
+\code{\link[spatstat]{rThomas}}
 }
 \author{
 Felix May

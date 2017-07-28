@@ -29,12 +29,14 @@
 #' sim_com1 <- sim_poisson_community(100, 10000)
 #' comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
 #' quadrat_area = 0.002, method = "grid")
-#' renyi(comm_mat1$spec_dat, hill = T, scales = c(0,1,2))
+#' specnumber(comm_mat1$spec_dat)
+#' diversity(comm_mat1$spec_dat, index = "shannon")
+#'
 #'
 #' @export
 #'
 sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
-                            plot = T, method = "random",
+                            plot = TRUE, method = "random",
                             avoid_overlap = F,
                             x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1)
 {
@@ -56,7 +58,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 
          if (method == "random"){
 
-            if (avoid_overlap == T){
+            if (avoid_overlap == TRUE){
 
 
                if (requireNamespace("spatstat", quietly = TRUE)){

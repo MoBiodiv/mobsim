@@ -17,7 +17,8 @@ Object of class \code{sad}, which contains a named integer vector
 Get species abundance distribution from community object
 }
 \examples{
-sim1 <- sim_poisson_community(200, 20000, cv_abund = 2)
+sim1 <- sim_poisson_community(s_pool = 200, n_sim = 20000, sad_type = "lnorm",
+                              sad_coef = list("cv_abund" = 2))
 sad1 <- community_to_sad(sim1)
 plot(sad1, method = "rank")
 plot(sad1, method = "octave")
