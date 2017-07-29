@@ -57,10 +57,13 @@ A community object as defined by \code{\link{community}}
 }
 \description{
 This function simulates a community with a certain abundance distribution and
-and clumped, i.e. aggregated, spatial coordinates. This function consecutively calls
-\code{\link{sim_sad}} and \code{\link{sim_thomas_coords}}
+with intraspecific aggregation, i.e. individuals of the same species are
+distributed in clusters.
 }
 \details{
+This function consecutively calls \code{\link{sim_sad}} and
+\code{\link{sim_thomas_coords}}
+
 See the documentations of \code{\link{sim_sad}} and
  \code{\link{sim_thomas_coords}} for details.
 }

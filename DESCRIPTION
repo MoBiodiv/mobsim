@@ -13,7 +13,11 @@ LazyData: TRUE
 Imports:
     Rcpp,
     vegan,
-    sads
+    sads,
+    grDevices,
+    utils,
+    graphics,
+    stats
 LinkingTo: Rcpp
 Suggests:
     rmarkdown,

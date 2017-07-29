@@ -155,7 +155,7 @@ sim_sad <- function(s_pool, n_sim,
                   ls = sad_coef$alpha * log ( 1 + sad_coef$N / sad_coef$alpha ),
                   mzsm = sum(sad_coef$theta / (1:sad_coef$J) *
                              (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1)),
-                  volkov = Svolkov(sad_coef$theta, sad_coef$m, sad_coef$J)
+                  volkov = sads::Svolkov(sad_coef$theta, sad_coef$m, sad_coef$J)
                  )
       S <- round(S)
       if (!is.null(s_pool)){
@@ -191,9 +191,9 @@ sim_sad <- function(s_pool, n_sim,
 
       # Generates the "community"
       if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")){
-         sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "stats")
+         sadr <- utils::getFromNamespace(paste("r", sad_type, sep=""), ns = "stats")
       } else {
-         sadr <- getFromNamespace(paste("r", sad_type, sep=""), ns = "sads")
+         sadr <- utils::getFromNamespace(paste("r", sad_type, sep=""), ns = "sads")
       }
       abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
@@ -259,35 +259,36 @@ sim_sad <- function(s_pool, n_sim,
 #'
 #' @export
 #'
-plot.sad <- function(abund, method = c("octave","rank"))
+plot.sad <- function(x, ..., method = c("octave","rank"))
 {
    method <- match.arg(method)
 
    if (method == "rank")
-      plot(sort(as.numeric(abund), decreasing = TRUE), type="b", log="y", las = 1,
-           xlab="Species rank", ylab="Species abundance",
-           main = "Rank-abundance curve", las = 1)
+      graphics::plot(sort(as.numeric(x), decreasing = TRUE), type="b", log="y",
+                     xlab="Species rank", ylab="Species abundance",
+                     main = "Rank-abundance curve", las = 1)
 
    if (method == "octave"){
 
       # code adopted from untb:preston()
-      max_abund <- max(abund)
+      max_abund <- max(x)
       n <- 1 + ceiling(log(max_abund)/log(2)) # number of abundance classes
 
       if (n < 2) breaks <- c(0, 1)
       else       breaks <- c(0, 2^(0:(n - 2)), max_abund)
 
-      r <- hist(abund, plot = FALSE, breaks = breaks, right = TRUE)
-      abund_dist <- r$counts
+      r <- graphics::hist(x, plot = FALSE, breaks = breaks, right = TRUE)
+                          abund_dist <- r$counts
 
       if (n <= 2) names(abund_dist) <- c("1","2")[1:n]
       else        names(abund_dist) <- c("1", "2",
                                          paste(breaks[-c(1:2, length(breaks))] + 1,
                                           "-", breaks[-c(1:3)], sep = ""))
 
-      barplot(height = as.numeric(abund_dist), names.arg = names(abund_dist),
-              xlab = "Abundance class", ylab ="No. of species",
-              main = "Preston octave plot", las = 1)
+      graphics::barplot(height = as.numeric(abund_dist),
+                        names.arg = names(abund_dist),
+                        xlab = "Abundance class", ylab ="No. of species",
+                        main = "Preston octave plot", las = 1)
    }
 }
 
@@ -350,13 +351,13 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #'
 #' @export
 #'
-summary.community <- function(comm)
+summary.community <- function(object, ...)
 {
-   cat("No. of individuals: ", nrow(comm$census), "\n")
-   cat("No. of species: ", length(unique(comm$census$species)), "\n")
-   cat("x-extent: ", comm$x_min_max, "\n")
-   cat("y-extent: ", comm$y_min_max, "\n\n")
-   print(summary(comm$census))
+   cat("No. of individuals: ", nrow(object$census), "\n")
+   cat("No. of species: ", length(unique(object$census$species)), "\n")
+   cat("x-extent: ", object$x_min_max, "\n")
+   cat("y-extent: ", object$y_min_max, "\n\n")
+   print(summary(object$census))
 }
 
 #' Plot spatial community object
@@ -374,14 +375,17 @@ summary.community <- function(comm)
 #'
 #' @export
 #'
-plot.community <- function(comm, col = NA, pch = NA, ...)
+plot.community <- function(x, ..., col = NULL, pch = NULL)
 {
-   nspec <- length(table(comm$census$species))
-   if (is.na(col))  col <- rainbow(nspec)
-   if (is.na(pch))  pch <- 19
+   comm <- x
 
-   plot(y ~ x, data = comm$census, xlim = comm$x_min_max, ylim = comm$y_min_max,
-        col = col[comm$census$species], pch = pch, las = 1, asp = 1, ...)
+   nspec <- length(table(comm$census$species))
+   if (is.null(col))  col <- grDevices::rainbow(nspec)
+   if (is.null(pch))  pch <- 19
+
+   graphics::plot(y ~ x, data = comm$census, xlim = comm$x_min_max,
+                  ylim = comm$y_min_max, col = col[comm$census$species],
+                  pch = pch, las = 1, asp = 1, ...)
 }
 
 #' Get species abundance distribution from community object
@@ -442,8 +446,8 @@ sim_poisson_coords <- function(abund_vec,
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
 
    n <- sum(abund_vec)
-   x <- runif(n, xrange[1], xrange[2])
-   y <- runif(n, yrange[1], yrange[2])
+   x <- stats::runif(n, xrange[1], xrange[2])
+   y <- stats::runif(n, yrange[1], yrange[2])
 
    id_spec <- factor(rep(names(abund_vec), times = abund_vec))
 
@@ -536,7 +540,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @details To generate a Thomas cluster process of a single species this
 #' function uses a C++ re-implementation of the function
-#' \code{\link[spatstat]{rThomas}} in the package \code{\link{spatstat}}.
+#' \code{\link[spatstat]{rThomas}} in the package \code{\link[spatstat]{spatstat}}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
 #' \code{mother_points}, and \code{cluster_points}. For every species the
@@ -709,8 +713,11 @@ sim_thomas_coords <- function(abund_vec,
 #' Simulate community with clumped spatial positions.
 #'
 #' This function simulates a community with a certain abundance distribution and
-#' and clumped, i.e. aggregated, spatial coordinates. This function consecutively calls
-#' \code{\link{sim_sad}} and \code{\link{sim_thomas_coords}}
+#' with intraspecific aggregation, i.e. individuals of the same species are
+#' distributed in clusters.
+#'
+#' This function consecutively calls \code{\link{sim_sad}} and
+#' \code{\link{sim_thomas_coords}}
 #'
 #' @inheritParams sim_sad
 #'
@@ -741,8 +748,8 @@ sim_thomas_coords <- function(abund_vec,
 #'
 sim_thomas_community <- function(s_pool, n_sim,
                                  sad_type = c("lnorm","bs", "gamma", "geom", "ls",
-                                              "mzsm","nbinom", "pareto", "poilog", "power",
-                                              "volkov","powbend", "weibull"),
+                                              "mzsm","nbinom", "pareto", "poilog",                                                "power","volkov","powbend",
+                                              "weibull"),
                                  sad_coef = list("cv_abund" = 1),
                                  fix_s_sim = FALSE,
                                  sigma = 0.02,

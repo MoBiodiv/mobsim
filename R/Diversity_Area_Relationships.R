@@ -136,8 +136,10 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
       }
    }
 
-   xpos <- runif(n_rect, min = comm$x_min_max[1], max = comm$x_min_max[2] - dx_rect)
-   ypos <- runif(n_rect, min = comm$y_min_max[1], max = comm$y_min_max[2] - dy_rect)
+   xpos <- stats::runif(n_rect, min = comm$x_min_max[1],
+                                max = comm$x_min_max[2] - dx_rect)
+   ypos <- stats::runif(n_rect, min = comm$y_min_max[1],
+                                max = comm$y_min_max[2] - dy_rect)
 
    div_plots <- mapply(div_rect, xpos, ypos,
                        MoreArgs=list(xsize = dx_rect, ysize = dy_rect,
@@ -146,17 +148,17 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
       div_plots <- div_plots[, div_plots["n_species",] > 0]
 
    return(c(m_species      = mean(div_plots["n_species",]),
-            sd_species     = sd(div_plots["n_species",]),
+            sd_species     = stats::sd(div_plots["n_species",]),
             m_endemics     = mean(div_plots["n_endemics",]),
-            sd_endemics    = sd(div_plots["n_endemics",]),
+            sd_endemics    = stats::sd(div_plots["n_endemics",]),
             m_shannon      = mean(div_plots["shannon",]),
-            sd_shannon     = sd(div_plots["shannon",]),
+            sd_shannon     = stats::sd(div_plots["shannon",]),
             m_ens_shannon  = mean(div_plots["ens_shannon",]),
-            sd_ens_shannon = sd(div_plots["ens_shannon",]),
+            sd_ens_shannon = stats::sd(div_plots["ens_shannon",]),
             m_simpson      = mean(div_plots["simpson",], na.rm = T),
-            sd_simpson     = sd(div_plots["simpson",], na.rm = T),
+            sd_simpson     = stats::sd(div_plots["simpson",], na.rm = T),
             m_ens_simpson  = mean(div_plots["ens_simpson",], na.rm = T),
-            sd_ens_simpson = sd(div_plots["ens_simpson",], na.rm = T)
+            sd_ens_simpson = stats::sd(div_plots["ens_simpson",], na.rm = T)
             )
    )
 }
@@ -225,12 +227,12 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 #' @param divar
 #'
 #' @export
-plot.divar <- function(divar)
+plot.divar <- function(x, ...)
 {
    #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
 
    # #Plot an empty graph and legend to get the size of the legend
-   max_spec <- max(divar$m_species)
+   max_spec <- max(x$m_species)
    # plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
    #      type = "n")
    #
@@ -246,19 +248,19 @@ plot.divar <- function(divar)
 
 
    #draw the plot with custom ylim
-   plot(m_species ~ prop_area, data = divar, ylim = my_range,
-        type = "n", las = 1,
-        xlab = "Proportion of area sampled", ylab = "No. of species",
-        main = "Diversity-area relationships")
-   lines(m_species ~ prop_area, data = divar, type = "b", col = 1)
-   lines(m_endemics ~ prop_area, data = divar, type = "b", col = 2)
-   lines(m_ens_shannon ~ prop_area, data = divar, type = "b", col = 3)
-   lines(m_ens_simpson ~ prop_area, data = divar, type = "b", col = 4)
+   graphics::plot(m_species ~ prop_area, data = x, ylim = my_range,
+                  type = "n", las = 1,
+                  xlab = "Proportion of area sampled", ylab = "No. of species",
+                  main = "Diversity-area relationships")
+   graphics::lines(m_species ~ prop_area, data = x, type = "b", col = 1)
+   graphics::lines(m_endemics ~ prop_area, data = x, type = "b", col = 2)
+   graphics::lines(m_ens_shannon ~ prop_area, data = x, type = "b", col = 3)
+   graphics::lines(m_ens_simpson ~ prop_area, data = x, type = "b", col = 4)
 
-   legend("topleft",legend = c("Species","Endemics",
-                               "ENS Shannon (common species) ",
-                               "ENS Simpson (dominant species)"),
-          col = 1:4, lwd = 2, cex = 0.9)
+   graphics::legend("topleft",legend = c("Species","Endemics",
+                                         "ENS Shannon ",
+                                         "ENS Simpson"),
+   col = 1:4, lwd = 2, ncol = 2, cex = 0.9)
 }
 
 
@@ -312,7 +314,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #'@export
 #'
 dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
-                       method = "bray", binary = F, plot = F)
+                       method = "bray", binary = F)
 {
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
@@ -327,12 +329,12 @@ dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
    area <- dx_plot * dy_plot * prop_area
    square_size <- sqrt(area)
 
-   xpos <- runif(n_samples, min = comm$x_min_max[1],
-                 max = comm$x_min_max[2] - square_size)
-   ypos <- runif(n_samples, min = comm$y_min_max[1],
-                 max = comm$y_min_max[2] - square_size)
+   xpos <- stats::runif(n_samples, min = comm$x_min_max[1],
+                                   max = comm$x_min_max[2] - square_size)
+   ypos <- stats::runif(n_samples, min = comm$y_min_max[1],
+                                   max = comm$y_min_max[2] - square_size)
 
-   d <- dist(cbind(xpos,ypos))
+   d <- stats::dist(cbind(xpos,ypos))
 
    com_tab <- mapply(abund_rect, xpos, ypos,
                      MoreArgs=list(xsize = square_size, ysize = square_size,
@@ -367,13 +369,14 @@ dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
 #'
 #' @export
 #'
-plot.dist_decay <- function(dist_decay)
+plot.dist_decay <- function(x, ...)
 {
-   plot(similarity ~ distance, data = dist_decay, las = 1,
-        xlab = "Distance", ylab = "Similarity", main = "Distance decay")
-   dd_loess <- loess(similarity ~ distance, data = dist_decay)
-   pred_sim <- predict(dd_loess)
-   lines(dist_decay$distance, pred_sim, col = "red")
+   graphics::plot(similarity ~ distance, data = x, las = 1,
+                  xlab = "Distance", ylab = "Similarity",
+                  main = "Distance decay", ...)
+   dd_loess <- stats::loess(similarity ~ distance, data = x)
+   pred_sim <- stats::predict(dd_loess)
+   graphics::lines(x$distance, pred_sim, col = "red", lwd = 2)
 }
 
 # -----------------------------------------------------------

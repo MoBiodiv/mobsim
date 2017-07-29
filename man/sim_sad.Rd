@@ -108,7 +108,7 @@ plot(sad_lnorm2, method = "octave")
 
 # Fix species richness in the simulation by adding rare species
 sad_lnorm3a <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
-                       sad_coef = list("cv_abund" = 5), fix_s_sim = T)
+                       sad_coef = list("cv_abund" = 5), fix_s_sim = TRUE)
 sad_lnorm3b <- sim_sad(s_pool = 500, n_sim = 10000, sad_type = "lnorm",
                        sad_coef = list("cv_abund" = 5))
 

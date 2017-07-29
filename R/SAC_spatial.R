@@ -146,30 +146,32 @@ spec_sample_curve <- function(comm, method = c("accumulation" ,"rarefaction"))
 #'
 #' @export
 #'
-plot.spec_sample_curve <- function(curve)
+plot.spec_sample_curve <- function(x, ...)
 {
-   plot(curve[[1]], curve[[2]], type = "n", xlab = "No. of individuals sampled",
-        ylab = "Expected no.of species", main = "Species sampling curves")
+   graphics::plot(x[[1]], x[[2]], type = "n",
+                  xlab = "No. of individuals sampled",
+                  ylab = "Expected no.of species",
+                  main = "Species sampling curves")
 
-   if (ncol(curve) == 2){
-      if (names(curve)[2] == "spec_accum"){
+   if (ncol(x) == 2){
+      if (names(x)[2] == "spec_accum"){
          legend_text <- c("Accumulation")
          line_col <- "red"
       }
-      if (names(curve)[2] == "spec_rarefied"){
+      if (names(x)[2] == "spec_rarefied"){
          legend_text <- c("Rarefaction")
          line_col <- "blue"
       }
-      lines(curve[[1]], curve[[2]], col = line_col)
+      graphics::lines(x[[1]], x[[2]], col = line_col)
    }
 
-   if (ncol(curve) == 3){
+   if (ncol(x) == 3){
       legend_text <- c("Accumulation","Rarefaction")
       line_col <- c("red","blue")
-      lines(curve[[1]], curve[[2]], col = line_col[1])
-      lines(curve[[1]], curve[[3]], col = line_col[2])
+      graphics::lines(x[[1]], x[[2]], col = line_col[1])
+      graphics::lines(x[[1]], x[[3]], col = line_col[2])
    }
 
-   legend("bottomright", legend = legend_text, lty = 1, col = line_col)
+   graphics::legend("bottomright", legend = legend_text, lty = 1, col = line_col)
 }
 

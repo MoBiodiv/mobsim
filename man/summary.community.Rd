@@ -4,7 +4,7 @@
 \alias{summary.community}
 \title{Print summary of spatial community object}
 \usage{
-\method{summary}{community}(comm)
+\method{summary}{community}(object, ...)
 }
 \arguments{
 \item{comm}{Community object}

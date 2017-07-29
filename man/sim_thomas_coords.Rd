@@ -53,7 +53,7 @@ cluster process (Morlon et al. 2008, Wiegand & Moloney 2014)
 \details{
 To generate a Thomas cluster process of a single species this
 function uses a C++ re-implementation of the function
-\code{\link[spatstat]{rThomas}} in the package \code{\link{spatstat}}.
+\code{\link[spatstat]{rThomas}} in the package \code{\link[spatstat]{spatstat}}.
 
 There is an inherent link between the parameters \code{abund_vec},
 \code{mother_points}, and \code{cluster_points}. For every species the

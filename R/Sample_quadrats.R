@@ -73,15 +73,17 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                   ypos <- hc_points$y
 
                   coords <- cbind(xpos,ypos)
-                  if (min(dist(coords)) < min_dist)
+                  if (min(stats::dist(coords)) < min_dist)
                      warning("There are overlapping sampling squares in the design. Use less quadrats or smaller quadrat area.")
                } else {
 
                   count <- 0
 
-                  while(min(dist(coords)) < min_dist && count <= 999){
-                     xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-                     ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+                  while(min(stats::dist(coords)) < min_dist && count <= 999){
+                     xpos <- stats::runif(n_quadrats, min = comm$x_min_max[1],
+                                                      max = comm$x_min_max[2] - quadrat_size)
+                     ypos <- stats::runif(n_quadrats, min = comm$y_min_max[1],
+                                                      max = comm$y_min_max[2] - quadrat_size)
 
                      coords <- cbind(xpos,ypos)
                      count <- count + 1
@@ -94,11 +96,13 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                }
 
             } else {
-               xpos <- runif(n_quadrats, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-               ypos <- runif(n_quadrats, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+               xpos <- stats::runif(n_quadrats, min = comm$x_min_max[1],
+                                                max = comm$x_min_max[2] - quadrat_size)
+               ypos <- stats::runif(n_quadrats, min = comm$y_min_max[1],
+                                                max = comm$y_min_max[2] - quadrat_size)
 
                coords <- cbind(xpos,ypos)
-               if (min(dist(coords)) < 0.9999*quadrat_size)
+               if (min(stats::dist(coords)) < 0.9999*quadrat_size)
                   warning("There are overlapping sampling squares in the design")
             }
 
@@ -122,7 +126,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
             ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
 
             coords <- cbind(xpos,ypos)
-            if (min(dist(coords)) < 0.9999*quadrat_size)
+            if (min(stats::dist(coords)) < 0.9999*quadrat_size)
                warning("There are overlapping sampling squares in the design")
          } # end transect
 
@@ -144,15 +148,15 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
             xpos <- coords$xpos[1:n_quadrats]
             ypos <- coords$ypos[1:n_quadrats]
 
-            if (min(dist(coords)) < 0.9999*quadrat_size)
+            if (min(stats::dist(coords)) < 0.9999*quadrat_size)
                warning("There are overlapping sampling squares in the design")
 
          } # end grid
 
       } else { # if n_quadrats == 1
 
-         xpos <- runif(1, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
-         ypos <- runif(1, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
+         xpos <- stats::runif(1, min = comm$x_min_max[1], max = comm$x_min_max[2] - quadrat_size)
+         ypos <- stats::runif(1, min = comm$y_min_max[1], max = comm$y_min_max[2] - quadrat_size)
 
       }
 
@@ -176,8 +180,8 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
    # plot sampling design
    if (plot == TRUE){
       plot(comm)
-      rect(xpos, ypos, xpos + quadrat_size, ypos + quadrat_size, lwd = 2,
-           col = adjustcolor("white", alpha.f = 0.6))
+      graphics::rect(xpos, ypos, xpos + quadrat_size, ypos + quadrat_size, lwd = 2,
+                     col = grDevices::adjustcolor("white", alpha.f = 0.6))
    }
 
    return(list(spec_dat = spec_dat, xy_dat = xy_dat))
