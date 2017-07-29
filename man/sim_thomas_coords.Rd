@@ -17,9 +17,9 @@ receives a specific cluster extent. Otherwise, the first value of \code{sigma}
 is recycled and all species share the same cluster extent.
 When \code{sigma} of any species is more than twice as large as the largest
 plot dimension, a random Poisson distribution is simulated, which is more
-efficient than a Thomas cluster process. The parameter \code{sigma} corresponds to the
-\code{scale} parameter of the function \code{\link[spatstat]{rThomas}} from
-the R package \code{\link{spatstat}}.}
+efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
+to the \code{scale} parameter of the function \code{rThomas} in the package
+\href{https://CRAN.R-project.org/package=spatstat}{spatstat}.}
 
 \item{mother_points}{Number of mother points (= cluster centres).
 If this is a single value, all species have the same number of clusters.
@@ -36,7 +36,7 @@ If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
 number of points per cluster is determined from the abundance and from
 \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
-\code{mu} parameter of \code{\link[spatstat]{rThomas}}.}
+\code{mu} parameter of \code{spatstat::rThomas}.}
 
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
@@ -53,7 +53,8 @@ cluster process (Morlon et al. 2008, Wiegand & Moloney 2014)
 \details{
 To generate a Thomas cluster process of a single species this
 function uses a C++ re-implementation of the function
-\code{\link[spatstat]{rThomas}} in the package \code{\link[spatstat]{spatstat}}.
+\code{rThomas} in the package
+\href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 
 There is an inherent link between the parameters \code{abund_vec},
 \code{mother_points}, and \code{cluster_points}. For every species the

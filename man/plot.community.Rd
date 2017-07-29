@@ -7,13 +7,13 @@
 \method{plot}{community}(x, ..., col = NULL, pch = NULL)
 }
 \arguments{
+\item{x}{Community object}
+
 \item{...}{Other parameters to \link[graphics]{plot}}
 
 \item{col}{Color vector to mark species identities}
 
 \item{pch}{Plotting character to mark speces identities}
-
-\item{comm}{Community object}
 }
 \description{
 Plot positions and species identities of all individuals in a community object.

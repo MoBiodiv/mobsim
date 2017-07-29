@@ -3,7 +3,7 @@ Type: Package
 Title: Spatial analysis of scale-dependent biodiversity changes
 Version: 0.0.0.9000
 Author: Felix May
-Maintainer: Felix May <felix.may@idiv.de>
+Maintainer: Felix May <felix.may@posteo.de>
 Description: The package includes functions to simulated species distributions in space
     with controlled abundance distributions as well as controlled intraspecific
     aggregation. For analysis there are functions for species rarefaction and
@@ -18,7 +18,8 @@ Imports:
     utils,
     graphics,
     stats
-LinkingTo: Rcpp
+LinkingTo:
+    Rcpp
 Suggests:
     rmarkdown,
     spatstat,

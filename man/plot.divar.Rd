@@ -8,7 +8,9 @@ Plot diversity-area relationships}
 \method{plot}{divar}(x, ...)
 }
 \arguments{
-\item{divar}{}
+\item{x}{Dataframe generated function \code{\link{divar}}.}
+
+\item{...}{Additional graphical parameters used in \code{\link[graphics]{plot}}.}
 }
 \description{
 -----------------------------------------------------------------------------

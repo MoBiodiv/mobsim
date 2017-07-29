@@ -7,7 +7,9 @@
 \method{summary}{community}(object, ...)
 }
 \arguments{
-\item{comm}{Community object}
+\item{object}{Community object of class \code{\link{community}}}
+
+\item{...}{Additional arguments passed to \code{\link{print}}.}
 }
 \description{
 Print summary of spatial community object

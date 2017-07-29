@@ -231,7 +231,10 @@ sim_sad <- function(s_pool, n_sim,
 
 #' Plot species abundance distributions
 #'
-#' @param abund Vector with species abundances (integer vector)
+#' @param x Vector with species abundances (integer vector)
+#'
+#' @param ... Additional graphical parameters used in \code{\link[graphics]{plot}}
+#' or \code{\link[graphics]{barplot}}
 #'
 #' @param method Plotting method, partial match to \code{"octave"} or \code{"rank"}
 #'
@@ -266,7 +269,7 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
    if (method == "rank")
       graphics::plot(sort(as.numeric(x), decreasing = TRUE), type="b", log="y",
                      xlab="Species rank", ylab="Species abundance",
-                     main = "Rank-abundance curve", las = 1)
+                     main = "Rank-abundance curve", las = 1, ...)
 
    if (method == "octave"){
 
@@ -288,7 +291,7 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
       graphics::barplot(height = as.numeric(abund_dist),
                         names.arg = names(abund_dist),
                         xlab = "Abundance class", ylab ="No. of species",
-                        main = "Preston octave plot", las = 1)
+                        main = "Preston octave plot", las = 1, ...)
    }
 }
 
@@ -347,7 +350,9 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 
 #' Print summary of spatial community object
 #'
-#' @param comm Community object
+#' @param object Community object of class \code{\link{community}}
+#'
+#' @param ... Additional arguments passed to \code{\link{print}}.
 #'
 #' @export
 #'
@@ -364,7 +369,7 @@ summary.community <- function(object, ...)
 #'
 #' Plot positions and species identities of all individuals in a community object.
 #'
-#' @param comm Community object
+#' @param x Community object
 #' @param col Color vector to mark species identities
 #' @param pch Plotting character to mark speces identities
 #' @param ... Other parameters to \link[graphics]{plot}
@@ -514,9 +519,10 @@ sim_poisson_community <- function(s_pool,
 #' is recycled and all species share the same cluster extent.
 #' When \code{sigma} of any species is more than twice as large as the largest
 #' plot dimension, a random Poisson distribution is simulated, which is more
-#' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds to the
-#' \code{scale} parameter of the function \code{\link[spatstat]{rThomas}} from
-#' the R package \code{\link{spatstat}}.
+#' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
+#' to the \code{scale} parameter of the function \code{rThomas} in the package
+#' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
+#'
 #'
 #' @param mother_points Number of mother points (= cluster centres).
 #' If this is a single value, all species have the same number of clusters.
@@ -533,14 +539,15 @@ sim_poisson_community <- function(s_pool,
 #' a specific mean number of points per cluster.  If no value is provided, the
 #' number of points per cluster is determined from the abundance and from
 #' \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
-#' \code{mu} parameter of \code{\link[spatstat]{rThomas}}.
+#' \code{mu} parameter of \code{spatstat::rThomas}.
 #'
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
 #'
 #' @details To generate a Thomas cluster process of a single species this
 #' function uses a C++ re-implementation of the function
-#' \code{\link[spatstat]{rThomas}} in the package \code{\link[spatstat]{spatstat}}.
+#' \code{rThomas} in the package
+#' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
 #' \code{mother_points}, and \code{cluster_points}. For every species the
@@ -675,8 +682,8 @@ sim_thomas_coords <- function(abund_vec,
                            xmin = xrange[1], xmax = xrange[2],
                            ymin = yrange[1], ymax = yrange[2])
    } else {
-      x1 <- runif(abund_vec[1], xrange[1], xrange[2])
-      y1 <- runif(abund_vec[1], yrange[1], yrange[2])
+      x1 <- stats::runif(abund_vec[1], xrange[1], xrange[2])
+      y1 <- stats::runif(abund_vec[1], yrange[1], yrange[2])
       dat1 <- data.frame(x = x1, y = y1)
    }
 
@@ -695,8 +702,8 @@ sim_thomas_coords <- function(abund_vec,
                                  xmin = xrange[1], xmax = xrange[2],
                                  ymin = yrange[1], ymax = yrange[2])
          } else {
-            x1 <- runif(abund_vec[ispec], xrange[1], xrange[2])
-            y1 <- runif(abund_vec[ispec], yrange[1], yrange[2])
+            x1 <- stats::runif(abund_vec[ispec], xrange[1], xrange[2])
+            y1 <- stats::runif(abund_vec[ispec], yrange[1], yrange[2])
             dat1 <- data.frame(x = x1, y = y1)
          }
 
