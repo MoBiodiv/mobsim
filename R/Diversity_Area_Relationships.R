@@ -316,7 +316,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #'
 #'@export
 #'
-dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
+dist_decay <- function(comm, prop_area = 0.01, n_samples = 30,
                        method = "bray", binary = F)
 {
    if (any(prop_area > 1))
@@ -328,26 +328,22 @@ dist_decay <- function(comm, prop_area = 0.05, n_samples = 30,
 
    dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
-
    area <- dx_plot * dy_plot * prop_area
-   square_size <- sqrt(area)
 
-   xpos <- stats::runif(n_samples, min = comm$x_min_max[1],
-                                   max = comm$x_min_max[2] - square_size)
-   ypos <- stats::runif(n_samples, min = comm$y_min_max[1],
-                                   max = comm$y_min_max[2] - square_size)
+   # square_size <- sqrt(area)
 
-   d <- stats::dist(cbind(xpos,ypos))
+   samples1 <- sample_quadrats(comm, n_quadrats = n_samples, quadrat_area = area,
+                               avoid_overlap = T)
+   com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0,]
+   d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0,])
 
-   com_tab <- mapply(abund_rect, xpos, ypos,
-                     MoreArgs=list(xsize = square_size, ysize = square_size,
-                                   comm = comm ))
-
-   similarity <- 1 - vegan::vegdist(t(com_tab), method = method, binary = binary)
+   similarity <- 1 - vegan::vegdist(com_mat, method = method,
+                                    binary = binary)
    similarity[!is.finite(similarity)] <- NA
 
    dat_out <- data.frame(distance = as.numeric(d),
                          similarity = as.numeric(similarity))
+
 
    # order by increasing distance
    dat_out <- dat_out[order(dat_out$distance), ]

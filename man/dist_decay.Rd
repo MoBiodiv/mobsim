@@ -4,7 +4,7 @@
 \alias{dist_decay}
 \title{Distance decay of similarity}
 \usage{
-dist_decay(comm, prop_area = 0.05, n_samples = 30, method = "bray",
+dist_decay(comm, prop_area = 0.01, n_samples = 30, method = "bray",
   binary = F)
 }
 \arguments{
