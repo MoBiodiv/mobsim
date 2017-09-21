@@ -60,7 +60,6 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 
             if (avoid_overlap == TRUE){
 
-
                if (requireNamespace("spatstat", quietly = TRUE)){
 
                   # Hard core process:
@@ -79,6 +78,12 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 
                   count <- 0
 
+                  xpos <- stats::runif(n_quadrats, min = comm$x_min_max[1],
+                                       max = comm$x_min_max[2] - quadrat_size)
+                  ypos <- stats::runif(n_quadrats, min = comm$y_min_max[1],
+                                       max = comm$y_min_max[2] - quadrat_size)
+                  coords <- cbind(xpos,ypos)
+
                   while(min(stats::dist(coords)) < min_dist && count <= 999){
                      xpos <- stats::runif(n_quadrats, min = comm$x_min_max[1],
                                                       max = comm$x_min_max[2] - quadrat_size)
@@ -93,7 +98,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                                             Install the package spatstat for an improved method for non-overlapping squares,
                                             Use less quadrats or smaller quadrat area, or set avoid_overlap to FALSE.")
 
-               }
+               } # of no spatstat
 
             } else {
                xpos <- stats::runif(n_quadrats, min = comm$x_min_max[1],

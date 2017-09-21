@@ -310,13 +310,13 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' similarity indices
 #'
 #' @examples
-#' sim_com1 <- sim_thomas_community(100, 10000)
-#' dd1 <- dist_decay(sim_com1)
+#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
+#' dd1 <- dist_decay(sim_com1, prop_area = 0.005, n_samples = 20)
 #' plot(dd1)
 #'
 #'@export
 #'
-dist_decay <- function(comm, prop_area = 0.01, n_samples = 30,
+dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
                        method = "bray", binary = F)
 {
    if (any(prop_area > 1))
@@ -330,10 +330,8 @@ dist_decay <- function(comm, prop_area = 0.01, n_samples = 30,
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
    area <- dx_plot * dy_plot * prop_area
 
-   # square_size <- sqrt(area)
-
    samples1 <- sample_quadrats(comm, n_quadrats = n_samples, quadrat_area = area,
-                               avoid_overlap = T)
+                               avoid_overlap = T, plot = F)
    com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0,]
    d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0,])
 
@@ -343,7 +341,6 @@ dist_decay <- function(comm, prop_area = 0.01, n_samples = 30,
 
    dat_out <- data.frame(distance = as.numeric(d),
                          similarity = as.numeric(similarity))
-
 
    # order by increasing distance
    dat_out <- dat_out[order(dat_out$distance), ]

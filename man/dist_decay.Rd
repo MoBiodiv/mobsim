@@ -4,7 +4,7 @@
 \alias{dist_decay}
 \title{Distance decay of similarity}
 \usage{
-dist_decay(comm, prop_area = 0.01, n_samples = 30, method = "bray",
+dist_decay(comm, prop_area = 0.005, n_samples = 20, method = "bray",
   binary = F)
 }
 \arguments{
@@ -28,8 +28,8 @@ Estimate pairwise similarities of comunities in subplots as
 function of distance
 }
 \examples{
-sim_com1 <- sim_thomas_community(100, 10000)
-dd1 <- dist_decay(sim_com1)
+sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
+dd1 <- dist_decay(sim_com1, prop_area = 0.005, n_samples = 20)
 plot(dd1)
 
 }
