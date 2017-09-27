@@ -1,0 +1,83 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7)
+```
+
+# Sampling simulated communities
+
+```{r}
+library(mobsim)
+```
+
+```{r, eval = F}
+?sample_quadrats
+```
+
+
+```{r}
+sim_com1 <- sim_poisson_community(s_pool = 100, n_sim = 20000)
+```
+
+## Random sampling
+
+```{r}
+sample1 <- sample_quadrats(sim_com1)
+str(sample1)
+head(sample1[,1:6])
+```
+
+```{r}
+library(vegan)
+diversity(sample1)
+renyi(sample1, scales = c(0,1,2), hill = T)
+plot(specaccum(sample1, method = "exact"))
+```
+
+```{r}
+sample2 <- sample_quadrats(sim_com1, n_quadrats= 2, quadrat_area = 0.1,
+                           avoid_overlap = T)
+```
+
+```{r}
+sample3 <- sample_quadrats(sim_com1, n_quadrats= 20, quadrat_area = 0.001,
+                           avoid_overlap = T)
+```
+
+## Transect sampling
+
+```{r}
+sample4 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
+                           method = "transect", x0 = 0, y0 = 0.5, delta_x = 0.1,
+                           delta_y = 0)
+
+sample5 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
+                           method = "transect", x0 = 0, y0 = 0, delta_x = 0.1,
+                           delta_y = 0.1)
+```
+                      
+## Grid sampling
+
+```{r}
+sample6 <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
+                           method = "grid", x0 = 0, y0 = 0, delta_x = 0.1,
+                           delta_y = 0.1)
+
+sample7 <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
+                           method = "grid", x0 = 0.05, y0 = 0.05, delta_x = 0.2,
+                           delta_y = 0.2)
+```
+

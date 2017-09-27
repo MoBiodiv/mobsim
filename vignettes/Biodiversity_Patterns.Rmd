@@ -18,14 +18,14 @@ data set, but of cause the same patterns can be also derived from real data.
 
 # Simulate and explore data
 
-First, we generate community data by simulating 500 individuals from 30 species
-with a cluster size of `sigma = 0.05`.
+First, we generate community data by simulating 1000 individuals from 30 species
+with a cluster size of `sigma = 0.01` and one cluster per species (`mother_points = 1`).
 
 ```{r}
 library(mobsim)
-sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 500, sad_type = "lnorm",
+sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 1000, sad_type = "lnorm",
                                  sad_coef = list("meanlog" = 2, "sdlog" = 1),
-                                 sigma = 0.05)
+                                 sigma = 0.1, mother_points = 1)
 ```
 
 Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
@@ -72,7 +72,7 @@ plot(abund1, method = "octave")
 
 ## Rarefaction curve
 
-Another important biodiversity pattern is the *rarefaction-curve*, which estimates
+Another important biodiversity pattern is the *rarefaction curve*, which estimates
 how the number of observed species increases with sample size of individuals.
 The rarefaction curve assumes that individuals are sampled randomly and
 independently (Gotelli & Colwell 2001). The rarefaction curve only depends on 
@@ -86,27 +86,27 @@ plot(rare1)
 
 # Spatial patterns
 
-As indicated by the name of the package the main strengths of mobsim are the
-simulation and analysis of *spatial* biodiversity patterns. In the following all
-functions for spatial pattern evaluation included in mobsim are introduced.
+The main strengths of mobsim are the simulation and analysis of *spatial* 
+biodiversity patterns. In the following all functions for spatial pattern
+evaluation included in mobsim are introduced.
 
 ## Species-accumulation curve
 
-Closely related to the *rarefaction curve* is the *species-accumulation curve*
+Closely related to the *rarefaction curve* is the *species accumulation curve*
 (Gotelli & Colwell 2001). In contrast to the rarefaction curve for the derivation
-of the species-accumulation curve individuals are not sampled randomly, but starting
-from a focal individual always the closets neighbour individual is sampled and the
-number of encountered species is counted. The resultting curve is derived as the 
-average of the curves for each focal individual. The species-accumulation curve
+of the species accumulation curve individuals are not sampled randomly, but starting
+from a focal individual always the closest neighbour individual is sampled and the
+number of encountered species is counted. The resulting curve is derived as the 
+average of the curves for each focal individual. The species accumulation curve
 is influenced by the abundance distribution, but also by the spatial aggregation
 or regularity of conspecific individuals (i.e. individuals of the same species).
-Therefore the species-accumulation curves requires individuals positions in addition
+Therefore the species accumulation curves requires individuals positions in addition
 to the abundances.
 
 Due to the close relationship of the accumulation and rarefaction curves they are
 calculated and plotted with the same function.
 
-It is comprehensive to plot the rarefaction and the species-accumulation curve
+It is comprehensive to plot the rarefaction and the species accumulation curve
 together. The difference between the two curves indicates aggregation or regularity
 of conspecifics.
 
@@ -130,8 +130,8 @@ in the function `?diversity`.
 For the Shannon and Simpson diversity indices also the corresponding *Effective
 Number of Species (ENS)* is calculated (Jost 2006). This measure corresponds
 to the species number in a community of *equally abundant species*, which results
-in the same Shannon and Simpson indices as the observed community (with unequal)
-abundances.
+in the same Shannon and Simpson indices as the observed community (with unequal
+abundances).
 
 The endemics-area relationship (EAR) has been suggested as important tool to
 investigate the consequences of habitat loss for biodiversity (He & Hubbell 2011,
@@ -155,6 +155,8 @@ plot(divar1)
 The last spatial pattern provided by mobsim is the *distance decay of
 community similarity*, which quantifies how quickly the similarity in species
 composition between two subplots decreases with the distance between two subplots.
+The function `dist_decay` tries to distribute a subplots with user-defined size and
+number in the community and calculates all pairwise similarities. 
 
 The function `dist_decay` makes use of the function `vegdist` from the package
 [vegan](https://cran.r-project.org/package=vegan). Therefore you can consult
@@ -163,7 +165,7 @@ The function `dist_decay` makes use of the function `vegdist` from the package
 Here is a demonstration how the distance decay can be estimated and visualized
 
 ```{r,fig.width=5, fig.height=5}
-dd1 <- dist_decay(sim_dat1, prop_area = 0.05, n_samples = 30, method = "jaccard")
+dd1 <- dist_decay(sim_dat1, prop_area = 0.01, n_samples = 20, method = "bray")
 head(dd1)
 
 plot(dd1)

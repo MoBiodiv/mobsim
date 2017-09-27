@@ -75,10 +75,10 @@ field data.
 
 ## Simulating communities
 
-We simulate two communities that have the same species richness (`s_pool`) and
-Poisson log-normal species abundance distribution (SAD) (, specified by`sad_type`
-and `sad_coef`) of the species pool, and the same intraspecific aggregation
-of species with cluster size parameter `sigma`. The two communities only differ
+We simulate two communities that have the same species richness (`s_pool`),
+the same Poisson log-normal species abundance distribution (SAD)
+(specified by`sad_type` and `sad_coef`) of the species pool, and the same intraspecific 
+aggregation of species with cluster size parameter `sigma`. The two communities only differ
 in the total number of individuals (`n_sim`).
 
 ```{r}
@@ -115,14 +115,14 @@ of sampling areas, specified as proportion of the total area. Here, we use
 an approximatley log-scaled sampling area vector.
 
 ```{r}
-area <- c(0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1)
+area <- c(0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1.0)
 sar_n_high <- divar(sim_n_high, prop_area = area)
 sar_n_low <- divar(sim_n_low, prop_area = area)
 
 names(sar_n_high)
 ```
 
-For each sampling size, the function calculated mean and standard deviation
+For each sampling size, the function calculates mean and standard deviation
 of several biodiversity indices. For the SAR, we plot the mean species richness
 vs. sampling area.
 
@@ -134,7 +134,7 @@ lines(m_species ~ prop_area, data = sar_n_low, type = "b", col = "red")
 legend("bottomright",c("N high","N low"), col = 1:2, pch = 1)
 ```
 
-We see that there are more species in the landscape with less individuals across
+We see that there are more species in the landscape with more individuals across
 most scales. However, the curves converge as soon as 50% or more of the landscape
 are sampled.
 
@@ -148,7 +148,7 @@ be used to simulate the sampling process.
 The function `sample_quadrats` distributes sampling quadrats of user defined
 number (`n_quadrats`) and size (`quadrat_area`) in a landscape and returns the
 species abundancce in each square. The user can choose different spatial sampling
-design. Here, we use a random distribution of the sampling squares.
+designs. Here, we use a random distribution of the sampling squares.
 
 First, we use many small samples:
 
@@ -177,14 +177,14 @@ samples_L_n_low <- sample_quadrats(sim_n_low, n_quadrats = 10,
 
 The function `sample_quadrats` return two objects: (i) a community matrix
 with quadrats in rows, species in columns and the abundance of every species in
-the respective cell. The second object includes the positions of the sampling
+the respective cell, and (ii) a matrix with the positions of the sampling
 squares in the landscapes.
 
 ```{r}
 dim(samples_L_n_high$spec_dat)
 head(samples_L_n_high$spec_dat)[,1:5]
 
-dim(samples_L_n_high$spec_dat)
+dim(samples_L_n_high$xy_dat)
 head(samples_L_n_high$xy_dat)
 ```
 
@@ -195,7 +195,7 @@ The community matrix can now be analysed just as ecologist will analyse field da
 A software package that is perfectly suited for this and smoothly integrates
 with mobsim is [vegan](https://CRAN.R-project.org/package=vegan). 
 
-Here, we use `vegan` calculate the the species richness, the Shannon- and Simpson-
+Here, we use `vegan` to calculate the species richness, the Shannon- and Simpson-
 diversity indices for both landscapes and for both sampling scales.
 
 ### Small scale analysis
@@ -237,6 +237,7 @@ is slightly higher with less individuals.
 
 Since the different diversity indices have different absolute values, we calculate
 relative changes of the mean values as diversity changes effect size.
+
 The relative change is defined as
 
 $$  relEff = \frac{diversity(N = low) - diversity(N = high)}{diversity(N = high)} $$
@@ -298,13 +299,13 @@ relEff_L <- (mean_div_L[mean_div_S$Group.1 == "N low", 2:4] -  mean_div_L[mean_d
 
 ### Compare results across scales
 
-Finally, we compare the diversity effect sizes also across the scales.
+Finally, we compare the diversity effect sizes across the two scales.
 
 ```{r}
 relEff_S
 relEff_L
 ```
-We that that there are differences, both among indices within the same scale,
+We see that there are differences, both among indices within the same scale,
 as shown above, but also across scales. At the larger scale there is a stronger
 negative effect of shannon diversity, while the positive change in Simpson
 diversity disappears. 

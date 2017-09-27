@@ -229,6 +229,24 @@ sim_sad <- function(s_pool, n_sim,
    return(abund2)
 }
 
+#' Print summary of species abundance distribution object
+#'
+#' @param object Community object of class \code{\link{sad}}
+#'
+#' @param ... Additional arguments passed to \code{\link{print}}.
+#'
+#' @export
+#'
+summary.sad <- function(object, ...)
+{
+   cat("Species abundance distribution\n\n")
+   cat("No. of individuals: ", sum(object), "\n")
+   cat("No. of species: ", length(object), "\n\n")
+   cat("Min. abundance: ", min(object), "\n")
+   cat("Mean abundance: ", mean(object), "\n")
+   cat("Max. abundance: ", max(object), "\n")
+}
+
 #' Plot species abundance distributions
 #'
 #' @param x Vector with species abundances (integer vector)
