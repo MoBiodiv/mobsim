@@ -1,5 +1,5 @@
 ---
-title: "Simulation communities with mobsim"
+title: "Simulating communities with mobsim"
 author: "Felix May"
 date: "`r Sys.Date()`"
 output:
@@ -29,8 +29,8 @@ explicit community data with `mobsim`.
 
 For this purpose `mobsim` provides the function `sim_sad`, which is a wrapper
 around the function `rsad` from the package [sads](https://CRAN.R-project.org/package=sads).
-In contrast to `rsad`, `sim_sad` allows simulating communities with user defined
-total number of individuals.
+In contrast to `rsad`, `sim_sad` allows simulating communities with user-defined
+number of species *and* user-defined total number of individuals.
 
 Here is an example for the simulation of an SAD using a log-normal model.
 
@@ -44,13 +44,13 @@ summary(abund1)
 ```
 
 `sim_sad` first simulates a *relative* species abundance distribution according
-to the user defined model and then samples the requested number of individuals 
-from this relative abundance distribution. Because of the use of a relative abundance
+to the chosen SAD model and then samples the requested number of individuals 
+according to this relative abundance distribution. Because of the use of a relative abundance
 distribution as intermediate step, in the log-normal model the mean abundance 
 is defined by the simulated number of individuals (`n_sim`) divided by the number 
 of species (`s_pool`). Therefore, for the log-normal model `sim_sad` offers 
 also a simpler parameterization that just specifies the coefficient of 
-variation (`cv`) of the log-normal SAD.
+variation (`cv_abund`) of the log-normal SAD.
 
 ```{r}
 abund2 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
@@ -58,13 +58,13 @@ abund2 <- sim_sad(s_pool = 100, n_sim = 1000, sad_type = "lnorm",
 summary(abund2)
 ```
 
-Obviously, the simulated community includes less species than the user defined 
+Obviously, the simulated community includes less species than the user-defined 
 value of `s_pool = 100`. This is a consequence of the stochastic sampling from the
 relative abundance distribution. When some species have very low relative abundances,
 they might not be sampled into the simulated community. However, `sim_sad` offers 
 the option `fix_s_sim = TRUE`, which results in the user-defined value of species 
 in the simulation. This is implemented by adding very rare species to the community,
-while removing individuals from the common species. Please not that the constraint
+while removing individuals from the common species. Please note that the constraint
 `fix_s_sim = TRUE` might result in deviations from the underlying theoretical
 SAD model.
 
@@ -99,14 +99,15 @@ summary(abund3)
 With `mobsim` random and aggregated species distributions can be simulated.
 This can be done in two ways. Either, simulated coordinates of individuals 
 can be added to an observed or simulated species abundance distributions, or
-species abundance and coordinates can be simulated at the same time.
+species abundances and distributions can be simulated at the same time with
+just one function call.
 
 ## Random distributions
 
 In spatial statistics for point patterns a random distribution of points in a
-given area is called Poisson process. Accordingly, th function to add random 
-coordinates to an existing species abundance distribution is called `sim_poisson_coords`.
-Here is an example of its application.
+given area is called Poisson process. Accordingly, the function to add random 
+coordinates to an existing species abundance distribution is called 
+`sim_poisson_coords`. Here is an example of its application.
 
 
 ```{r}
@@ -116,7 +117,7 @@ comm1 <- sim_poisson_coords(abund_vec = abund1, xrange = c(0,1), yrange = c(0,1)
 
 The community object includes x and y coordinates, as well as the species
 identity for every individual in the community. `mobsim` offers functions for
-exploring and plotting the community object produces by `sim_poisson_coords`.
+exploring and plotting the community objects.
 
 
 ```{r, fig.width = 3.5, fig.height = 4}
@@ -131,7 +132,8 @@ simulated at the same time using `sim_poisson_community`, which essentially call
 
 ```{r, fig.width = 3.5, fig.height = 4}
 comm2 <- sim_poisson_community(s_pool = 20, n_sim = 200,
-                               sad_type = "lnorm")
+                               sad_type = "lnorm",
+                               sad_coef = list(cv_abund = 1))
 plot(comm2)
 ```
 
@@ -140,9 +142,9 @@ plot(comm2)
 
 Aggregated, or clustered species distributions are simulated based on the
 Thomas process, also known as Poisson cluster process, in `mobsim`. For each
-species the Thomas process first distributes a given number of mother points
+species, the Thomas process first distributes a given number of mother points
 in the landscape. Then, offspring points are distributed around the mother points
-according to a bivariate Gaussion distance kernel, where the average distance
+according to a bivariate Gaussian distance kernel, where the average displacement
 between mother and offspring points is called `sigma`. The offspring points
 constitute the final distribution of the species. 
 
@@ -159,58 +161,61 @@ aggregation or segregation.
 
 Here is one example for a community with intraspecific aggregation:
 
-```{r}
+```{r, fig.width = 3.5, fig.height = 4}
 comm3 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02)
 plot(comm3)
 ```
 
-First, we change the size of the clusters
+First, we change the size of the clusters using the argument `sigma`.
 
-```{r, fig.width = 8, fig.height = 4}
+```{r, fig.width = 7, fig.height = 4}
 comm3a <- sim_thomas_coords(abund_vec = abund1, sigma = 0.05)
 par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3a)
 ```
 
-**Change number of mother points**
+Second, we change the number of clusters per species using the argument 
+`mother_points`.
 
-```{r, fig.width = 10, fig.height = 5}
-com2b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
+```{r, fig.width = 7, fig.height = 4}
+comm3b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
 par(mfrow = c(1,2))
-plot(com2)
-plot(com2b)
+plot(comm3)
+plot(comm3b)
+```
+Third, we change the average number of points (i.e. individuals) per cluster using
+the argument `cluster_points`.
+
+```{r, fig.width = 7, fig.height = 4}
+comm3c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 5)
+par(mfrow = c(1,2))
+plot(comm3)
+plot(comm3c)
 ```
 
-**Change number of points per cluster**
+Each of these parameters can be either set to the same equal value for all species
+as in the examples before, or individually for all species by providing a vector
+with a length equal to the number of species. For example,
+each species can has its specific number of clusters.
 
-```{r, fig.width = 10, fig.height = 5}
-com2c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 10)
-par(mfrow = c(1,2))
-plot(com2)
-plot(com2c)
+```{r, fig.width = 3.5, fig.height = 4}
+comm4 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02,
+                           mother_points = c(5,4,3,2,1))
+plot(comm4)
 ```
 
-## Simulate abundances and distributions at the same time
+Please note that there can be clusters with zero individuals, so the simulated
+number of clusters does not necessarily match the parameter settings.
 
-### Poisson process
+In analogy to random distributions, there is a function to simulate
+abundances and aggregated distributions at the same time.
 
 ```{r}
-com3 <- sim_poisson_community(s_pool = 100, n_sim = 500)
+comm5 <- sim_thomas_community(s_pool = 100, n_sim = 500, sad_type = "lnorm",
+                              sad_coef = list(cv_abund = 1),sigma = 0.05)
+plot(comm5)
 ```
-
-### Thomas process
-
-```{r}
-com4 <- sim_thomas_community(s_pool = 100, n_sim = 500, sigma = 0.05)
-```
-
-```{r, fig.width = 10, fig.height = 5}
-par(mfrow = c(1,2))
-plot(com3)
-plot(com4)
-```
-
 
 
 

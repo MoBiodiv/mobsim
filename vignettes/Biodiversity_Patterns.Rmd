@@ -86,9 +86,9 @@ plot(rare1)
 
 # Spatial patterns
 
-The main strengths of mobsim are the simulation and analysis of *spatial* 
+The main strengths of `mobsim` are the simulation and analysis of *spatial* 
 biodiversity patterns. In the following all functions for spatial pattern
-evaluation included in mobsim are introduced.
+evaluation included in `mobsim` are introduced.
 
 ## Species-accumulation curve
 
@@ -98,17 +98,16 @@ of the species accumulation curve individuals are not sampled randomly, but star
 from a focal individual always the closest neighbour individual is sampled and the
 number of encountered species is counted. The resulting curve is derived as the 
 average of the curves for each focal individual. The species accumulation curve
-is influenced by the abundance distribution, but also by the spatial aggregation
-or regularity of conspecific individuals (i.e. individuals of the same species).
-Therefore the species accumulation curves requires individuals positions in addition
-to the abundances.
+is influenced by the abundance distribution, but also by the spatial distribution of 
+individuals and species. Therefore the species accumulation curves requires 
+individuals positions in addition to the abundances.
 
 Due to the close relationship of the accumulation and rarefaction curves they are
 calculated and plotted with the same function.
 
 It is comprehensive to plot the rarefaction and the species accumulation curve
-together. The difference between the two curves indicates aggregation or regularity
-of conspecifics.
+together. The difference between the two curves indicates aggregation or 
+overdispersion of conspecifics.
 
 ```{r, fig.width = 5, fig.height = 5}
 spec_curves1 <- spec_sample_curve(sim_dat1, method = c("accumulation", "rarefaction"))
@@ -155,8 +154,8 @@ plot(divar1)
 The last spatial pattern provided by mobsim is the *distance decay of
 community similarity*, which quantifies how quickly the similarity in species
 composition between two subplots decreases with the distance between two subplots.
-The function `dist_decay` tries to distribute a subplots with user-defined size and
-number in the community and calculates all pairwise similarities. 
+The function `dist_decay` distributes non-overlapping subplots with user-defined size
+and number in the community and calculates all pairwise similarities. 
 
 The function `dist_decay` makes use of the function `vegdist` from the package
 [vegan](https://cran.r-project.org/package=vegan). Therefore you can consult

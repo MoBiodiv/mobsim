@@ -1,51 +1,54 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Sampling communities with mobsim"
+author: "Felix May"
 date: "`r Sys.Date()`"
 output:
-   rmarkdown::html_vignette:
+ rmarkdown::html_vignette:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Sampling communities}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 5, fig.height = 5)
 ```
 
-# Sampling simulated communities
+In addition to the simulation of spatially-explicit communities, `mobsim` provides
+a function to generate samples from simulated or observed communities. The combination
+of simulated data AND simulated sampling is powerful to test the validity and power
+of empirical approaches.
+
+# Random sampling
+
+Here, we simulate a community and then generate samples with the function
+`sample_quadrats`. By default `sample_quadrats` distributes a user-defined
+number of quadrats with user-defined size in the landscape and provides the
+number of individuals for each species in each quadrat.
+
+The function returns two dataframes. The first includes the abundance of every 
+species in every sampling quadrat and the second the positions of the lower left
+corners of the quadrats.
+
 
 ```{r}
 library(mobsim)
-```
-
-```{r, eval = F}
-?sample_quadrats
-```
-
-
-```{r}
 sim_com1 <- sim_poisson_community(s_pool = 100, n_sim = 20000)
 ```
 
-## Random sampling
-
 ```{r}
 sample1 <- sample_quadrats(sim_com1)
-str(sample1)
-head(sample1[,1:6])
+
+head(sample1$spec_dat[,1:6])
+head(sample1$xy_dat)
 ```
 
-```{r}
-library(vegan)
-diversity(sample1)
-renyi(sample1, scales = c(0,1,2), hill = T)
-plot(specaccum(sample1, method = "exact"))
-```
+There is an option to exclude overlapping quadrats from the random sampling
+design, which is shown here in two examples with different numbers and sizes
+of the quadrats.
 
 ```{r}
 sample2 <- sample_quadrats(sim_com1, n_quadrats= 2, quadrat_area = 0.1,
@@ -57,7 +60,11 @@ sample3 <- sample_quadrats(sim_com1, n_quadrats= 20, quadrat_area = 0.001,
                            avoid_overlap = T)
 ```
 
-## Transect sampling
+# Transect sampling
+
+In addition to random design also transect can be sampled, which requires
+a position for the lower left quadrat as well as x and y distances between
+neighbouring quadrats.
 
 ```{r}
 sample4 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
@@ -69,7 +76,9 @@ sample5 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
                            delta_y = 0.1)
 ```
                       
-## Grid sampling
+# Grid sampling
+
+Finally, sampling quadrats can be arranged in a regular lattice.
 
 ```{r}
 sample6 <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
