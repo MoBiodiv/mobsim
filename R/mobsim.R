@@ -36,6 +36,6 @@
 #' @name mobsim
 NULL
 
-#' @useDynLib mobsim
+#' @useDynLib mobsim, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 NULL

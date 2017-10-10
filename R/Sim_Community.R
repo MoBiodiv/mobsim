@@ -231,9 +231,11 @@ sim_sad <- function(s_pool, n_sim,
 
 #' Print summary of species abundance distribution object
 #'
-#' @param object Community object of class \code{\link{sad}}
+#' @param object Community object of class \code{sad}
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
+#'
+#' @seealso \code{\link{sim_sad}}
 #'
 #' @export
 #'

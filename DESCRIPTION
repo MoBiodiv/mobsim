@@ -1,7 +1,7 @@
 Package: mobsim
 Type: Package
 Title: Spatial analysis of scale-dependent biodiversity changes
-Version: 0.0.0.9000
+Version: 0.1.0
 Author: Felix May
 Maintainer: Felix May <felix.may@posteo.de>
 Description: The package includes functions to simulated species distributions in space

@@ -7,10 +7,13 @@
 \method{summary}{sad}(object, ...)
 }
 \arguments{
-\item{object}{Community object of class \code{\link{sad}}}
+\item{object}{Community object of class \code{sad}}
 
 \item{...}{Additional arguments passed to \code{\link{print}}.}
 }
 \description{
 Print summary of species abundance distribution object
+}
+\seealso{
+\code{\link{sim_sad}}
 }

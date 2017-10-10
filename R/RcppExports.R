@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 rThomas_rcpp <- function(n_points, n_mother_points, sigma, mu, xmin = 0, xmax = 1, ymin = 0, ymax = 1) {
-    .Call('_mobsim_rThomas_rcpp', PACKAGE = 'mobsim', n_points, n_mother_points, sigma, mu, xmin, xmax, ymin, ymax)
+    .Call(`_mobsim_rThomas_rcpp`, n_points, n_mother_points, sigma, mu, xmin, xmax, ymin, ymax)
 }
 
 sSAC1_C <- function(x, y, id_spec) {
-    .Call('_mobsim_sSAC1_C', PACKAGE = 'mobsim', x, y, id_spec)
+    .Call(`_mobsim_sSAC1_C`, x, y, id_spec)
 }
 
