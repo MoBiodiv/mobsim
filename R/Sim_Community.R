@@ -75,7 +75,6 @@
 #'    \code{\link[sads]{rpoilog}} \tab Poisson-lognormal distribution \tab	mu	 \tab sigma \tab cv_abund \cr
 #'    \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
 #'    \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
-#'    \code{\link[sads]{rvolkov}} \tab Neutral theory distribution by Volkov et al. \tab theta \tab	m \tab J \cr
 #'    \code{\link[stats]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
 #'}
 #'
@@ -135,7 +134,7 @@
 sim_sad <- function(s_pool, n_sim,
                     sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
                                  "mzsm","nbinom", "pareto", "poilog", "power",
-                                 "volkov","powbend", "weibull"),
+                                 "powbend", "weibull"),
                     sad_coef = list("cv_abund" = 1),
                     fix_s_sim = FALSE)
 {
@@ -149,13 +148,12 @@ sim_sad <- function(s_pool, n_sim,
    if (class(sad_coef) != "list" | is.null(names(sad_coef))) stop("coef must be a named list!")
 
    # Handles parameters that give the community size
-   if (sad_type %in% c("bs", "ls", "mzsm", "volkov")) {
+   if (sad_type %in% c("bs", "ls", "mzsm")) {
       S <- switch(sad_type,
                   bs = sad_coef$S,
                   ls = sad_coef$alpha * log ( 1 + sad_coef$N / sad_coef$alpha ),
                   mzsm = sum(sad_coef$theta / (1:sad_coef$J) *
-                             (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1)),
-                  volkov = sads::Svolkov(sad_coef$theta, sad_coef$m, sad_coef$J)
+                             (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1))
                  )
       S <- round(S)
       if (!is.null(s_pool)){
