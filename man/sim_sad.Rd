@@ -5,8 +5,8 @@
 \title{Simulate species abundance distributions}
 \usage{
 sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
-  "mzsm", "nbinom", "pareto", "poilog", "power", "volkov", "powbend",
-  "weibull"), sad_coef = list(cv_abund = 1), fix_s_sim = FALSE)
+  "mzsm", "nbinom", "pareto", "poilog", "power", "powbend", "weibull"),
+  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}
@@ -90,7 +90,6 @@ The function \code{sim_sad} was built using code of the function
    \code{\link[sads]{rpoilog}} \tab Poisson-lognormal distribution \tab	mu	 \tab sigma \tab cv_abund \cr
    \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
    \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
-   \code{\link[sads]{rvolkov}} \tab Neutral theory distribution by Volkov et al. \tab theta \tab	m \tab J \cr
    \code{\link[stats]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
 }
 }

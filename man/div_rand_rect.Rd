@@ -18,14 +18,18 @@ div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = F)
 \value{
 Vector with mean and standard deviation of the following diversity
 indices:
+
 \enumerate{
    \item Number of species
    \item Number of endemics
    \item Shannon index
-   \item ENS_shannon
+   \item Effective number of species (ENS) based on Shannon index
    \item Simpson index
-   \item ENS_simpson
+   \item Effective number of species (ENS) based on Simpson index
 }
+
+See the documentation of  \code{\link{div_rect}} for detailed information on the
+definition on diversity indices.
 }
 \description{
 Get mean and standard deviation of diversity indices in several equally
@@ -36,7 +40,4 @@ sim1 <- sim_poisson_community(100,1000)
 div_rand_rect(prop_area = 0.1, comm = sim1)
 
 
-}
-\seealso{
-\code{\link{div_rect}}
 }

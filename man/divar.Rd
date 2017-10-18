@@ -23,10 +23,13 @@ standard deviation of the following diversity indices:
    \item Number of species
    \item Number of endemics
    \item Shannon index
-   \item ENS_shannon
+   \item Effective number of species (ENS) based on Shannon index
    \item Simpson index
-   \item ENS_simpson
+   \item Effective number of species (ENS) based on Simpson index
 }
+
+See the documentation of  \code{\link{div_rect}} for detailed information on the
+definition on diversity indices.
 }
 \description{
 Estimate diversity indices in subplots of different sizes. This includes the

@@ -4,7 +4,7 @@
 \alias{summary.sad}
 \title{Print summary of species abundance distribution object}
 \usage{
-summary.sad(object, ...)
+\method{summary}{sad}(object, ...)
 }
 \arguments{
 \item{object}{Community object of class \code{sad}}

@@ -95,16 +95,18 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #'
 #' @return Vector with mean and standard deviation of the following diversity
 #' indices:
+#'
 #' \enumerate{
 #'    \item Number of species
 #'    \item Number of endemics
 #'    \item Shannon index
-#'    \item ENS_shannon
+#'    \item Effective number of species (ENS) based on Shannon index
 #'    \item Simpson index
-#'    \item ENS_simpson
+#'    \item Effective number of species (ENS) based on Simpson index
 #' }
 #'
-#' @seealso \code{\link{div_rect}}
+#' See the documentation of  \code{\link{div_rect}} for detailed information on the
+#' definition of the diversity indices.
 #'
 #' @examples
 #' sim1 <- sim_poisson_community(100,1000)
@@ -179,10 +181,13 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #'    \item Number of species
 #'    \item Number of endemics
 #'    \item Shannon index
-#'    \item ENS_shannon
+#'    \item Effective number of species (ENS) based on Shannon index
 #'    \item Simpson index
-#'    \item ENS_simpson
+#'    \item Effective number of species (ENS) based on Simpson index
 #' }
+#'
+#' See the documentation of  \code{\link{div_rect}} for detailed information on the
+#' definition of the diversity indices.
 #'
 #' @seealso \code{\link{div_rand_rect}}, \code{\link{div_rect}}
 #'
