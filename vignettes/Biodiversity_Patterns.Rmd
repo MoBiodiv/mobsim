@@ -12,14 +12,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This introduction shows the list of biodiversity patterns that can be analysed
+This introduction shows the list of biodiversity patterns that can be derived
 using `mobsim`. In this vignette the patterns are evaluated on a simulated
-data set, but of cause the same patterns can be also derived from real data.
+data set, but of course the same patterns can be also derived from real data.
 
 # Simulate and explore data
 
-First, we generate community data by simulating 1000 individuals from 30 species
+First, we generate community data by simulating 1,000 individuals from 30 species
 with a cluster size of `sigma = 0.01` and one cluster per species (`mother_points = 1`).
+For more information on the simulation of communities see the vignette **Simulating
+communities with `mobsim`**.
 
 ```{r}
 library(mobsim)
@@ -39,7 +41,7 @@ str(sim_dat1)
 
 # Non-spatial patterns
 
-## Species abundance distribution
+## Species abundance distribution (SAD)
 
 A fundamental non-spatial pattern of a community is the abundance distribution,
 i.e. the distribution of commonness and rarity in a community. The abundance
@@ -50,7 +52,7 @@ distribution can be extracted from a community object using the function
 abund1 <- community_to_sad(sim_dat1)
 ```
 
-A standard plot in community ecology is the *rank-abundance plot* where the 
+A standard plot in community ecology is the *rank-abundance plot*, where the 
 abundance of each species is plotted vs. its rank from highest to lowest abundance.
 As a standard log-scaling is used for the abundance axis in this plot.
 
@@ -92,22 +94,22 @@ evaluation included in `mobsim` are introduced.
 
 ## Species-accumulation curve
 
-Closely related to the *rarefaction curve* is the *species accumulation curve*
-(Gotelli & Colwell 2001). In contrast to the rarefaction curve for the derivation
-of the species accumulation curve individuals are not sampled randomly, but starting
-from a focal individual always the closest neighbour individual is sampled and the
+Closely related to the *rarefaction curve* is the *spatial species accumulation curve*.
+In contrast to the rarefaction curve for the derivation of the species accumulation
+curve individuals are not sampled randomly, but starting from a focal individual
+always the closest neighbour individual is sampled and the
 number of encountered species is counted. The resulting curve is derived as the 
 average of the curves for each focal individual. The species accumulation curve
 is influenced by the abundance distribution, but also by the spatial distribution of 
 individuals and species. Therefore the species accumulation curves requires 
-individuals positions in addition to the abundances.
+individual's positions in addition to species abundances.
 
 Due to the close relationship of the accumulation and rarefaction curves they are
 calculated and plotted with the same function.
 
 It is comprehensive to plot the rarefaction and the species accumulation curve
 together. The difference between the two curves indicates aggregation or 
-overdispersion of conspecifics.
+overdispersion of conspecific individuals.
 
 ```{r, fig.width = 5, fig.height = 5}
 spec_curves1 <- spec_sample_curve(sim_dat1, method = c("accumulation", "rarefaction"))
@@ -117,14 +119,13 @@ plot(spec_curves1)
 ## Diversity-area relationships
 
 The most well-known spatial biodiversity pattern is the *species-area relationship* 
-(SAR). In mobsim the function `divar` (diversity-area relationships) calculates
+(SAR). In `mobsim` the function `divar` (diversity-area relationships) calculates
 the species richness in randomly located subplots (quadrats or rectangles) of 
 different sizes. However, the function `divar` calculates additional indices,
 including the Shannon and Simpson diversity indices for each subplot, as well
 as the number of endemic species, which are the species that *only* occur within, 
-but not outside the subplot. Documentation for the Shannon and Simpson diversity
-indices can be found in the package [vegan](https://cran.r-project.org/package=vegan)
-in the function `?diversity`.
+but not outside the subplot. See `?div_rect` for detailed information on 
+the diversity indices.
 
 For the Shannon and Simpson diversity indices also the corresponding *Effective
 Number of Species (ENS)* is calculated (Jost 2006). This measure corresponds
@@ -134,8 +135,8 @@ abundances).
 
 The endemics-area relationship (EAR) has been suggested as important tool to
 investigate the consequences of habitat loss for biodiversity (He & Hubbell 2011,
-Keil et al. 2015). For the evaluation of SAR and EAR using mobsim a vector
-with subplot sizes as proportion of the total community size has to be defined
+Keil et al. 2015). For the evaluation of the diversity-area relationships a vector
+with subplot sizes measured as proportion of the total community size has to be defined.
 
 ```{r}
 subplot_size <- c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 
@@ -151,7 +152,7 @@ plot(divar1)
 
 ## Distance decay of community similarity
 
-The last spatial pattern provided by mobsim is the *distance decay of
+The last spatial pattern provided by `mobsim` is the *distance decay of
 community similarity*, which quantifies how quickly the similarity in species
 composition between two subplots decreases with the distance between two subplots.
 The function `dist_decay` distributes non-overlapping subplots with user-defined size

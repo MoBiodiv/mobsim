@@ -1,13 +1,15 @@
 Package: mobsim
 Type: Package
-Title: Spatial analysis of scale-dependent biodiversity changes
+Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
 Version: 0.1.0
 Author: Felix May
 Maintainer: Felix May <felix.may@posteo.de>
-Description: The package includes functions to simulated species distributions in space
-    with controlled abundance distributions as well as controlled intraspecific
-    aggregation. For analysis there are functions for species rarefaction and
-    accumulation curves, species-area relationships and endemics-area relationships.
+Description: Tools for the simulation, analysis and sampling of spatial
+    biodiversity data. In the simulation tools user define the numbers of
+    species and individuals, the species abundance distribution and species
+    aggregation. Functions for analysis include species rarefaction 
+    and accumulation curves, species-area relationships and the distance
+    decay of similarity. 
 License: GPL-3
 LazyData: TRUE
 Imports:
