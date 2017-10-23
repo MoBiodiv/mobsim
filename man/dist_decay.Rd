@@ -14,7 +14,7 @@ dist_decay(comm, prop_area = 0.005, n_samples = 20, method = "bray",
 
 \item{n_samples}{Number of randomly located subplots}
 
-\item{method}{Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}}
+\item{method}{Choice of (dis)similarity index. See \code{\link[vegan]{vegdist}}}
 
 \item{binary}{Perform presence/absence standardization before analysis?
 See \code{\link[vegan]{vegdist}}}
@@ -24,7 +24,7 @@ Dataframe with distances between subplot pairs and the respective
 similarity indices
 }
 \description{
-Estimate pairwise similarities of comunities in subplots as
+Estimate pairwise similarities of communities in subplots as
 function of distance
 }
 \examples{

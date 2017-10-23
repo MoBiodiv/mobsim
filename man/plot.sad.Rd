@@ -38,6 +38,6 @@ plot(abund1, method = "rank")
 \references{
 Preston 1948. The Commonness, and rarity, of species. Ecology 29(3):254-283.
 
-Hubell 2001. The unified neutral theory of biodiversity and biogeography.
+Hubbell 2001. The unified neutral theory of biodiversity and biogeography.
 Princeton University Press.
 }

@@ -13,7 +13,7 @@
 
 \item{col}{Color vector to mark species identities}
 
-\item{pch}{Plotting character to mark speces identities}
+\item{pch}{Plotting character to mark species identities}
 }
 \description{
 Plot positions and species identities of all individuals in a community object.

@@ -75,7 +75,7 @@ The function \code{sim_sad} was built using code of the function
   respective coefficients (\code{sad_coef}). Further information is provided
   by the documentation of the specific functions that can be accesses by the
   links. Please note that the coefficient \code{cv_abund} for the log-normal
-  and Poisson log-normal model are onyl available within \code{mobsim}.
+  and Poisson log-normal model are only available within \code{mobsim}.
 
 \tabular{lllll}{
    \strong{SAD function} \tab \strong{Distribution name} \tab \strong{coef #1} \tab \strong{coef #2} \tab \strong{coef #3} \cr
