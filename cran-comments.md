@@ -1,40 +1,49 @@
-## Test environments
+# Test environments
+* local ubuntu 16.04 LTS, R 3.4.2
+* win-builder (devel and release)
 
-## R CMD check results
+# R CMD check results
 
-Status: 1 WARNING, 4 NOTEs
+## ubuntu 16.04
 
-See
-  'C:/FelixMay/MoBiodiv/mobsim.Rcheck/00check.log'
-for details.
-
-
-checking for hidden files and directories ... NOTE
-Found the following hidden files and directories:
-  revdep/.cache.rds
-These were most likely included in error. See section 'Package
-structure' in the 'Writing R Extensions' manual.
-
-checking top-level files ... NOTE
-Non-standard file/directory found at top level:
-  'revdep'
-
-checking dependencies in R code ... NOTE
-Missing or unexported object: 'sads::Svolkov'
-
-checking compiled code ... NOTE
-File 'mobsim/libs/x64/mobsim.dll':
-  Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'
-
-It is good practice to register native routines and to disable symbol
-search.
-
-See 'Writing portable packages' in the 'Writing R Extensions' manual.
- WARNING
-'qpdf' is needed for checks on size reduction of PDFs
-R CMD check results
-0 errors | 0 warnings | 4 notes
+0 errors | 0 warnings | 0 notes
 
 R CMD check succeeded
 
-## Downstream dependencies
+## win-builder (devel)
+
+Status: 1 WARNING, 1 NOTE
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Felix May <felix.may@posteo.de>'
+
+* checking top-level files ... WARNING
+Conversion of 'README.md' failed:
+pandoc.exe: Could not fetch README-unnamed-chunk-4-1.png
+README-unnamed-chunk-4-1.png: openBinaryFile: does not exist (No such file or directory)
+
+I use an R markdown file (README.Rmd) to create README.md
+In the ode examples in README.Rmd figures are created. This seems to be a problem
+for the windows build. If this is a serious problem I can easily remove the plotting
+functions from the examples. However, it would be nice to have a graphical example
+in the README file.
+
+## win-builder (release)
+
+Status: 1 WARNING, 1 NOTE
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Felix May <felix.may@posteo.de>'
+
+* checking top-level files ... WARNING
+Conversion of 'README.md' failed:
+pandoc.exe: Could not fetch README-unnamed-chunk-4-1.png
+README-unnamed-chunk-4-1.png: openBinaryFile: does not exist (No such file or directory)
+
+# Downstream dependencies
+
+I ran devtools::revdep_check() locally
+
+0 packages with problems
+
+No ERRORs or WARNINGs found :)

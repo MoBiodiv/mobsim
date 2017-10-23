@@ -29,7 +29,7 @@ indices:
 }
 
 See the documentation of  \code{\link{div_rect}} for detailed information on the
-definition on diversity indices.
+definition of the diversity indices.
 }
 \description{
 Get mean and standard deviation of diversity indices in several equally
