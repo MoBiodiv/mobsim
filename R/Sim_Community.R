@@ -60,7 +60,7 @@
 #'   respective coefficients (\code{sad_coef}). Further information is provided
 #'   by the documentation of the specific functions that can be accesses by the
 #'   links. Please note that the coefficient \code{cv_abund} for the log-normal
-#'   and Poisson log-normal model are onyl available within \code{mobsim}.
+#'   and Poisson log-normal model are only available within \code{mobsim}.
 #'
 #' \tabular{lllll}{
 #'    \strong{SAD function} \tab \strong{Distribution name} \tab \strong{coef #1} \tab \strong{coef #2} \tab \strong{coef #3} \cr
@@ -269,7 +269,7 @@ summary.sad <- function(object, ...)
 #' @references
 #' Preston 1948. The Commonness, and rarity, of species. Ecology 29(3):254-283.
 #'
-#' Hubell 2001. The unified neutral theory of biodiversity and biogeography.
+#' Hubbell 2001. The unified neutral theory of biodiversity and biogeography.
 #' Princeton University Press.
 #'
 #' @examples
@@ -389,7 +389,7 @@ summary.community <- function(object, ...)
 #'
 #' @param x Community object
 #' @param col Color vector to mark species identities
-#' @param pch Plotting character to mark speces identities
+#' @param pch Plotting character to mark species identities
 #' @param ... Other parameters to \link[graphics]{plot}
 #'
 #' @examples

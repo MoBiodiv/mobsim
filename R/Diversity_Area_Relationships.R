@@ -1,4 +1,3 @@
-
 #' Get local diversity indices
 #'
 #' Get diversity indices including species richness, no. of endemics,
@@ -17,7 +16,7 @@
 #'    \item shannon: Shannon index index defined as \eqn{H = - \sum p_i * log(p_i)},
 #'    where \eqn{p_i} is the relative abundance of species i:
 #'    \item ens_shannon: Effective number of species (ENS) based on the Shannon index exp(H)
-#'    \item simpson: Simpson index index (= probabiliy of interspecific encounter PIE)
+#'    \item simpson: Simpson index index (= probability of interspecific encounter PIE)
 #'    defined as \eqn{D =  1 - \sum p_i^2}
 #'    \item ens_simpson: Effective number of species (ENS) based on the Simpson index \eqn{1/D}
 #'
@@ -301,13 +300,13 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 
 #' Distance decay of similarity
 #'
-#' Estimate pairwise similarities of comunities in subplots as
+#' Estimate pairwise similarities of communities in subplots as
 #' function of distance
 #'
 #' @param comm \code{\link{community}} object
 #' @param prop_area Subplot size as proportion of the total area
 #' @param n_samples Number of randomly located subplots
-#' @param method Choise of (dis)similarity index. See \code{\link[vegan]{vegdist}}
+#' @param method Choice of (dis)similarity index. See \code{\link[vegan]{vegdist}}
 #' @param binary Perform presence/absence standardization before analysis?
 #' See \code{\link[vegan]{vegdist}}
 #'
