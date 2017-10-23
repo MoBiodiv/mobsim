@@ -4,6 +4,9 @@
 
 # R CMD check results
 
+test
+
+
 ## ubuntu 16.04
 
 0 errors | 0 warnings | 0 notes

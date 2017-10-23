@@ -5,10 +5,16 @@ mobsim
 
 The goal of the package is to facilitate understanding of scale-dependent biodiversity changes.
 
-The package includes functions to simulated species distributions in space with controlled abundance distributions as well as controlled intraspecific aggregation. For analysis there are functions for species rarefaction and accumulation curves, species-area relationships, endemics-area relationships and th distance-decay of community similarity.
+The package includes functions to simulate species distributions in space with controlled abundance distributions as well as controlled intraspecific aggregation. For analysis there are functions for species rarefaction and accumulation curves, species-area relationships, endemics-area relationships and th distance-decay of community similarity.
 
 Installation
 ------------
+
+Sometimes the function `devtools::install_github()` does not install dependencies correctly. To be save it is better to install the dependencies of `mobsim` first.
+
+``` r
+install.packages("Rcpp","vegan","sads","rmarkdown","spatstat","testthat","knitr")
+```
 
 You can install mobsim from github with:
 
@@ -51,7 +57,7 @@ plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](README-unnamed-chunk-4-1.png)
+![](inst/image/README-unnamed-chunk-4-1.png)
 
 ### Analysis of spatially-explicit community data
 
@@ -70,7 +76,7 @@ lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](README-unnamed-chunk-6-1.png)
+![](inst/image/README-unnamed-chunk-6-1.png)
 
 ### Sampling of communities
 
@@ -82,4 +88,4 @@ samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](README-unnamed-chunk-7-1.png)
+![](inst/image/README-unnamed-chunk-7-1.png)
