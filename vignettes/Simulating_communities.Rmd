@@ -20,7 +20,7 @@ Biodiversity in any sampling area depends on three components:
 2. The relative abundances of species
 3. The spatial distribution of species
 
-`mobsim` provides functions to simulate communities and control for all 
+`mobsim` provides functions to simulate communities and thereby control for all 
 these components. This vignette first shows how to simulate non-spatial
 species abundance distributions (SADs) and second, how to simulate spatially-
 explicit community data with `mobsim`.
@@ -99,7 +99,7 @@ summary(abund3)
 With `mobsim` random and aggregated species distributions can be simulated.
 This can be done in two ways. Either, simulated coordinates of individuals 
 can be added to an observed or simulated species abundance distributions, or
-species abundances and distributions can be simulated at the same time with
+species abundances and distributions can be simulated simultaneously with
 just one function call.
 
 ## Random distributions
@@ -141,7 +141,8 @@ plot(comm2)
 ## Aggregated positions
 
 Aggregated, or clustered species distributions are simulated based on the
-Thomas process, also known as Poisson cluster process, in `mobsim`. For each
+Thomas process, also known as Poisson cluster process, in `mobsim`
+(Morlon et al. 2008, Wiegand & Moloney 2014). For each
 species, the Thomas process first distributes a given number of mother points
 in the landscape. Then, offspring points are distributed around the mother points
 according to a bivariate Gaussian distance kernel, where the average displacement
@@ -211,13 +212,17 @@ number of clusters does not necessarily match the parameter settings.
 In analogy to random distributions, there is a function to simulate
 abundances and aggregated distributions at the same time.
 
-```{r}
+```{r, fig.width = 3.5, fig.height = 4}
 comm5 <- sim_thomas_community(s_pool = 100, n_sim = 500, sad_type = "lnorm",
                               sad_coef = list(cv_abund = 1),sigma = 0.05)
 plot(comm5)
 ```
 
+# References
 
+Morlon et al. 2008. A general framework for the distance-decay of similarity in ecological communities. Ecology Letters 11, 904-917.
+
+Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology. CRC Press
 
 
 <!-- ```{r} -->
