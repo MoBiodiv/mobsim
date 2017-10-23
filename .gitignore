@@ -3,3 +3,5 @@ inst/doc
 .o
 .dll
 /revdep/.cache.rds
+.Rhistory
+revdep/
