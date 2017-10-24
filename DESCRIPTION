@@ -2,8 +2,8 @@ Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
 Version: 0.1.0
-Author: Felix May
-Maintainer: Felix May <felix.may@posteo.de>
+Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
+Date: 2017-10-24
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data. In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
@@ -30,3 +30,4 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 URL: http://github.com/MoBiodiv/mobsim
+BugReports: https://github.com/MoBiodiv/mobsim
