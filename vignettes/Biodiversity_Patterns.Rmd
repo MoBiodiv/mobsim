@@ -159,7 +159,7 @@ The function `dist_decay` distributes non-overlapping subplots with user-defined
 and number in the community and calculates all pairwise similarities. 
 
 The function `dist_decay` makes use of the function `vegdist` from the package
-[vegan](https://cran.r-project.org/package=vegan). Therefore you can consult
+[vegan](https://cran.r-project.org/package=vegan). Therefore you can consult 
 `?vegdist` for a list of available similarity indices.
 
 Here is a demonstration how the distance decay can be estimated and visualized
