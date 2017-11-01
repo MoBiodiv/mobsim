@@ -101,7 +101,7 @@ most scales. However, the curves converge as soon as 50% or more of the landscap
 are sampled.
 
 In contrast to the simulated communities, where we have full information about
-all indivivuals in the landscape, in reality we only have data from local samples,
+all individuals in the landscape, in reality we only have data from local samples,
 e.g. plots, traps, etc.. In the following, it is illustrated, how `mobsim` can
 be used to simulate the sampling process.
 
@@ -274,12 +274,12 @@ as shown above, but also across scales. The reduction of diversity is smaller
 at larger scales. However, the change of the effect across scales 
 is weak with species richness, but strong with the Simpson-index.
 
-# Conlusion
+# Conclusion
 
-This simple example shows hopefully shows two things. First, it illustrates the dependence of 
+This simple example hopefully shows two things. First, it illustrates the dependence of 
 biodiversity change on the specific index and the sampling scale used, which
 even emerges with a very simple change of just reducing the total abundance.
-Second, it show sthe potential of `mobsim` to investigate and foster understanding
+Second, it shows the potential of `mobsim` to investigate and foster understanding
 of scale- and sampling-dependent biodiversity change. Of course, similar analysis
 with different changes in biodiversity components, including total abundance,
 relative abundance and spatial patterns can be easily implemented in `mobsim`.

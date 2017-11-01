@@ -388,7 +388,7 @@ summary.community <- function(object, ...)
 #' Plot positions and species identities of all individuals in a community object.
 #'
 #' @param x Community object
-#' @param col Color vector to mark species identities
+#' @param col Colour vector to mark species identities
 #' @param pch Plotting character to mark species identities
 #' @param ... Other parameters to \link[graphics]{plot}
 #'

@@ -11,7 +11,7 @@
 
 \item{...}{Other parameters to \link[graphics]{plot}}
 
-\item{col}{Color vector to mark species identities}
+\item{col}{Colour vector to mark species identities}
 
 \item{pch}{Plotting character to mark species identities}
 }

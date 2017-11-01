@@ -30,7 +30,7 @@ sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 1000, sad_type = "lnorm",
                                  sigma = 0.1, mother_points = 1)
 ```
 
-Then we explore the generated community object. In the plot each dot represents one individual and the color indicates the species
+Then we explore the generated community object. In the plot each dot represents one individual and the colour indicates the species
 identity.
 
 ```{r, fig.width = 5, fig.height = 5}
@@ -63,7 +63,7 @@ plot(abund1, method = "rank")
 Of course the abundance distribution can be also visualized as a histogram. 
 By tradition for the binning of species abundances logarithms with base 2 are used,
 following the suggestion of Preston (1948).
-This means the first abundance class includes species with just one invididual,
+This means the first abundance class includes species with just one individual,
 the second class with two individuals, the third class with 3-4, the fourth with
 5-8 etc. These abundance classes are called "octaves".
 
@@ -176,7 +176,7 @@ plot(dd1)
 
 1. F. W. Preston 1948. The Commonness, and Rarity, of Species. Ecology 29:254-283.
 
-2. Cotelli & Colwell 2001. Quantifying biodiversity: procedures and pitfalls in 
+2. Gotelli & Colwell 2001. Quantifying biodiversity: procedures and pitfalls in 
 the measurement and comparison of species richness. Ecology Letters 4: 379–391.
 
 3. He & Hubbell 2001. Species-area relationships always overestimate extinction
