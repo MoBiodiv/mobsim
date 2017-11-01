@@ -1,3 +1,13 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Included a reference to the paper describing the package in the DESCRIPTION file, see
+[](https://www.biorxiv.org/content/early/2017/10/26/209502), as suggested by the CRAN team
+member Swetlana Herbrandt
+
+* Fixed small typos in the vignettes and documentation
+
 ## Test environments
 * local ubuntu 16.04 LTS, R 3.4.2
 * win-builder (devel and release)
