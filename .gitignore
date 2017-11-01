@@ -1,6 +1,6 @@
 inst/doc
 ./Rproj.user
-.Rproj
+mobsim.Rproj
 .o
 .dll
 /revdep/.cache.rds
