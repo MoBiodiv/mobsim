@@ -4,7 +4,7 @@
 \alias{plot.community}
 \title{Plot spatial community object}
 \usage{
-plot.community(x, ..., col = NULL, pch = NULL)
+\method{plot}{community}(x, ..., col = NULL, pch = NULL)
 }
 \arguments{
 \item{x}{Community object}

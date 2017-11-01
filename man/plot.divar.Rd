@@ -5,7 +5,7 @@
 \title{-----------------------------------------------------------------------------
 Plot diversity-area relationships}
 \usage{
-plot.divar(x, ...)
+\method{plot}{divar}(x, ...)
 }
 \arguments{
 \item{x}{Dataframe generated function \code{\link{divar}}.}
