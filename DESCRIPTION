@@ -3,9 +3,9 @@ Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
 Version: 0.1.0
 Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
-Date: 2017-10-24
+Date: 2017-11-02
 Description: Tools for the simulation, analysis and sampling of spatial
-    biodiversity data (May et al. 2017)<bioRxiv:209502>.
+    biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
     aggregation. Functions for analysis include species rarefaction 

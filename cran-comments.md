@@ -2,6 +2,9 @@
 
 This is a resubmission. In this version I have:
 
+* Formatted the reference according to the suggestions of Uwe Ligges and changed from 
+a reference using the bioRXiv labe to the DOI
+
 * Included a reference to the paper describing the package in the DESCRIPTION file, see
 [](https://www.biorxiv.org/content/early/2017/10/26/209502), as suggested by the CRAN team
 member Swetlana Herbrandt
@@ -22,8 +25,6 @@ There was 1 NOTE:
 Maintainer: ‘Felix May <felix.may@posteo.de>’
 
 It seems this is normal for the first submission of a package
-
-## win-builder
 
 ## Downstream dependencies
 
