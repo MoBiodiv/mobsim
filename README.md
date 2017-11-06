@@ -1,27 +1,31 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-mobsim
-======
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim) [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](http://cran.rstudio.com/web/packages/mobsim/index.html)
 
-The goal of the package is to facilitate understanding of scale-dependent biodiversity changes.
+[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)" [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+
+Overview
+--------
+
+The goal of the package `mobsim` is to facilitate understanding of scale-dependent biodiversity changes.
 
 The package includes functions to simulate species distributions in space with controlled abundance distributions as well as controlled intraspecific aggregation. For analysis there are functions for species rarefaction and accumulation curves, species-area relationships, endemics-area relationships and th distance-decay of community similarity.
+
+A detailed introduction of the package is available at [bioRxiv](https://www.biorxiv.org/content/early/2017/10/26/209502).
 
 Installation
 ------------
 
-Sometimes the function `devtools::install_github()` does not install dependencies correctly. To be save it is better to install the dependencies of `mobsim` first.
-
 ``` r
-install.packages("Rcpp","vegan","sads","rmarkdown","spatstat","testthat","knitr")
-```
+# The easiest way to get mobsim is to install from CRAN:
+install.packages("mobsim")
 
-You can install mobsim from github with:
-
-``` r
+# Or the development version from GitHub:
 # install.packages("devtools")
 devtools::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
 ```
+
+Please enter bug reports on [github](https://github.com/MoBiodiv/mobsim/issues).
 
 Getting help
 ------------
@@ -38,8 +42,8 @@ Or have a look at tutorials in the vignette:
 browseVignettes("mobsim")
 ```
 
-Example
--------
+Examples
+--------
 
 Here is an example of how to simulate two communities, which just differ in their spatial aggregation of species, but have the same species abundance distribution and the same total number of individuals.
 
