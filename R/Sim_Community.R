@@ -46,7 +46,7 @@
 #'
 #'   Please note that this might effect the interpretation of the parameters of
 #'   the underlying statistical distribution, e.g. the mean abundance will always
-#'   be \code{n_sim/n_pool} irrespective of the settings of \code{sad_coef}.
+#'   be \code{n_sim/s_pool} irrespective of the settings of \code{sad_coef}.
 #'
 #'   When \code{fix_s_sim = FALSE} the species number in the local
 #'   community might deviate from \code{s_pool} due to stochastic sampling. When
