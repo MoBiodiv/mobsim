@@ -34,6 +34,9 @@
 #' @param fix_s_sim Should the simulation constrain the number of
 #'   species in the simulated local community? (logical)
 #'
+#' @param drop_zeros Should the function remove species with abundance zero
+#'    from the output? (logical)
+#'
 #' @details The function \code{sim_sad} was built using code of the function
 #'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
 #'   contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
@@ -136,7 +139,8 @@ sim_sad <- function(s_pool, n_sim,
                                  "mzsm","nbinom", "pareto", "poilog", "power",
                                  "powbend", "weibull"),
                     sad_coef = list("cv_abund" = 1),
-                    fix_s_sim = FALSE)
+                    fix_s_sim = FALSE,
+                    drop_zeros = TRUE)
 {
    sad_type <- match.arg(sad_type)
 
@@ -195,36 +199,43 @@ sim_sad <- function(s_pool, n_sim,
       }
       abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
-      abund_pool <- abund_pool[abund_pool > 0]
+      # abund_pool <- abund_pool[abund_pool > 0]
       rel_abund_pool <- abund_pool/sum(abund_pool)
+      rel_abund_pool <- sort(rel_abund_pool, decreasing = T)
+      names(rel_abund_pool) <- paste0("species",seq_along(rel_abund_pool))
 
-      sample_vec <- sample(x = length(rel_abund_pool),
+      sample_vec <- sample(x = names(rel_abund_pool),
                            size = n_sim, replace = TRUE,
                            prob = rel_abund_pool)
+      sample_vec <- factor(sample_vec, levels = names(rel_abund_pool))
 
-      abund2 <- as.numeric(sort(table(sample_vec), decreasing = TRUE))
+      abund_local <- table(sample_vec)
 
-      if (fix_s_sim == TRUE & length(abund2) < s_pool){
-         s_diff <- s_pool - length(abund2)
-         abund2 <- c(abund2, rep(1, s_diff))
-         n <- sum(abund2)
+      s_local <- sum(abund_local > 0)
+      if (fix_s_sim == TRUE & s_local < s_pool){
+         s_diff <- s_pool - s_local
+         abund_local[abund_local == 0] <- 1
+         n <- sum(abund_local)
 
          #randomly remove individuals until target level is reached
          while (n > n_sim){
-            rel_abund <- abund2/sum(abund2)
+            rel_abund <- abund_local/sum(abund_local)
             # draw proportional to relative abundance
             irand <- sample(1:s_pool, size = 1, prob = rel_abund)
-            if (abund2[irand] > 1) abund2[irand] <- abund2[irand] - 1
-            n <- sum(abund2)
+            if (abund_local[irand] > 1) abund_local[irand] <- abund_local[irand] - 1
+            n <- sum(abund_local)
          }
       }
    } else { # end if(s_pool > 1)
-      abund2 <- n_sim
+      abund_local <- n_sim
    }
 
-   names(abund2) <- paste("species", 1:length(abund2), sep = "")
-   class(abund2) <- c("sad","integer")
-   return(abund2)
+   #names(abund2) <- paste("species", 1:length(abund2), sep = "")
+   if (drop_zeros == T)
+      abund_local <- abund_local[abund_local > 0]
+
+   class(abund_local) <- c("sad","integer")
+   return(abund_local)
 }
 
 #' Print summary of species abundance distribution object
@@ -239,12 +250,18 @@ sim_sad <- function(s_pool, n_sim,
 #'
 summary.sad <- function(object, ...)
 {
+   spec_zero <- sum(object == 0)
+   abund <- object[object > 0]
+
    cat("Species abundance distribution\n\n")
-   cat("No. of individuals: ", sum(object), "\n")
-   cat("No. of species: ", length(object), "\n\n")
-   cat("Min. abundance: ", min(object), "\n")
-   cat("Mean abundance: ", mean(object), "\n")
-   cat("Max. abundance: ", max(object), "\n")
+   cat("No. of individuals: ", sum(abund), "\n")
+   cat("No. of species: ", length(abund), "\n\n")
+   cat("Min. abundance: ", min(abund), "\n")
+   cat("Mean abundance: ", mean(abund), "\n")
+   cat("Max. abundance: ", max(abund), "\n\n")
+
+   if (spec_zero > 0)
+      cat("There are ", spec_zero," species with zero individuals\n")
 }
 
 #' Plot species abundance distributions
@@ -283,6 +300,8 @@ summary.sad <- function(object, ...)
 plot.sad <- function(x, ..., method = c("octave","rank"))
 {
    method <- match.arg(method)
+
+   x <- x[x > 0]
 
    if (method == "rank")
       graphics::plot(sort(as.numeric(x), decreasing = TRUE), type="b", log="y",
@@ -468,6 +487,8 @@ sim_poisson_coords <- function(abund_vec,
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
 
+   abund_vec <- abund_vec[abund_vec > 0]
+
    n <- sum(abund_vec)
    x <- stats::runif(n, xrange[1], xrange[2])
    y <- stats::runif(n, yrange[1], yrange[2])
@@ -628,6 +649,8 @@ sim_thomas_coords <- function(abund_vec,
    abund_vec <- trunc(abund_vec)
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
+
+   abund_vec <- abund_vec[abund_vec > 0]
 
    xext <- xrange[2] - xrange[1]
    yext <- yrange[2] - yrange[1]

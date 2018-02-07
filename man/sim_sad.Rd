@@ -6,7 +6,7 @@
 \usage{
 sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
   "mzsm", "nbinom", "pareto", "poilog", "power", "powbend", "weibull"),
-  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE)
+  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE, drop_zeros = TRUE)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}
@@ -38,6 +38,9 @@ sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}
+
+\item{drop_zeros}{Should the function remove species with abundance zero
+from the output? (logical)}
 }
 \value{
 Object of class \code{sad}, which contains a named integer vector
@@ -61,7 +64,7 @@ The function \code{sim_sad} was built using code of the function
 
   Please note that this might effect the interpretation of the parameters of
   the underlying statistical distribution, e.g. the mean abundance will always
-  be \code{n_sim/n_pool} irrespective of the settings of \code{sad_coef}.
+  be \code{n_sim/s_pool} irrespective of the settings of \code{sad_coef}.
 
   When \code{fix_s_sim = FALSE} the species number in the local
   community might deviate from \code{s_pool} due to stochastic sampling. When
