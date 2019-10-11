@@ -202,7 +202,7 @@ sim_sad <- function(s_pool, n_sim,
       # abund_pool <- abund_pool[abund_pool > 0]
       rel_abund_pool <- abund_pool/sum(abund_pool)
       rel_abund_pool <- sort(rel_abund_pool, decreasing = T)
-      names(rel_abund_pool) <- paste0("species",seq_along(rel_abund_pool))
+      names(rel_abund_pool) <- paste("species",seq_along(rel_abund_pool), sep="_")	# underslash addition for readability
 
       sample_vec <- sample(x = names(rel_abund_pool),
                            size = n_sim, replace = TRUE,
@@ -640,9 +640,11 @@ sim_poisson_community <- function(s_pool,
 #'
 sim_thomas_coords <- function(abund_vec,
                               sigma = 0.02,
-                              mother_points = NA,
-                              cluster_points = NA,
-                              xrange = c(0,1),
+                              mother_points = 0,	# should be renamed for consistency with rThomas_r and rThomas_rcpp.
+										xmother=NA,	# list of vectors
+										ymother=NA,	# list of vectors
+                              cluster_points = NA,		# I would rename it and change the shiny app description for a better understanding: mean_point_number_per_cluster, mu_points_cluster etc
+                              xrange = c(0,1),	# could easily be turned into a list with one range per species. Several ranges per species would be challenging.
                               yrange = c(0,1)
                               )
 {
@@ -680,46 +682,75 @@ sim_thomas_coords <- function(abund_vec,
       sigma_vec <- rep(sigma[1], times = s_local)
    }
 
-   x = numeric(n)
-   y = numeric(n)
-   id_spec <- factor(rep(names(abund_vec), times = abund_vec))
 
-   # determine points per cluster and number of mother points
-   if (all(!is.na(mother_points))){
+	if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(mother_points))) stop("random_mother_points or click_for_mother_points method?")
+	
+	method <- NA
+	if(any(!is.na(xmother)) | any(!is.na(ymother))) {
+		method <- "click_for_mother_points"
+		stopifnot(length(xmother) == length(ymother))
+		stopifnot(all(!is.na(unlist(xmother)) & !is.na(unlist(ymother))))	# error message is not meaningful
+		
+		# if(length(xmother) == 1 & length(ymother) == 1){
+			# x_mother <- rep(xmother, n)
+			# y_mother <- rep(ymother, n)
+		# } else {
+			# stopifnot(length(xmother) == s_local & length(ymother) == s_local)	# planned implementation: at least one per species
+			# x_mother <- rep(xmother, times=abund_vec)
+			# y_mother <- rep(ymother, times=abund_vec)
+		# }
+		#xmother <- rep(xmother, s_local)
+		#ymother <- rep(ymother, s_local)		
+		mother_points <- sapply(xmother, function(x) ifelse(any(x=="no clustering"), 0, length(x)))
+		n_mothers <- mother_points
+		
+	}
+	
+ # determine the number of points per cluster and the number of mother points
+	# if mother_points and cluster_points are given OR xmother and ymother, and cluster points are given, cluster_points is overridden. If mother_points=0 and cluster_points=400 (high clustering), cluster_points is overridden and there is 0 clustering -> there should be a warning to let the user know.
+   if(is.na(method)){
+		if (all(!is.na(mother_points))){
+			method <- "random_mother_points"
+			if (length(mother_points) == s_local)
+				n_mothers <- mother_points
+			else
+				n_mothers <- rep(mother_points[1], s_local)
 
-      if (length(mother_points) == s_local)
-         n_mothers <- mother_points
-      else
-         n_mothers <- rep(mother_points[1], s_local)
+			points_per_cluster <- abund_vec / n_mothers
 
-      points_per_cluster <- abund_vec / n_mothers
+		} else {
 
-   } else {
+			if (all(!is.na(cluster_points))){
+			method <- "cluster_points"
+				if (length(cluster_points) == s_local)
+					 points_per_cluster <- cluster_points
+				else
+					points_per_cluster <- rep(cluster_points[1], s_local)
 
-      if (all(!is.na(cluster_points))){
+				lambda_mother <- abund_vec / points_per_cluster
 
-         if (length(cluster_points) == s_local)
-             points_per_cluster <- cluster_points
-         else
-            points_per_cluster <- rep(cluster_points[1], s_local)
+			} else {
+				lambda_mother <- points_per_cluster <- sqrt(abund_vec)
+			}
+			#n.mother_points <- rpois(s_local, lambda = lambda_mother)
+			n_mothers <- ceiling(lambda_mother)
+		}
+	}
 
-         lambda_mother <- abund_vec / points_per_cluster
-
-      } else {
-         lambda_mother <- points_per_cluster <- sqrt(abund_vec)
-      }
-      #n.mother_points <- rpois(s_local, lambda = lambda_mother)
-      n_mothers <- ceiling(lambda_mother)
-   }
+	
+	x <- numeric(n)
+	y <- numeric(n)
+	id_spec <- factor(rep(names(abund_vec), times = abund_vec))
 
    # create map for first species
    if (sigma_vec[1] < 2 * max_dim){
-      dat1 <- rThomas_rcpp(abund_vec[1],
+      dat1 <- rThomas_r(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
                            sigma = sigma_vec[1],
                            mu = points_per_cluster[1],
                            xmin = xrange[1], xmax = xrange[2],
-                           ymin = yrange[1], ymax = yrange[2])
+                           ymin = yrange[1], ymax = yrange[2],
+									xmother=xmother[[1]], ymother=ymother[[1]])
    } else {
       x1 <- stats::runif(abund_vec[1], xrange[1], xrange[2])
       y1 <- stats::runif(abund_vec[1], yrange[1], yrange[2])
@@ -727,19 +758,24 @@ sim_thomas_coords <- function(abund_vec,
    }
 
    irange <- 1:cum_abund[1]
-   x[irange] <- dat1$x
-   y[irange] <- dat1$y
+   x[irange] <- dat1[,"x"]
+   y[irange] <- dat1[,"y"]
 
    if (s_local > 1){
       for (ispec in 2:s_local){
 
          if (sigma_vec[ispec] < 2 * max_dim){
-            dat1 <- rThomas_rcpp(abund_vec[ispec],
+				if(method=="click_for_mother_points") xmother_spec <- xmother[[ispec]] else xmother_spec <- NA
+				if(method=="click_for_mother_points") ymother_spec <- ymother[[ispec]] else ymother_spec <- NA
+            dat1 <- rThomas_r(n_points=abund_vec[ispec],
                                  n_mother_points = n_mothers[ispec],
                                  sigma = sigma_vec[ispec],
                                  mu = points_per_cluster[ispec],
                                  xmin = xrange[1], xmax = xrange[2],
-                                 ymin = yrange[1], ymax = yrange[2])
+                                 ymin = yrange[1], ymax = yrange[2],
+											xmother=xmother_spec,
+											ymother=ymother_spec
+											)
          } else {
             x1 <- stats::runif(abund_vec[ispec], xrange[1], xrange[2])
             y1 <- stats::runif(abund_vec[ispec], yrange[1], yrange[2])
@@ -747,8 +783,8 @@ sim_thomas_coords <- function(abund_vec,
          }
 
          irange <- (cum_abund[ispec-1] + 1):cum_abund[ispec]
-         x[irange] <- dat1$x
-         y[irange] <- dat1$y
+			x[irange] <- dat1[,"x"]
+			y[irange] <- dat1[,"y"]
       }
    }
 
@@ -799,7 +835,9 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  sigma = 0.02,
                                  cluster_points = NA,
                                  mother_points = NA,
-                                 xrange = c(0,1),
+                                 xmother=NA,
+											ymother=NA,
+											xrange = c(0,1),
                                  yrange = c(0,1)
                                  )
 {
@@ -813,6 +851,8 @@ sim_thomas_community <- function(s_pool, n_sim,
                                 sigma = sigma,
                                 mother_points = mother_points,
                                 cluster_points = cluster_points,
+										  xmother=xmother,
+										  ymother=ymother,
                                 xrange = xrange,
                                 yrange = yrange)
 
@@ -923,7 +963,3 @@ sim_thomas_community <- function(s_pool, n_sim,
 #    names(dat3) <- c("X","Y","spec_id")
 #    return(dat3)
 # }
-
-
-
-
