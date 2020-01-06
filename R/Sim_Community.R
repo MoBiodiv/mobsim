@@ -140,9 +140,12 @@ sim_sad <- function(s_pool, n_sim,
                                  "powbend", "weibull"),
                     sad_coef = list("cv_abund" = 1),
                     fix_s_sim = FALSE,
-                    drop_zeros = TRUE)
+                    drop_zeros = TRUE,
+						  seed = NULL)
 {
    sad_type <- match.arg(sad_type)
+	
+	if (!is.null(seed)) set.seed(seed)
 
    if (!is.numeric(n_sim) || n_sim <= 0)
       stop("n_sim has to be a positive integer number")
@@ -363,21 +366,26 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
 #'
 community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
-   if (length(xrange) < 2 | length(yrange) < 2) ("Error: missing ranges for x or y!")
+   if (length(xrange) < 2 | length(yrange) < 2) stop("Error: missing ranges for x or y!")
 
-   if (xrange[1] > min(x)) return("Error: Inappropriate ranges for x!")
-   if (xrange[2] < max(x)) return("Error: Inappropriate ranges for x!")
+	if(is.vector(xrange) & is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
+		xrange <- data.frame(matrix(xrange, length(unique(spec_id)), 2, byrow=TRUE))
+		yrange <- data.frame(matrix(yrange, length(unique(spec_id)), 2, byrow=TRUE))
+	}
 
-   if (yrange[1] > min(y)) return("Error: Inappropriate ranges for y!")
-   if (yrange[2] < max(y)) return("Error: Inappropriate ranges for y!")
+   if (min(x) < min(xrange[,1])) stop("Error: Inappropriate ranges for x!")
+   if (max(x) > max(xrange[,2])) stop("Error: Inappropriate ranges for x!")
+
+   if (min(y) < min(yrange[,1])) stop("Error: Inappropriate ranges for y!")
+   if (max(y) > max(yrange[,2])) stop("Error: Inappropriate ranges for y!")
 
 
    points <- data.frame(x = as.numeric(x), y = as.numeric(y),
                         species = as.factor(spec_id))
 
    comm <- list(census = points,
-               x_min_max = as.numeric(xrange[1:2]),
-               y_min_max = as.numeric(yrange[1:2])
+               x_min_max = range(xrange),
+               y_min_max = range(yrange)
                )
 
    class(comm) <- "community"
@@ -393,13 +401,13 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #'
 #' @export
 #'
-summary.community <- function(object, ...)
+summary.community <- function(object, digits=2, ...)	# digits should be passed through ... instead.
 {
    cat("No. of individuals: ", nrow(object$census), "\n")
    cat("No. of species: ", length(unique(object$census$species)), "\n")
    cat("x-extent: ", object$x_min_max, "\n")
    cat("y-extent: ", object$y_min_max, "\n\n")
-   print(summary(object$census))
+   print(summary(object$census, digits=digits))
 }
 
 #' Plot spatial community object
@@ -493,9 +501,9 @@ sim_poisson_coords <- function(abund_vec,
    x <- stats::runif(n, xrange[1], xrange[2])
    y <- stats::runif(n, yrange[1], yrange[2])
 
-   id_spec <- factor(rep(names(abund_vec), times = abund_vec))
+   spec_id <- factor(rep(names(abund_vec), times = abund_vec))
 
-   sim_dat1 <- community(x, y, id_spec, xrange, yrange)
+   sim_dat1 <- community(x, y, spec_id, xrange, yrange)
    return(sim_dat1)
 }
 
@@ -648,20 +656,26 @@ sim_thomas_coords <- function(abund_vec,
                               yrange = c(0,1)
                               )
 {
-   abund_vec <- trunc(abund_vec)
+	abund_vec <- trunc(abund_vec)
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
 
    abund_vec <- abund_vec[abund_vec > 0]
-
-   xext <- xrange[2] - xrange[1]
-   yext <- yrange[2] - yrange[1]
-
-   max_dim <- ifelse(xext >= yext, xext, yext)
+	
+	if(is.vector(xrange) & is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
+		xrange <- data.frame(matrix(xrange, length(abund_vec), 2, byrow=TRUE))
+		yrange <- data.frame(matrix(yrange, length(abund_vec), 2, byrow=TRUE))
+	}
+	
+	xext <- xrange[,2] - xrange[,1]
+	yext <- yrange[,2] - yrange[,1]
+	max_dim <- ifelse(xext >= yext, xext, yext)
+	
 
    cum_abund <- cumsum(abund_vec)
    s_local <- length(abund_vec)
    n <- sum(abund_vec)
+
 
    # if (length(sigma) == 2){
    #    # linear relationship between sigma and log(relabund)
@@ -740,17 +754,17 @@ sim_thomas_coords <- function(abund_vec,
 	
 	x <- numeric(n)
 	y <- numeric(n)
-	id_spec <- factor(rep(names(abund_vec), times = abund_vec))
+	spec_id <- factor(rep(names(abund_vec), times = abund_vec))
 
    # create map for first species
-   if (sigma_vec[1] < 2 * max_dim){
+   if (sigma_vec[1] < 2 * max_dim[1]){
       dat1 <- rThomas_r(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
                            sigma = sigma_vec[1],
                            mu = points_per_cluster[1],
-                           xmin = xrange[1], xmax = xrange[2],
-                           ymin = yrange[1], ymax = yrange[2],
-									xmother=xmother[[1]], ymother=ymother[[1]])
+                           xmin = xrange[1,1], xmax = xrange[1,2],
+                           ymin = yrange[1,1], ymax = yrange[1,2],
+									xmother = xmother[[1]], ymother = ymother[[1]])
    } else {
       x1 <- stats::runif(abund_vec[1], xrange[1], xrange[2])
       y1 <- stats::runif(abund_vec[1], yrange[1], yrange[2])
@@ -764,21 +778,21 @@ sim_thomas_coords <- function(abund_vec,
    if (s_local > 1){
       for (ispec in 2:s_local){
 
-         if (sigma_vec[ispec] < 2 * max_dim){
+         if (sigma_vec[ispec] < 2 * max_dim[ispec]){
 				if(method=="click_for_mother_points") xmother_spec <- xmother[[ispec]] else xmother_spec <- NA
 				if(method=="click_for_mother_points") ymother_spec <- ymother[[ispec]] else ymother_spec <- NA
             dat1 <- rThomas_r(n_points=abund_vec[ispec],
                                  n_mother_points = n_mothers[ispec],
                                  sigma = sigma_vec[ispec],
                                  mu = points_per_cluster[ispec],
-                                 xmin = xrange[1], xmax = xrange[2],
-                                 ymin = yrange[1], ymax = yrange[2],
+                                 xmin = xrange[ispec, 1], xmax = xrange[ispec, 2],
+                                 ymin = yrange[ispec, 1], ymax = yrange[ispec, 2],
 											xmother=xmother_spec,
 											ymother=ymother_spec
 											)
          } else {
-            x1 <- stats::runif(abund_vec[ispec], xrange[1], xrange[2])
-            y1 <- stats::runif(abund_vec[ispec], yrange[1], yrange[2])
+            x1 <- stats::runif(abund_vec[ispec], xrange[ispec, 1], xrange[ispec, 2])
+            y1 <- stats::runif(abund_vec[ispec], yrange[ispec, 1], yrange[ispec, 2])
             dat1 <- data.frame(x = x1, y = y1)
          }
 
@@ -788,7 +802,7 @@ sim_thomas_coords <- function(abund_vec,
       }
    }
 
-   sim_dat1 <- community(x, y, id_spec, xrange, yrange)
+   sim_dat1 <- community(x, y, spec_id, xrange, yrange)
    return(sim_dat1)
 }
 
@@ -838,13 +852,15 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  xmother=NA,
 											ymother=NA,
 											xrange = c(0,1),
-                                 yrange = c(0,1)
+                                 yrange = c(0,1),
+											seed=NULL
                                  )
 {
    sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
                    sad_type = sad_type,
                    sad_coef = sad_coef,
-                   fix_s_sim = fix_s_sim)
+                   fix_s_sim = fix_s_sim,
+						 seed = seed)
    abund_vec <- sim1
 
    sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
@@ -900,9 +916,9 @@ sim_thomas_community <- function(s_pool, n_sim,
 #       if (sigma > 2*max_dim){
 #          x <- runif(N,0,xmax)
 #          y <- runif(N,0,ymax)
-#          id_spec <- rep.int(1:S,times=abund_vec)
+#          spec_id <- rep.int(1:S,times=abund_vec)
 #
-#          dat1 <- data.frame(X=x,Y=y,spec_id=id_spec)
+#          dat1 <- data.frame(X=x,Y=y,spec_id=spec_id)
 #          return(dat1)
 #       }
 #
@@ -963,3 +979,7 @@ sim_thomas_community <- function(s_pool, n_sim,
 #    names(dat3) <- c("X","Y","spec_id")
 #    return(dat3)
 # }
+
+
+
+

@@ -38,11 +38,14 @@
 sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                             plot = TRUE, method = "random",
                             avoid_overlap = F,
-                            x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1)
+                            x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
+									 seed=NULL)
 {
    if (class(comm) != "community")
       stop ("comm has to be a community object")
-
+	
+	if (!is.null(seed)) set.seed(seed)
+		
    method <- match.arg(method, c("random", "transect","grid"))
 
    quadrat_size <- sqrt(quadrat_area)
