@@ -658,7 +658,7 @@ sim_thomas_coords <- function(abund_vec,
 {
 	abund_vec <- trunc(abund_vec)
    if (length(names(abund_vec)) < length(abund_vec))
-      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
+      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "_")
 
    abund_vec <- abund_vec[abund_vec > 0]
 	
