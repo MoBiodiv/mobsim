@@ -751,6 +751,8 @@ sim_thomas_coords <- function(abund_vec,
 		}
 	}
 
+	xmother <- lapply(xmother, function(x) ifelse(x == "no clustering", NA, x))
+	ymother <- lapply(ymother, function(x) ifelse(x == "no clustering", NA, x))
 	
 	x <- numeric(n)
 	y <- numeric(n)
@@ -758,10 +760,9 @@ sim_thomas_coords <- function(abund_vec,
 
    # create map for first species
    if (sigma_vec[1] < 2 * max_dim[1]){
-      dat1 <- rThomas_r(n_points=abund_vec[1],
+      dat1 <- rThomas_rcpp(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
                            sigma = sigma_vec[1],
-                           mu = points_per_cluster[1],
                            xmin = xrange[1,1], xmax = xrange[1,2],
                            ymin = yrange[1,1], ymax = yrange[1,2],
 									xmother = xmother[[1]], ymother = ymother[[1]])
@@ -781,14 +782,13 @@ sim_thomas_coords <- function(abund_vec,
          if (sigma_vec[ispec] < 2 * max_dim[ispec]){
 				if(method=="click_for_mother_points") xmother_spec <- xmother[[ispec]] else xmother_spec <- NA
 				if(method=="click_for_mother_points") ymother_spec <- ymother[[ispec]] else ymother_spec <- NA
-            dat1 <- rThomas_r(n_points=abund_vec[ispec],
+            dat1 <- rThomas_rcpp(n_points=abund_vec[ispec],
                                  n_mother_points = n_mothers[ispec],
                                  sigma = sigma_vec[ispec],
-                                 mu = points_per_cluster[ispec],
                                  xmin = xrange[ispec, 1], xmax = xrange[ispec, 2],
                                  ymin = yrange[ispec, 1], ymax = yrange[ispec, 2],
-											xmother=xmother_spec,
-											ymother=ymother_spec
+											xmother = xmother_spec,
+											ymother = ymother_spec
 											)
          } else {
             x1 <- stats::runif(abund_vec[ispec], xrange[ispec, 1], xrange[ispec, 2])
