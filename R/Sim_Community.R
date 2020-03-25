@@ -730,7 +730,7 @@ sim_thomas_coords <- function(abund_vec,
 			else
 				n_mothers <- rep(mother_points[1], s_local)
 
-			points_per_cluster <- abund_vec / n_mothers
+			# points_per_cluster <- abund_vec / n_mothers   # useless? does not work if n_mothers = 0
 
 		} else {
 
@@ -759,7 +759,7 @@ sim_thomas_coords <- function(abund_vec,
 	spec_id <- factor(rep(names(abund_vec), times = abund_vec))
 
    # create map for first species
-   if (sigma_vec[1] < 2 * max_dim[1]){
+   if (sigma_vec[1] < 2 * max_dim[1] & n_mothers[1] != 0){
       dat1 <- rThomas_rcpp(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
                            sigma = sigma_vec[1],
@@ -767,8 +767,8 @@ sim_thomas_coords <- function(abund_vec,
                            ymin = yrange[1,1], ymax = yrange[1,2],
 									xmother = xmother[[1]], ymother = ymother[[1]])
    } else {
-      x1 <- stats::runif(abund_vec[1], xrange[1], xrange[2])
-      y1 <- stats::runif(abund_vec[1], yrange[1], yrange[2])
+      x1 <- stats::runif(abund_vec[1], xrange[1,1], xrange[1,2])
+      y1 <- stats::runif(abund_vec[1], yrange[1,1], yrange[1,2])
       dat1 <- data.frame(x = x1, y = y1)
    }
 
@@ -779,7 +779,7 @@ sim_thomas_coords <- function(abund_vec,
    if (s_local > 1){
       for (ispec in 2:s_local){
 
-         if (sigma_vec[ispec] < 2 * max_dim[ispec]){
+         if (sigma_vec[ispec] < 2 * max_dim[ispec] & n_mothers[ispec] != 0){
 				if(method=="click_for_mother_points") xmother_spec <- xmother[[ispec]] else xmother_spec <- NA
 				if(method=="click_for_mother_points") ymother_spec <- ymother[[ispec]] else ymother_spec <- NA
             dat1 <- rThomas_rcpp(n_points=abund_vec[ispec],
