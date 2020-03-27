@@ -39,8 +39,9 @@ DataFrame rThomas_rcpp(int n_points,
    //int n_mother_points = as<int>(rpois(1, lambda_mother));
    //int n_mother_points = as<int>(rpois(1, kappa));
    
+	bool mother_points_specified = Rcpp::na_omit(xmother).size() > 0;
 	
-   if (n_mother_points > 0 || xmother.size() > 0) {   //missing conditions here: "No clustering" strings
+   if (n_mother_points > 0 || mother_points_specified) {
       if(!LogicalVector::is_na(n_mother_points) & all(is_na(xmother)) & all(is_na(ymother))) {
 			// xmother = runif(n_mother_points, xmin2, xmax2);
 			// ymother = runif(n_mother_points, ymin2, ymax2);
