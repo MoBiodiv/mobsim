@@ -718,7 +718,7 @@ sim_thomas_coords <- function(abund_vec,
       # }
       #xmother <- rep(xmother, s_local)
       #ymother <- rep(ymother, s_local)		
-      mother_points <- sapply(xmother, function(x) ifelse(any(x=="no clustering"), 0, length(x)))
+      mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
       n_mothers <- mother_points
       
    }
@@ -752,8 +752,6 @@ sim_thomas_coords <- function(abund_vec,
       }
    }
    
-   xmother <- lapply(xmother, function(x) ifelse(x == "no clustering", NA, x))
-   ymother <- lapply(ymother, function(x) ifelse(x == "no clustering", NA, x))
    
    x <- numeric(n)
    y <- numeric(n)
