@@ -397,6 +397,8 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #'
 #' @param object Community object of class \code{\link{community}}
 #'
+#' @param integer digits number of digits to print
+#'
 #' @param ... Additional arguments passed to \code{\link{print}}.
 #'
 #' @export
@@ -416,7 +418,7 @@ summary.community <- function(object, digits=2, ...)	# digits should be passed t
 #'
 #' @param x Community object
 #' @param col Colour vector to mark species identities
-#' @param pch Plotting character to mark species identities
+#' @param pch Plotting character to mark species identities. pch 16 is advised for large datasets
 #' @param ... Other parameters to \link[graphics]{plot}
 #'
 #' @examples
@@ -569,25 +571,42 @@ sim_poisson_community <- function(s_pool,
 #' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #'
-#' @param mother_points Number of mother points (= cluster centres).
+#' @param n_mother_points Number of mother points (= cluster centres).
 #' If this is a single value, all species have the same number of clusters.
-#' For example \code{mother_points = 1} can be used to simulate only one cluster
+#' For example \code{n_mother_points = 1} can be used to simulate only one cluster
 #' per species, which then represents the complete species range.
-#' If \code{mother_points} is a vector of the same length as \code{abund_vec},
-#' each species has a specific number of clusters. If no value is provided, the
-#' number of clusters is determined from the abundance and the number of points
-#' per cluster (\code{cluster_points}).
+#' If \code{n_mother_points} is a vector of the same length as \code{abund_vec},
+#' each species has a specific number of clusters. If \code{n_mother_points} equals 0
+#' there is no clustering and the distribution is homogeneous. If no value is provided,
+#' the number of clusters is determined from the abundance and the number of points
+#' per cluster (\code{points_per_cluster}).
 #'
-#' @param cluster_points Mean number of points per cluster. If this is
+#' @param xmother List of length equal to the number of species. Each list element
+#' is a vector of x coordinates for every mother points. If one element is NA, the
+#' the corresponding species is not clustered.
+#'
+#' @param ymother List of length equal to the number of species. Each list element
+#' is a vector of y coordinates for every mother points. If one element is NA, the
+#' the corresponding species is not clustered.
+#'
+#' @param points_per_cluster Mean number of points per cluster. If this is
 #' a single value, species have the same average number of points per cluster.
 #' If this is a vector of the same length as \code{abund_vec}, each species has
 #' a specific mean number of points per cluster.  If no value is provided, the
 #' number of points per cluster is determined from the abundance and from
-#' \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
+#' \code{n_mother_points}. If \code{n_mother_points} and \code{points_per_cluster} are given OR
+#' \code{xmother} and \code{ymother}, and cluster points are given, \code{points_per_cluster} is overridden.
+#' If \code{n_mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
+#' \code{points_per_cluster} is overridden.
+#' The parameter \code{points_per_cluster} corresponds to the
 #' \code{mu} parameter of \code{spatstat::rThomas}.
 #'
-#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
-#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
+#' @param xrange Extent of the community in x-direction. If this a numeric vector
+#' of length 2, all species share the same range. To specify different x ranges for
+#' all species, \code{xrange} should be a data.frame with 2 columns, min and max.
+#' @param yrange Extent of the community in y-direction. If this a numeric vector
+#' of length 2, all species share the same range. To specify different y ranges for
+#' all species, \code{xrange} should be a data.frame with 2 columns, min and max.
 #'
 #' @details To generate a Thomas cluster process of a single species this
 #' function uses a C++ re-implementation of the function
@@ -595,20 +614,20 @@ sim_poisson_community <- function(s_pool,
 #' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
-#' \code{mother_points}, and \code{cluster_points}. For every species the
+#' \code{n_mother_points}, and \code{points_per_cluster}. For every species the
 #' abundance has to be equal to the number of clusters
-#' (\code{mother_points}) times the number of points per cluster
-#' (\code{cluster_points}).
+#' (\code{n_mother_points}) times the number of points per cluster
+#' (\code{points_per_cluster}).
 #'
-#' \deqn{abundance = mother_points * cluster_points}
+#' \deqn{abundance = n_mother_points * points_per_cluster}
 #'
 #' Accordingly, if one of the parameters is provided, the other one is directly
-#' calculated from the abundance. Values for \code{mother_points} override values
-#' for \code{cluster_points}. If none of the parameters is specified, it is assumed
+#' calculated from the abundance. Values for \code{n_mother_points} override values
+#' for \code{points_per_cluster}. If none of the parameters is specified, it is assumed
 #' that for every species there is a similar number of clusters and of points
 #' per cluster.
 #'
-#' \deqn{mother_points = cluster_points = \sqrt(abundance),}
+#' \deqn{n_mother_points = points_per_cluster = \sqrt(abundance),}
 #'
 #' In this case rare species have few clusters with few points per
 #' cluster, while abundant species have many clusters with many points per cluster.
@@ -622,7 +641,7 @@ sim_poisson_community <- function(s_pool,
 #' Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 #' CRC Press
 #'
-#' @author Felix May
+#' @author Felix May, Alban Sagouis
 #'
 #' @seealso \code{\link[spatstat]{rThomas}}
 #'
@@ -633,41 +652,69 @@ sim_poisson_community <- function(s_pool,
 #' plot(sim1)
 #'
 #' # Simulate species "ranges"
-#' sim2 <- sim_thomas_coords(abund, sigma = 0.02, mother_points = 1)
+#' sim2 <- sim_thomas_coords(abund, sigma = 0.02, n_mother_points = 1)
 #' plot(sim2)
 #'
 #' # Equal numbers of points per cluster
-#' sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
+#' sim3 <- sim_thomas_coords(abund, sigma = 0.02, points_per_cluster = 5)
 #' plot(sim3)
 #'
 #' # With large sigma the distribution will be essentially random (see Details)
 #' sim4 <- sim_thomas_coords(abund, sigma = 10)
 #' plot(sim4)
 #'
+#' # Some random and some clustered species with different numbers of mother points.
+#' n_mother_points <- sample(0:3, length(abund), replace=T)
+#' sim5 <- sim_thomas_coords(abund, n_mother_points = n_mother_points, sigma=0.01)
+#' plot(sim5)
+#' 
+#' # Specifying mother point coordinates or no-clustering (\code{NA}).
+#' n_mother_points <- sample(1:3, length(abund), replace=T)
+#' xmother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
+#' ymother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
+#' xmother[[1]] <- NA
+#' ymother[[1]] <- NA
+#' sim6 <- sim_thomas_coords(abund, xmother=xmother, ymother=ymother, sigma=0.01)
+#' plot(sim6)
+#' 
+#' # Species having different ranges.
+#' xrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
+#' yrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
+#' sim7 <- sim_thomas_coords(abund, n_mother_points=1, sigma=1, xrange=xrange, yrange=yrange)
+#' plot(sim7)
+#'
 #' @export
 #'
-# Better than the original with random species as they are all dealt with together in a vectorised way
 
 sim_thomas_coords <- function(abund_vec,
                                sigma = 0.02,
-                               mother_points = 0,	# should be renamed for consistency with rThomas_r and rThomas_rcpp.
-                               xmother=NA,	# list of vectors
-                               ymother=NA,	# list of vectors
-                               cluster_points = NA,		# I would rename it and change the shiny app description for a better understanding: mean_point_number_per_cluster, mu_points_cluster etc
-                               xrange = c(0,1),	# could easily be turned into a list with one range per species. Several ranges per species would be challenging.
+                               n_mother_points = NA,
+                               xmother = NA,	# list of vectors
+                               ymother = NA,	# list of vectors
+                               points_per_cluster = NA,
+                               xrange = c(0,1),
                                yrange = c(0,1)
 )
 {
+
+   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(n_mother_points))) stop("random_mother_points or coordinates_for_mother_points method? Missing parametres")
+   if((!is.na(points_per_cluster) & any(!is.na(n_mother_points))) | (!is.na(points_per_cluster) & any(!is.na(xmother)))) warning("Parametre points_per_cluster overidden by other parametre.")	# points_per_cluster is overridden if n_mother_points or xmother and ymother are given.
+	
+   
    abund_vec <- trunc(abund_vec)
+   
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "_")
    
    abund_vec <- abund_vec[abund_vec > 0]
+   cum_abund <- cumsum(abund_vec)
+   s_local <- length(abund_vec)
+   n <- sum(abund_vec)
    
    oneRangeForAll <- is.vector(xrange) & is.vector(yrange)
    if(oneRangeForAll)	{	# converting xrange and yrange from vectors to data.frames
-      xrange <- data.frame(matrix(xrange, length(abund_vec), 2, byrow=TRUE))
-      yrange <- data.frame(matrix(yrange, length(abund_vec), 2, byrow=TRUE))
+      xrange <- data.frame(matrix(xrange, s_local, 2, byrow=TRUE))
+      yrange <- data.frame(matrix(yrange, s_local, 2, byrow=TRUE))
    }
    
    xext <- xrange[,2] - xrange[,1]
@@ -675,9 +722,6 @@ sim_thomas_coords <- function(abund_vec,
    max_dim <- ifelse(xext >= yext, xext, yext)
    
    
-   cum_abund <- cumsum(abund_vec)
-   s_local <- length(abund_vec)
-   n <- sum(abund_vec)
    
    
    # if (length(sigma) == 2){
@@ -699,14 +743,11 @@ sim_thomas_coords <- function(abund_vec,
       sigma_vec <- rep(sigma[1], times = s_local)
    }
    
-   
-   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(mother_points))) stop("random_mother_points or click_for_mother_points method?")
-   
    method <- NA
    if(any(!is.na(xmother)) | any(!is.na(ymother))) {
-      method <- "click_for_mother_points"
+      method <- "coordinates_for_mother_points"
       stopifnot(length(xmother) == length(ymother))
-      stopifnot(all(!is.na(unlist(xmother)) & !is.na(unlist(ymother))))	# error message is not meaningful
+      #stopifnot(all(!is.na(unlist(xmother)) & !is.na(unlist(ymother))))	# error message is not meaningful
       
       # if(length(xmother) == 1 & length(ymother) == 1){
       # x_mother <- rep(xmother, n)
@@ -718,29 +759,28 @@ sim_thomas_coords <- function(abund_vec,
       # }
       #xmother <- rep(xmother, s_local)
       #ymother <- rep(ymother, s_local)		
-      mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
-      n_mothers <- mother_points
+      n_mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
+      n_mothers <- n_mother_points
       
    }
    
    # determine the number of points per cluster and the number of mother points
-   # if mother_points and cluster_points are given OR xmother and ymother, and cluster points are given, cluster_points is overridden. If mother_points=0 and cluster_points=400 (high clustering), cluster_points is overridden and there is 0 clustering -> there should be a warning to let the user know.
    if(is.na(method)){
-      if (all(!is.na(mother_points))){
+      if (all(!is.na(n_mother_points))){
          method <- "random_mother_points"
-         if (length(mother_points) == s_local)
-            n_mothers <- mother_points
-         else
-            n_mothers <- rep(mother_points[1], s_local)
-         
+         if (length(n_mother_points) == s_local) {
+            n_mothers <- n_mother_points
+         } else {
+            n_mothers <- rep(n_mother_points[1], s_local)
+         }
       } else {
          
-         if (all(!is.na(cluster_points))){
+         if (all(!is.na(points_per_cluster))){
             method <- "cluster_points"
-            if (length(cluster_points) == s_local)
-               points_per_cluster <- cluster_points
+            if (length(points_per_cluster) == s_local)
+               points_per_cluster <- points_per_cluster
             else
-               points_per_cluster <- rep(cluster_points[1], s_local)
+               points_per_cluster <- rep(points_per_cluster[1], s_local)
             
             lambda_mother <- abund_vec / points_per_cluster
             
@@ -763,6 +803,8 @@ sim_thomas_coords <- function(abund_vec,
       
       x[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), xrange[1,1], xrange[1,2])
       y[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), yrange[1,1], yrange[1,2])
+   } else {
+      directToRunif <- logical(s_local)
    }
    
    # create map for first species only
@@ -782,10 +824,10 @@ sim_thomas_coords <- function(abund_vec,
       
    } else {
       
-      for (ispec in which(!directToRunif)){
+      for (ispec in which(!directToRunif)){   # IS THE FIRST SPECIES RAN AGAIN?
          
          # if (sigma_vec[ispec] < 2 * max_dim[ispec]){# & n_mothers[ispec] != 0){
-         if(method=="click_for_mother_points") {
+         if(method=="coordinates_for_mother_points") {
             xmother_spec <- xmother[[ispec]]
             ymother_spec <- ymother[[ispec]]
          } else {
@@ -831,9 +873,9 @@ sim_thomas_coords <- function(abund_vec,
 #' @param sigma Mean displacement (along each coordinate axes) of a point from
 #' its mother point (= cluster centre).
 #'
-#' @param mother_points Number of mother points (= cluster centres).
+#' @param n_mother_points Number of mother points (= cluster centres).
 #'
-#' @param cluster_points Mean number of points per cluster.
+#' @param points_per_cluster Mean number of points per cluster.
 #'
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
@@ -858,8 +900,8 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  sad_coef = list("cv_abund" = 1),
                                  fix_s_sim = FALSE,
                                  sigma = 0.02,
-                                 cluster_points = NA,
-                                 mother_points = NA,
+                                 points_per_cluster = NA,
+                                 n_mother_points = NA,
                                  xmother=NA,
 											ymother=NA,
 											xrange = c(0,1),
@@ -876,8 +918,8 @@ sim_thomas_community <- function(s_pool, n_sim,
 
    sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
                                 sigma = sigma,
-                                mother_points = mother_points,
-                                cluster_points = cluster_points,
+                                n_mother_points = n_mother_points,
+                                points_per_cluster = points_per_cluster,
 										  xmother=xmother,
 										  ymother=ymother,
                                 xrange = xrange,
