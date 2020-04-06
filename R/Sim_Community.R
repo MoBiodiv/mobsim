@@ -431,7 +431,7 @@ plot.community <- function(x, ..., col = NULL, pch = NULL)
 
    nspec <- length(table(comm$census$species))
    if (is.null(col))  col <- grDevices::rainbow(nspec)
-   if (is.null(pch))  pch <- 19
+   if (is.null(pch))  pch <- 16
 
    graphics::plot(y ~ x, data = comm$census, xlim = comm$x_min_max,
                   ylim = comm$y_min_max, col = col[comm$census$species],
