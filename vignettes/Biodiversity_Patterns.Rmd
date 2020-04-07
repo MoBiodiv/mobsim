@@ -19,7 +19,7 @@ data set, but of course the same patterns can be also derived from real data.
 # Simulate and explore data
 
 First, we generate community data by simulating 1,000 individuals from 30 species
-with a cluster size of `sigma = 0.01` and one cluster per species (`mother_points = 1`).
+with a cluster size of `sigma = 0.01` and one cluster per species (`n_mother_points = 1`).
 For more information on the simulation of communities see the vignette **Simulating
 communities with `mobsim`**.
 
@@ -27,7 +27,7 @@ communities with `mobsim`**.
 library(mobsim)
 sim_dat1 <- sim_thomas_community(s_pool = 30,  n_sim = 1000, sad_type = "lnorm",
                                  sad_coef = list("meanlog" = 2, "sdlog" = 1),
-                                 sigma = 0.1, mother_points = 1)
+                                 sigma = 0.1, n_mother_points = 1)
 ```
 
 Then we explore the generated community object. In the plot each dot represents one individual and the colour indicates the species

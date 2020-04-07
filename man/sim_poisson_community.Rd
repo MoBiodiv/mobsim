@@ -4,9 +4,15 @@
 \alias{sim_poisson_community}
 \title{Simulate community with random spatial positions.}
 \usage{
-sim_poisson_community(s_pool, n_sim, sad_type = "lnorm",
-  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE, xrange = c(0, 1),
-  yrange = c(0, 1))
+sim_poisson_community(
+  s_pool,
+  n_sim,
+  sad_type = "lnorm",
+  sad_coef = list(cv_abund = 1),
+  fix_s_sim = FALSE,
+  xrange = c(0, 1),
+  yrange = c(0, 1)
+)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}

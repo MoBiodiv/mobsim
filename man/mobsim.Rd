@@ -3,7 +3,6 @@
 \docType{package}
 \name{mobsim}
 \alias{mobsim}
-\alias{mobsim-package}
 \title{mobsim: A package for spatial analysis of scale-dependent biodiversity changes.}
 \description{
 The package includes functions to simulate species distributions in space
@@ -34,6 +33,8 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{divar}}
 
 \code{\link{dist_decay}}
+
+\code{\link{dist_decay_quadrats}}
 
 \code{\link{sample_quadrats}}
 }

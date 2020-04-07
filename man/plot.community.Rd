@@ -13,7 +13,7 @@
 
 \item{col}{Colour vector to mark species identities}
 
-\item{pch}{Plotting character to mark species identities}
+\item{pch}{Plotting character to mark species identities. pch 16 is advised for large datasets}
 }
 \description{
 Plot positions and species identities of all individuals in a community object.

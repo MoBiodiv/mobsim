@@ -4,8 +4,13 @@
 \alias{dist_decay}
 \title{Distance decay of similarity}
 \usage{
-dist_decay(comm, prop_area = 0.005, n_samples = 20, method = "bray",
-  binary = F)
+dist_decay(
+  comm,
+  prop_area = 0.005,
+  n_samples = 20,
+  method = "bray",
+  binary = F
+)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}
@@ -20,15 +25,15 @@ dist_decay(comm, prop_area = 0.005, n_samples = 20, method = "bray",
 See \code{\link[vegan]{vegdist}}}
 }
 \value{
-Dataframe with distances between subplot pairs and the respective
-similarity indices
+Object of class  \code{dist_decay}: a dataframe with distances between 
+subplot pairs and the respective similarity indices.
 }
 \description{
 Estimate pairwise similarities of communities in subplots as
 function of distance
 }
 \examples{
-sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
+sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, n_mother_points = 2)
 dd1 <- dist_decay(sim_com1, prop_area = 0.005, n_samples = 20)
 plot(dd1)
 

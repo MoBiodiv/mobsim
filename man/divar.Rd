@@ -4,8 +4,12 @@
 \alias{divar}
 \title{Diversity-area relationships}
 \usage{
-divar(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-  exclude_zeros = T)
+divar(
+  comm,
+  prop_area = seq(0.1, 1, by = 0.1),
+  n_samples = 100,
+  exclude_zeros = T
+)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}

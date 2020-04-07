@@ -4,10 +4,21 @@
 \alias{sim_thomas_community}
 \title{Simulate community with clumped spatial positions.}
 \usage{
-sim_thomas_community(s_pool, n_sim, sad_type = "lnorm",
-  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE, sigma = 0.02,
-  cluster_points = NA, mother_points = NA, xrange = c(0, 1),
-  yrange = c(0, 1))
+sim_thomas_community(
+  s_pool,
+  n_sim,
+  sad_type = "lnorm",
+  sad_coef = list(cv_abund = 1),
+  fix_s_sim = FALSE,
+  sigma = 0.02,
+  points_per_cluster = NA,
+  n_mother_points = NA,
+  xmother = NA,
+  ymother = NA,
+  xrange = c(0, 1),
+  yrange = c(0, 1),
+  seed = NULL
+)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}
@@ -43,9 +54,9 @@ species in the simulated local community? (logical)}
 \item{sigma}{Mean displacement (along each coordinate axes) of a point from
 its mother point (= cluster centre).}
 
-\item{cluster_points}{Mean number of points per cluster.}
+\item{points_per_cluster}{Mean number of points per cluster.}
 
-\item{mother_points}{Number of mother points (= cluster centres).}
+\item{n_mother_points}{Number of mother points (= cluster centres).}
 
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 

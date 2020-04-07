@@ -1,9 +1,10 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.1.0
-Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
-Date: 2017-11-02
+Version: 0.2.0
+Authors@R: c(person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre")),
+				 person("Alban", "Sagouis", email = "alban.sagouis@idiv.de", role = "aut"))
+Date: 2020-04-07
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
@@ -29,6 +30,6 @@ Suggests:
     testthat,
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.2
 URL: http://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim

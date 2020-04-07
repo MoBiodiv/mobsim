@@ -743,7 +743,7 @@ sim_thomas_coords <- function(abund_vec,
       sigma_vec <- rep(sigma[1], times = s_local)
    }
    
-   method <- NA
+   method <- "default"
    if(any(!is.na(xmother)) | any(!is.na(ymother))) {
       method <- "coordinates_for_mother_points"
       stopifnot(length(xmother) == length(ymother))
@@ -765,7 +765,7 @@ sim_thomas_coords <- function(abund_vec,
    }
    
    # determine the number of points per cluster and the number of mother points
-   if(is.na(method)){
+   if(method == 'default'){
       if (all(!is.na(n_mother_points))){
          method <- "random_mother_points"
          if (length(n_mother_points) == s_local) {
@@ -807,9 +807,7 @@ sim_thomas_coords <- function(abund_vec,
       directToRunif <- logical(s_local)
    }
    
-   # create map for first species only
-   # IS THIS NECESSARY?
-   if (s_local == 1 & !directToRunif[1]){
+   if (s_local == 1 & !directToRunif[1]){   # create map for first species only
       dat1 <- rThomas_rcpp(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
                            sigma = sigma_vec[1],
