@@ -16,6 +16,8 @@
 #'
 #' \code{\link{sim_thomas_community}}
 #'
+#' \code{\link{rThomas_rcpp}}
+#'
 #'
 #' @section Functions to analyse species abundances and distributions:
 #'

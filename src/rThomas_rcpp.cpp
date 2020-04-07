@@ -1,9 +1,30 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//------------------------------------------------------------------------------
-   //simulate spatial ThomaS process
-// the function is an efficient re-implementation of the rThomas function from the spatstat package
+//' Thomas process individual distribution simulation for one species
+//' 
+//' Usually used internally inside \code{\link{sim_thomas_coords}}
+//' This function randomly draws points (individuals) around one or several mother points using Rcpp.
+//' The function is an efficient re-implementation of the rThomas function from the spatstat package.
+//' 
+//' @name rThomas_rcpp
+//' 
+//' @param n_points The total number of points (individuals).
+//' @param n_mother_points Number of mother points (= cluster centres).
+//' @param xmother Vector of \code{n_mother_points} x coordinates for the mother points.
+//' @param ymother Vector of \code{n_mother_points} y coordinates for the mother points.
+//' @param sigma Mean displacement (along each coordinate axes) of a point from
+//' its mother point (= cluster centre).
+//' @param xmin Left limit, \code{default}=0.
+//' @param xmax Right limit, \code{default}=1.
+//' @param ymin Bottom limit, \code{default}=0.
+//' @param ymax Top limit, \code{default}=1.
+//'
+//' @return A dataframe with x and y coordinates.
+//'
+//' @author Felix May, Alban Sagouis
+//' @export
+
 
 // [[Rcpp::export]]
 DataFrame rThomas_rcpp(int n_points,
@@ -17,18 +38,6 @@ DataFrame rThomas_rcpp(int n_points,
                        double ymax = 1
 )
 {
-   //simulate mother points
-   //double kappa = n_points/mu/((xmax-xmin)*(ymax-ymin)); //density of mother points
-   
-   // double expand = 4.0*sigma;
-   //
-      // double xmin2 = xmin - expand;
-   // double xmax2 = xmax + expand;
-   //
-      // double ymin2 = ymin - expand;
-   // double ymax2 = ymax + expand;
-   //
-      // double lambda_mother = kappa * (xmax2 - xmin2) * (ymax2 - ymin2);
    
    NumericVector xpoints(n_points);
    NumericVector ypoints(n_points);
@@ -36,15 +45,10 @@ DataFrame rThomas_rcpp(int n_points,
    
    RNGScope scope;
    
-   //int n_mother_points = as<int>(rpois(1, lambda_mother));
-   //int n_mother_points = as<int>(rpois(1, kappa));
-   
 	bool mother_points_specified = Rcpp::na_omit(xmother).size() > 0;
 	
-   if (n_mother_points > 0 || mother_points_specified) {
+   if (n_mother_points > 0 || mother_points_specified) {	// if clustering
       if(!LogicalVector::is_na(n_mother_points) & all(is_na(xmother)) & all(is_na(ymother))) {
-			// xmother = runif(n_mother_points, xmin2, xmax2);
-			// ymother = runif(n_mother_points, ymin2, ymax2);
 			xmother = runif(n_mother_points, xmin, xmax);
 			ymother = runif(n_mother_points, ymin, ymax);
       } else {
@@ -71,7 +75,7 @@ DataFrame rThomas_rcpp(int n_points,
          xpoints[ipoint] = xnew;
          ypoints[ipoint] = ynew;
       }
-   } // end if n_mother_points > 0 || xmother.size() > 0 : if clustering
+   } // end if n_mother_points > 0 || xmother.size() > 0
    
    else {
       xpoints = runif(n_points, xmin, xmax);
