@@ -11,7 +11,7 @@ test_that("classes are correct", {
    expect_is(sim_thomas_coords(sad1, mother_points = 0), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 100), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 4.2), "community")
-   expect_is(sim_thomas_coords(sad1, mother_points = 1, points_per_cluster = 2), "community")
+   expect_is(sim_thomas_coords(sad1, mother_points = 1, cluster_points = 2), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 1, xmother=xmother, ymother=ymother), "community")
    expect_is(sim_thomas_coords(sad1, xmother=xmother, ymother=ymother), "community")
    expect_is(sim_thomas_coords(sad1), "community")

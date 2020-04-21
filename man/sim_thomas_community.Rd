@@ -11,7 +11,7 @@ sim_thomas_community(
   sad_coef = list(cv_abund = 1),
   fix_s_sim = FALSE,
   sigma = 0.02,
-  points_per_cluster = NA,
+  cluster_points = NA,
   mother_points = NA,
   xmother = NA,
   ymother = NA,
@@ -54,7 +54,7 @@ species in the simulated local community? (logical)}
 \item{sigma}{Mean displacement (along each coordinate axes) of a point from
 its mother point (= cluster centre).}
 
-\item{points_per_cluster}{Mean number of points per cluster.}
+\item{cluster_points}{Mean number of points per cluster.}
 
 \item{mother_points}{Number of mother points (= cluster centres).}
 

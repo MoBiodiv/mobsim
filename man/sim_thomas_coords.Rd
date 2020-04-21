@@ -10,7 +10,7 @@ sim_thomas_coords(
   mother_points = NA,
   xmother = NA,
   ymother = NA,
-  points_per_cluster = NA,
+  cluster_points = NA,
   xrange = c(0, 1),
   yrange = c(0, 1)
 )
@@ -37,7 +37,7 @@ If \code{mother_points} is a vector of the same length as \code{abund_vec},
 each species has a specific number of clusters. If \code{mother_points} equals 0
 there is no clustering and the distribution is homogeneous. If no value is provided,
 the number of clusters is determined from the abundance and the number of points
-per cluster (\code{points_per_cluster}).}
+per cluster (\code{cluster_points}).}
 
 \item{xmother}{List of length equal to the number of species. Each list element
 is a vector of x coordinates for every mother points. If one element is NA, the
@@ -47,16 +47,16 @@ the corresponding species is not clustered.}
 is a vector of y coordinates for every mother points. If one element is NA, the
 the corresponding species is not clustered.}
 
-\item{points_per_cluster}{Mean number of points per cluster. If this is
+\item{cluster_points}{Mean number of points per cluster. If this is
 a single value, species have the same average number of points per cluster.
 If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
 number of points per cluster is determined from the abundance and from
-\code{mother_points}. If \code{mother_points} and \code{points_per_cluster} are given OR
-\code{xmother} and \code{ymother}, and cluster points are given, \code{points_per_cluster} is overridden.
-If \code{mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
-\code{points_per_cluster} is overridden.
-The parameter \code{points_per_cluster} corresponds to the
+\code{mother_points}. If \code{mother_points} and \code{cluster_points} are given OR
+\code{xmother} and \code{ymother}, and cluster points are given, \code{cluster_points} is overridden.
+If \code{mother_points}=0, there will be no clustering even if \code{cluster_points}=400 (high clustering) because
+\code{cluster_points} is overridden.
+The parameter \code{cluster_points} corresponds to the
 \code{mu} parameter of \code{spatstat::rThomas}.}
 
 \item{xrange}{Extent of the community in x-direction. If this a numeric vector
@@ -82,20 +82,20 @@ function uses a C++ re-implementation of the function
 \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 
 There is an inherent link between the parameters \code{abund_vec},
-\code{mother_points}, and \code{points_per_cluster}. For every species the
+\code{mother_points}, and \code{cluster_points}. For every species the
 abundance has to be equal to the number of clusters
 (\code{mother_points}) times the number of points per cluster
-(\code{points_per_cluster}).
+(\code{cluster_points}).
 
-\deqn{abundance = mother_points * points_per_cluster}
+\deqn{abundance = mother_points * cluster_points}
 
 Accordingly, if one of the parameters is provided, the other one is directly
 calculated from the abundance. Values for \code{mother_points} override values
-for \code{points_per_cluster}. If none of the parameters is specified, it is assumed
+for \code{cluster_points}. If none of the parameters is specified, it is assumed
 that for every species there is a similar number of clusters and of points
 per cluster.
 
-\deqn{mother_points = points_per_cluster = \sqrt(abundance),}
+\deqn{mother_points = cluster_points = \sqrt(abundance),}
 
 In this case rare species have few clusters with few points per
 cluster, while abundant species have many clusters with many points per cluster.
@@ -111,7 +111,7 @@ sim2 <- sim_thomas_coords(abund, sigma = 0.02, mother_points = 1)
 plot(sim2)
 
 # Equal numbers of points per cluster
-sim3 <- sim_thomas_coords(abund, sigma = 0.02, points_per_cluster = 5)
+sim3 <- sim_thomas_coords(abund, sigma = 0.02, cluster_points = 5)
 plot(sim3)
 
 # With large sigma the distribution will be essentially random (see Details)
