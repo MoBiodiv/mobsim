@@ -12,7 +12,7 @@ sim_thomas_community(
   fix_s_sim = FALSE,
   sigma = 0.02,
   points_per_cluster = NA,
-  n_mother_points = NA,
+  mother_points = NA,
   xmother = NA,
   ymother = NA,
   xrange = c(0, 1),
@@ -56,7 +56,7 @@ its mother point (= cluster centre).}
 
 \item{points_per_cluster}{Mean number of points per cluster.}
 
-\item{n_mother_points}{Number of mother points (= cluster centres).}
+\item{mother_points}{Number of mother points (= cluster centres).}
 
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 

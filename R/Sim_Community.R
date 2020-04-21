@@ -571,12 +571,12 @@ sim_poisson_community <- function(s_pool,
 #' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #'
-#' @param n_mother_points Number of mother points (= cluster centres).
+#' @param mother_points Number of mother points (= cluster centres).
 #' If this is a single value, all species have the same number of clusters.
-#' For example \code{n_mother_points = 1} can be used to simulate only one cluster
+#' For example \code{mother_points = 1} can be used to simulate only one cluster
 #' per species, which then represents the complete species range.
-#' If \code{n_mother_points} is a vector of the same length as \code{abund_vec},
-#' each species has a specific number of clusters. If \code{n_mother_points} equals 0
+#' If \code{mother_points} is a vector of the same length as \code{abund_vec},
+#' each species has a specific number of clusters. If \code{mother_points} equals 0
 #' there is no clustering and the distribution is homogeneous. If no value is provided,
 #' the number of clusters is determined from the abundance and the number of points
 #' per cluster (\code{points_per_cluster}).
@@ -594,9 +594,9 @@ sim_poisson_community <- function(s_pool,
 #' If this is a vector of the same length as \code{abund_vec}, each species has
 #' a specific mean number of points per cluster.  If no value is provided, the
 #' number of points per cluster is determined from the abundance and from
-#' \code{n_mother_points}. If \code{n_mother_points} and \code{points_per_cluster} are given OR
+#' \code{mother_points}. If \code{mother_points} and \code{points_per_cluster} are given OR
 #' \code{xmother} and \code{ymother}, and cluster points are given, \code{points_per_cluster} is overridden.
-#' If \code{n_mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
+#' If \code{mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
 #' \code{points_per_cluster} is overridden.
 #' The parameter \code{points_per_cluster} corresponds to the
 #' \code{mu} parameter of \code{spatstat::rThomas}.
@@ -614,20 +614,20 @@ sim_poisson_community <- function(s_pool,
 #' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
-#' \code{n_mother_points}, and \code{points_per_cluster}. For every species the
+#' \code{mother_points}, and \code{points_per_cluster}. For every species the
 #' abundance has to be equal to the number of clusters
-#' (\code{n_mother_points}) times the number of points per cluster
+#' (\code{mother_points}) times the number of points per cluster
 #' (\code{points_per_cluster}).
 #'
-#' \deqn{abundance = n_mother_points * points_per_cluster}
+#' \deqn{abundance = mother_points * points_per_cluster}
 #'
 #' Accordingly, if one of the parameters is provided, the other one is directly
-#' calculated from the abundance. Values for \code{n_mother_points} override values
+#' calculated from the abundance. Values for \code{mother_points} override values
 #' for \code{points_per_cluster}. If none of the parameters is specified, it is assumed
 #' that for every species there is a similar number of clusters and of points
 #' per cluster.
 #'
-#' \deqn{n_mother_points = points_per_cluster = \sqrt(abundance),}
+#' \deqn{mother_points = points_per_cluster = \sqrt(abundance),}
 #'
 #' In this case rare species have few clusters with few points per
 #' cluster, while abundant species have many clusters with many points per cluster.
@@ -652,7 +652,7 @@ sim_poisson_community <- function(s_pool,
 #' plot(sim1)
 #'
 #' # Simulate species "ranges"
-#' sim2 <- sim_thomas_coords(abund, sigma = 0.02, n_mother_points = 1)
+#' sim2 <- sim_thomas_coords(abund, sigma = 0.02, mother_points = 1)
 #' plot(sim2)
 #'
 #' # Equal numbers of points per cluster
@@ -664,14 +664,14 @@ sim_poisson_community <- function(s_pool,
 #' plot(sim4)
 #'
 #' # Some random and some clustered species with different numbers of mother points.
-#' n_mother_points <- sample(0:3, length(abund), replace=T)
-#' sim5 <- sim_thomas_coords(abund, n_mother_points = n_mother_points, sigma=0.01)
+#' mother_points <- sample(0:3, length(abund), replace=T)
+#' sim5 <- sim_thomas_coords(abund, mother_points = mother_points, sigma=0.01)
 #' plot(sim5)
 #' 
 #' # Specifying mother point coordinates or no-clustering (\code{NA}).
-#' n_mother_points <- sample(1:3, length(abund), replace=T)
-#' xmother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
-#' ymother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
+#' mother_points <- sample(1:3, length(abund), replace=T)
+#' xmother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
+#' ymother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 #' xmother[[1]] <- NA
 #' ymother[[1]] <- NA
 #' sim6 <- sim_thomas_coords(abund, xmother=xmother, ymother=ymother, sigma=0.01)
@@ -680,7 +680,7 @@ sim_poisson_community <- function(s_pool,
 #' # Species having different ranges.
 #' xrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
 #' yrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
-#' sim7 <- sim_thomas_coords(abund, n_mother_points=1, sigma=1, xrange=xrange, yrange=yrange)
+#' sim7 <- sim_thomas_coords(abund, mother_points=1, sigma=1, xrange=xrange, yrange=yrange)
 #' plot(sim7)
 #'
 #' @export
@@ -688,7 +688,7 @@ sim_poisson_community <- function(s_pool,
 
 sim_thomas_coords <- function(abund_vec,
                                sigma = 0.02,
-                               n_mother_points = NA,
+                               mother_points = NA,
                                xmother = NA,	# list of vectors
                                ymother = NA,	# list of vectors
                                points_per_cluster = NA,
@@ -696,16 +696,16 @@ sim_thomas_coords <- function(abund_vec,
                                yrange = c(0,1)
 )
 {
-   # n_mother_points
-   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(n_mother_points))) {
-      n_mother_points <- NA
-      warning("n_mother_points, xmother and ymother given, n_mother_points is overidden.")
+   # mother_points
+   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(mother_points))) {
+      mother_points <- NA
+      warning("mother_points, xmother and ymother given, mother_points is overidden.")
    }
-   if((!is.na(points_per_cluster) & any(!is.na(n_mother_points))) | (!is.na(points_per_cluster) & any(!is.na(xmother)))) warning("Parametre points_per_cluster overidden by other parametre.")	# points_per_cluster is overridden if n_mother_points or xmother and ymother are given.
+   if((!is.na(points_per_cluster) & any(!is.na(mother_points))) | (!is.na(points_per_cluster) & any(!is.na(xmother)))) warning("Parametre points_per_cluster overidden by other parametre.")	# points_per_cluster is overridden if mother_points or xmother and ymother are given.
    
-   if((length(n_mother_points) > 1 & any(is.na(n_mother_points))) | any(na.omit(n_mother_points) <0 )) stop("If specified, n_mother_points should include only positive integers (or 0 for a random distribution).")
+   if((length(mother_points) > 1 & any(is.na(mother_points))) | any(na.omit(mother_points) <0 )) stop("If specified, mother_points should include only positive integers (or 0 for a random distribution).")
       
-   if(length(n_mother_points) != 1 & length(n_mother_points) != length(abund_vec)) stop("Length of n_mother_points should be either 1 or equal to the number of species.")
+   if(length(mother_points) != 1 & length(mother_points) != length(abund_vec)) stop("Length of mother_points should be either 1 or equal to the number of species.")
    
    # xmother ymother
    if(
@@ -797,19 +797,19 @@ sim_thomas_coords <- function(abund_vec,
       # }
       #xmother <- rep(xmother, s_local)
       #ymother <- rep(ymother, s_local)		
-      n_mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
-      n_mothers <- n_mother_points
+      mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
+      n_mothers <- mother_points
       
    }
    
    # determine the number of points per cluster and the number of mother points
    if(method == 'default'){
-      if (all(!is.na(n_mother_points))){
+      if (all(!is.na(mother_points))){
          method <- "random_mother_points"
-         if (length(n_mother_points) == s_local) {
-            n_mothers <- n_mother_points
+         if (length(mother_points) == s_local) {
+            n_mothers <- mother_points
          } else {
-            n_mothers <- rep(n_mother_points[1], s_local)
+            n_mothers <- rep(mother_points[1], s_local)
          }
       } else {
          
@@ -909,7 +909,7 @@ sim_thomas_coords <- function(abund_vec,
 #' @param sigma Mean displacement (along each coordinate axes) of a point from
 #' its mother point (= cluster centre).
 #'
-#' @param n_mother_points Number of mother points (= cluster centres).
+#' @param mother_points Number of mother points (= cluster centres).
 #'
 #' @param points_per_cluster Mean number of points per cluster.
 #'
@@ -937,7 +937,7 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  fix_s_sim = FALSE,
                                  sigma = 0.02,
                                  points_per_cluster = NA,
-                                 n_mother_points = NA,
+                                 mother_points = NA,
                                  xmother=NA,
 											ymother=NA,
 											xrange = c(0,1),
@@ -954,7 +954,7 @@ sim_thomas_community <- function(s_pool, n_sim,
 
    sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
                                 sigma = sigma,
-                                n_mother_points = n_mother_points,
+                                mother_points = mother_points,
                                 points_per_cluster = points_per_cluster,
 										  xmother=xmother,
 										  ymother=ymother,

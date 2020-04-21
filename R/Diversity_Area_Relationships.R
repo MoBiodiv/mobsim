@@ -314,7 +314,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' subplot pairs and the respective similarity indices.
 #'
 #' @examples
-#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, n_mother_points = 2)
+#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 #' dd1 <- dist_decay(sim_com1, prop_area = 0.005, n_samples = 20)
 #' plot(dd1)
 #'
@@ -369,7 +369,7 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 #' subplot pairs and the respective similarity indices.
 #'
 #' @examples
-#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, n_mother_points = 2)
+#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 #' par(mfrow=c(1,2))
 #' samples <- sample_quadrats(sim_com1, avoid_overlap=T, quadrat_area=.005, n_quadrats=50, plot=T)
 #' dd_quadrats <- dist_decay_quadrats(samples)

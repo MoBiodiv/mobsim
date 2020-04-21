@@ -7,7 +7,7 @@
 sim_thomas_coords(
   abund_vec,
   sigma = 0.02,
-  n_mother_points = NA,
+  mother_points = NA,
   xmother = NA,
   ymother = NA,
   points_per_cluster = NA,
@@ -29,12 +29,12 @@ efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
 to the \code{scale} parameter of the function \code{rThomas} in the package
 \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.}
 
-\item{n_mother_points}{Number of mother points (= cluster centres).
+\item{mother_points}{Number of mother points (= cluster centres).
 If this is a single value, all species have the same number of clusters.
-For example \code{n_mother_points = 1} can be used to simulate only one cluster
+For example \code{mother_points = 1} can be used to simulate only one cluster
 per species, which then represents the complete species range.
-If \code{n_mother_points} is a vector of the same length as \code{abund_vec},
-each species has a specific number of clusters. If \code{n_mother_points} equals 0
+If \code{mother_points} is a vector of the same length as \code{abund_vec},
+each species has a specific number of clusters. If \code{mother_points} equals 0
 there is no clustering and the distribution is homogeneous. If no value is provided,
 the number of clusters is determined from the abundance and the number of points
 per cluster (\code{points_per_cluster}).}
@@ -52,9 +52,9 @@ a single value, species have the same average number of points per cluster.
 If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
 number of points per cluster is determined from the abundance and from
-\code{n_mother_points}. If \code{n_mother_points} and \code{points_per_cluster} are given OR
+\code{mother_points}. If \code{mother_points} and \code{points_per_cluster} are given OR
 \code{xmother} and \code{ymother}, and cluster points are given, \code{points_per_cluster} is overridden.
-If \code{n_mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
+If \code{mother_points}=0, there will be no clustering even if \code{points_per_cluster}=400 (high clustering) because
 \code{points_per_cluster} is overridden.
 The parameter \code{points_per_cluster} corresponds to the
 \code{mu} parameter of \code{spatstat::rThomas}.}
@@ -82,20 +82,20 @@ function uses a C++ re-implementation of the function
 \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 
 There is an inherent link between the parameters \code{abund_vec},
-\code{n_mother_points}, and \code{points_per_cluster}. For every species the
+\code{mother_points}, and \code{points_per_cluster}. For every species the
 abundance has to be equal to the number of clusters
-(\code{n_mother_points}) times the number of points per cluster
+(\code{mother_points}) times the number of points per cluster
 (\code{points_per_cluster}).
 
-\deqn{abundance = n_mother_points * points_per_cluster}
+\deqn{abundance = mother_points * points_per_cluster}
 
 Accordingly, if one of the parameters is provided, the other one is directly
-calculated from the abundance. Values for \code{n_mother_points} override values
+calculated from the abundance. Values for \code{mother_points} override values
 for \code{points_per_cluster}. If none of the parameters is specified, it is assumed
 that for every species there is a similar number of clusters and of points
 per cluster.
 
-\deqn{n_mother_points = points_per_cluster = \sqrt(abundance),}
+\deqn{mother_points = points_per_cluster = \sqrt(abundance),}
 
 In this case rare species have few clusters with few points per
 cluster, while abundant species have many clusters with many points per cluster.
@@ -107,7 +107,7 @@ sim1 <- sim_thomas_coords(abund, sigma = 0.02)
 plot(sim1)
 
 # Simulate species "ranges"
-sim2 <- sim_thomas_coords(abund, sigma = 0.02, n_mother_points = 1)
+sim2 <- sim_thomas_coords(abund, sigma = 0.02, mother_points = 1)
 plot(sim2)
 
 # Equal numbers of points per cluster
@@ -119,14 +119,14 @@ sim4 <- sim_thomas_coords(abund, sigma = 10)
 plot(sim4)
 
 # Some random and some clustered species with different numbers of mother points.
-n_mother_points <- sample(0:3, length(abund), replace=T)
-sim5 <- sim_thomas_coords(abund, n_mother_points = n_mother_points, sigma=0.01)
+mother_points <- sample(0:3, length(abund), replace=T)
+sim5 <- sim_thomas_coords(abund, mother_points = mother_points, sigma=0.01)
 plot(sim5)
 
 # Specifying mother point coordinates or no-clustering (\code{NA}).
-n_mother_points <- sample(1:3, length(abund), replace=T)
-xmother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
-ymother <- lapply(1:length(abund), function(i) runif(n_mother_points[i], 0, 1))
+mother_points <- sample(1:3, length(abund), replace=T)
+xmother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
+ymother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 xmother[[1]] <- NA
 ymother[[1]] <- NA
 sim6 <- sim_thomas_coords(abund, xmother=xmother, ymother=ymother, sigma=0.01)
@@ -135,7 +135,7 @@ plot(sim6)
 # Species having different ranges.
 xrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
 yrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
-sim7 <- sim_thomas_coords(abund, n_mother_points=1, sigma=1, xrange=xrange, yrange=yrange)
+sim7 <- sim_thomas_coords(abund, mother_points=1, sigma=1, xrange=xrange, yrange=yrange)
 plot(sim7)
 
 }
