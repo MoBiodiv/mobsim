@@ -30,6 +30,6 @@ Suggests:
     testthat,
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 URL: http://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim

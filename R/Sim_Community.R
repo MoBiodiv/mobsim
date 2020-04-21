@@ -696,10 +696,49 @@ sim_thomas_coords <- function(abund_vec,
                                yrange = c(0,1)
 )
 {
-
-   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(n_mother_points))) stop("random_mother_points or coordinates_for_mother_points method? Missing parametres")
+   # n_mother_points
+   if((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(n_mother_points))) {
+      n_mother_points <- NA
+      warning("n_mother_points, xmother and ymother given, n_mother_points is overidden.")
+   }
    if((!is.na(points_per_cluster) & any(!is.na(n_mother_points))) | (!is.na(points_per_cluster) & any(!is.na(xmother)))) warning("Parametre points_per_cluster overidden by other parametre.")	# points_per_cluster is overridden if n_mother_points or xmother and ymother are given.
-	
+   
+   if((length(n_mother_points) > 1 & any(is.na(n_mother_points))) | any(na.omit(n_mother_points) <0 )) stop("If specified, n_mother_points should include only positive integers (or 0 for a random distribution).")
+      
+   if(length(n_mother_points) != 1 & length(n_mother_points) != length(abund_vec)) stop("Length of n_mother_points should be either 1 or equal to the number of species.")
+   
+   # xmother ymother
+   if(
+      length(xmother) != length(ymother) | 
+      (length(xmother) != 1 & length(xmother) != length(abund_vec)) | 
+      (length(ymother) != 1 & length(ymother) != length(abund_vec))
+   ) stop("Length of xmother and ymother should be the same and either 1 or equal to the number of species.")
+   
+   if(any(sapply(xmother, function(x) any(is.na(x)) & any(!is.na(x)))) | 
+      any(sapply(ymother, function(y) any(is.na(y)) & any(!is.na(y))))
+   ) stop("xmother or ymother countains NA values where coordinates are expected.\nFor a given species, c(0.2), c(0.2, 0.6) or NA are correct entries but c(0.2, NA) is not.")
+
+   if(sum(sapply(xmother, is.na)) != sum(sapply(ymother, is.na))) stop("Unexpected NA value, xmother and ymother do not match.")
+   
+   oneRangeForAll <- is.vector(xrange) & is.vector(yrange)
+   if(oneRangeForAll) {
+      if(length(xmother) > 1 & length(ymother) > 1) if(any(c(unlist(xmother) < xrange[1], unlist(xmother) > xrange[2],
+            unlist(ymother) < yrange[1], unlist(ymother) > yrange[2]))) stop("xmother or ymother coordinates outside of range.")
+   } else {
+      if(class(xrange) != class(yrange)) stop("xrange and yrange have to objects of the same class.")
+      if(
+         nrow(xrange) != length(abund_vec) | nrow(yrange) != length(abund_vec) |
+         ncol(xrange) != 2 | ncol(yrange != 2)
+      ) stop("Expected dimensions for xrange and yrange are nrow = length(abund_vec), ncol=2.")
+      if(any(c(
+            sapply(1:length(xmother), function(i) xmother[[i]] < xrange[i, 1] |
+                   xmother[[i]] > xrange[i, 2]),
+            sapply(1:length(xmother), function(i) xmother[[i]] < xrange[i, 1] |
+                   xmother[[i]] > xrange[i, 2])
+            ))
+      ) stop("xmother or ymother coordinates outside or range.")
+   }
+   
    
    abund_vec <- trunc(abund_vec)
    
@@ -711,7 +750,6 @@ sim_thomas_coords <- function(abund_vec,
    s_local <- length(abund_vec)
    n <- sum(abund_vec)
    
-   oneRangeForAll <- is.vector(xrange) & is.vector(yrange)
    if(oneRangeForAll)	{	# converting xrange and yrange from vectors to data.frames
       xrange <- data.frame(matrix(xrange, s_local, 2, byrow=TRUE))
       yrange <- data.frame(matrix(yrange, s_local, 2, byrow=TRUE))
@@ -822,7 +860,7 @@ sim_thomas_coords <- function(abund_vec,
       
    } else {
       
-      for (ispec in which(!directToRunif)){   # IS THE FIRST SPECIES RAN AGAIN?
+      for (ispec in which(!directToRunif)){
          
          # if (sigma_vec[ispec] < 2 * max_dim[ispec]){# & n_mothers[ispec] != 0){
          if(method=="coordinates_for_mother_points") {
