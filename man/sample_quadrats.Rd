@@ -39,6 +39,8 @@ in x-direction (the distance between the left sides is measured)}
 
 \item{delta_y}{Distance between consecutive quadrats in transect and grid sampling
 in y-direction (the distance between the lower sides is measured)}
+
+\item{seed}{Integer. Any integer passed to \code(set.seed) for reproducibility.}
 }
 \value{
 A list with two items, \code{spec_dat} and \code{xy_dat}.

@@ -58,9 +58,19 @@ its mother point (= cluster centre).}
 
 \item{mother_points}{Number of mother points (= cluster centres).}
 
+\item{xmother}{List of length equal to the number of species. Each list element
+is a vector of x coordinates for every mother points. If one element is NA, the
+the corresponding species is not clustered.}
+
+\item{ymother}{List of length equal to the number of species. Each list element
+is a vector of y coordinates for every mother points. If one element is NA, the
+the corresponding species is not clustered.}
+
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
 \item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
+
+\item{seed}{Integer. Any integer passed to \code(set.seed) for reproducibility.}
 }
 \value{
 A community object as defined by \code{\link{community}}

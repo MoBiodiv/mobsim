@@ -310,7 +310,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' @param binary Perform presence/absence standardization before analysis?
 #' See \code{\link[vegan]{vegdist}}
 #'
-#' @return Object of class  \code{dist_decay}: a dataframe with distances between 
+#' @return Object of class  \code{dist_decay}: a dataframe with distances between
 #' subplot pairs and the respective similarity indices.
 #'
 #' @examples
@@ -365,13 +365,14 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 #' @param binary Perform presence/absence standardization before analysis?
 #' See \code{\link[vegan]{vegdist}}
 #'
-#' @return Object of class  \code{dist_decay}: a dataframe with distances between 
+#' @return Object of class  \code{dist_decay}: a dataframe with distances between
 #' subplot pairs and the respective similarity indices.
 #'
 #' @examples
 #' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 #' par(mfrow=c(1,2))
-#' samples <- sample_quadrats(sim_com1, avoid_overlap=T, quadrat_area=.005, n_quadrats=50, plot=T)
+#' samples <- sample_quadrats(sim_com1, avoid_overlap=TRUE, quadrat_area=.005,
+#'                            n_quadrats=50, plot=TRUE)
 #' dd_quadrats <- dist_decay_quadrats(samples)
 #' plot(dd_quadrats)
 #'
@@ -381,19 +382,19 @@ dist_decay_quadrats <- function(samples, method = "bray", binary = F)
 {
    com_mat <- samples$spec_dat[rowSums(samples$spec_dat) > 0,]
    d <- stats::dist(samples$xy_dat[rowSums(samples$spec_dat) > 0,])
-   
+
    similarity <- 1 - vegan::vegdist(com_mat, method = method,
                                     binary = binary)
    similarity[!is.finite(similarity)] <- NA
-   
+
    dat_out <- data.frame(distance = as.numeric(d),
                          similarity = as.numeric(similarity))
-   
+
    # order by increasing distance
    dat_out <- dat_out[order(dat_out$distance), ]
-   
+
    class(dat_out) <- c("dist_decay", "data.frame")
-   
+
    return(dat_out)
 }
 

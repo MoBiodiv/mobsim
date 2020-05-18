@@ -15,7 +15,7 @@ dist_decay_quadrats(samples, method = "bray", binary = F)
 See \code{\link[vegan]{vegdist}}}
 }
 \value{
-Object of class  \code{dist_decay}: a dataframe with distances between 
+Object of class  \code{dist_decay}: a dataframe with distances between
 subplot pairs and the respective similarity indices.
 }
 \description{
@@ -26,7 +26,8 @@ distance decay between the quadrats of his/her choice.
 \examples{
 sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 par(mfrow=c(1,2))
-samples <- sample_quadrats(sim_com1, avoid_overlap=T, quadrat_area=.005, n_quadrats=50, plot=T)
+samples <- sample_quadrats(sim_com1, avoid_overlap=TRUE, quadrat_area=.005,
+                           n_quadrats=50, plot=TRUE)
 dd_quadrats <- dist_decay_quadrats(samples)
 plot(dd_quadrats)
 

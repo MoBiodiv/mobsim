@@ -25,7 +25,7 @@ dist_decay(
 See \code{\link[vegan]{vegdist}}}
 }
 \value{
-Object of class  \code{dist_decay}: a dataframe with distances between 
+Object of class  \code{dist_decay}: a dataframe with distances between
 subplot pairs and the respective similarity indices.
 }
 \description{

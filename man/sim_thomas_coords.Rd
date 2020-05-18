@@ -119,12 +119,12 @@ sim4 <- sim_thomas_coords(abund, sigma = 10)
 plot(sim4)
 
 # Some random and some clustered species with different numbers of mother points.
-mother_points <- sample(0:3, length(abund), replace=T)
+mother_points <- sample(0:3, length(abund), replace = TRUE)
 sim5 <- sim_thomas_coords(abund, mother_points = mother_points, sigma=0.01)
 plot(sim5)
 
 # Specifying mother point coordinates or no-clustering (\code{NA}).
-mother_points <- sample(1:3, length(abund), replace=T)
+mother_points <- sample(1:3, length(abund), replace = TRUE)
 xmother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 ymother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 xmother[[1]] <- NA

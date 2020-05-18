@@ -150,8 +150,8 @@ between mother and offspring points is called `sigma`. The offspring points
 constitute the final distribution of the species. 
 
 By variations in the size of clusters (`sigma`), the number of 
-clusters (`n_mother_points`), and the mean number of individuals per cluster 
-(`points_per_cluster`) the Thomas process can generate a large range of different
+clusters (`mother_points`), and the mean number of individuals per cluster 
+(`cluster_points`) the Thomas process can generate a large range of different
 species distributions with intraspecific aggregation.
 
 It is important to note the each species distribution is simulated independently
@@ -177,19 +177,19 @@ plot(comm3a)
 ```
 
 Second, we change the number of clusters per species using the argument 
-`n_mother_points`.
+`mother_points`.
 
 ```{r, fig.width = 7, fig.height = 4}
-comm3b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, n_mother_points = 1)
+comm3b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
 par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3b)
 ```
 Third, we change the average number of points (i.e. individuals) per cluster using
-the argument `points_per_cluster`.
+the argument `cluster_points`.
 
 ```{r, fig.width = 7, fig.height = 4}
-comm3c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, points_per_cluster = 5)
+comm3c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 5)
 par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3c)
@@ -202,7 +202,7 @@ each species can has its specific number of clusters.
 
 ```{r, fig.width = 3.5, fig.height = 4}
 comm4 <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02,
-                           n_mother_points = c(5,4,3,2,1))
+                           mother_points = c(5,4,3,2,1))
 plot(comm4)
 ```
 

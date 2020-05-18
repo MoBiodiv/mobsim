@@ -1,35 +1,27 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.2.0
-Authors@R: c(person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre")),
-				 person("Alban", "Sagouis", email = "alban.sagouis@idiv.de", role = "aut"))
-Date: 2020-04-07
-Description: Tools for the simulation, analysis and sampling of spatial
-    biodiversity data (May et al. 2017) <doi:10.1101/209502>.
-    In the simulation tools user define the numbers of
-    species and individuals, the species abundance distribution and species
-    aggregation. Functions for analysis include species rarefaction 
-    and accumulation curves, species-area relationships and the distance
-    decay of similarity. 
+Version: 0.1.0.9004
+Authors@R: 2020-05-18
+Date: 2017-11-02
+Description: Tools for the simulation, analysis and sampling of spatial biodiversity data (May
+          et al. 2017) <doi:10.1101/209502>. In the simulation tools user define the numbers
+          of species and individuals, the species abundance distribution and species
+          aggregation. Functions for analysis include species rarefaction and accumulation
+          curves, species-area relationships and the distance decay of similarity.
 License: GPL-3
 LazyData: TRUE
-Imports:
-    Rcpp,
-    vegan,
-    sads (>= 0.4.1),
-    grDevices,
-    utils,
-    graphics,
-    stats
-LinkingTo:
-    Rcpp
-Suggests:
-    rmarkdown,
-    spatstat,
-    testthat,
-    knitr
+Imports: Rcpp, vegan, sads (>= 0.4.1), grDevices, utils, graphics, stats
+LinkingTo: Rcpp
+Suggests: rmarkdown, spatstat, testthat, knitr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
 URL: http://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim
+NeedsCompilation: yes
+Packaged: 2020-05-18 17:25:13 UTC; as80fywe
+Author: Felix May [aut, cre]
+Maintainer: Felix May <felix.may@posteo.de>
+Repository: CRAN
+Date/Publication: 2017-11-02 15:31:05 UTC
+Archs: x64

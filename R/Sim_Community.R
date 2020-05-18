@@ -37,6 +37,8 @@
 #' @param drop_zeros Should the function remove species with abundance zero
 #'    from the output? (logical)
 #'
+#' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
+#'
 #' @details The function \code{sim_sad} was built using code of the function
 #'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
 #'   contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
@@ -144,7 +146,7 @@ sim_sad <- function(s_pool, n_sim,
 						  seed = NULL)
 {
    sad_type <- match.arg(sad_type)
-	
+
 	if (!is.null(seed)) set.seed(seed)
 
    if (!is.numeric(n_sim) || n_sim <= 0)
@@ -397,7 +399,7 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #'
 #' @param object Community object of class \code{\link{community}}
 #'
-#' @param integer digits number of digits to print
+#' @param digits Integer. Number of digits to print
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
 #'
@@ -664,19 +666,19 @@ sim_poisson_community <- function(s_pool,
 #' plot(sim4)
 #'
 #' # Some random and some clustered species with different numbers of mother points.
-#' mother_points <- sample(0:3, length(abund), replace=T)
+#' mother_points <- sample(0:3, length(abund), replace = TRUE)
 #' sim5 <- sim_thomas_coords(abund, mother_points = mother_points, sigma=0.01)
 #' plot(sim5)
-#' 
+#'
 #' # Specifying mother point coordinates or no-clustering (\code{NA}).
-#' mother_points <- sample(1:3, length(abund), replace=T)
+#' mother_points <- sample(1:3, length(abund), replace = TRUE)
 #' xmother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 #' ymother <- lapply(1:length(abund), function(i) runif(mother_points[i], 0, 1))
 #' xmother[[1]] <- NA
 #' ymother[[1]] <- NA
 #' sim6 <- sim_thomas_coords(abund, xmother=xmother, ymother=ymother, sigma=0.01)
 #' plot(sim6)
-#' 
+#'
 #' # Species having different ranges.
 #' xrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
 #' yrange <- data.frame(t(sapply(1:length(abund), function(i) sort(runif(2, 0, 1)))))
@@ -702,24 +704,24 @@ sim_thomas_coords <- function(abund_vec,
       warning("mother_points, xmother and ymother given, mother_points is overidden.")
    }
    if((!is.na(cluster_points) & any(!is.na(mother_points))) | (!is.na(cluster_points) & any(!is.na(xmother)))) warning("Parametre cluster_points overidden by other parametre.")	# cluster_points is overridden if mother_points or xmother and ymother are given.
-   
+
    if((length(mother_points) > 1 & any(is.na(mother_points))) | any(na.omit(mother_points) <0 )) stop("If specified, mother_points should include only positive integers (or 0 for a random distribution).")
-      
+
    if(length(mother_points) != 1 & length(mother_points) != length(abund_vec)) stop("Length of mother_points should be either 1 or equal to the number of species.")
-   
+
    # xmother ymother
    if(
-      length(xmother) != length(ymother) | 
-      (length(xmother) != 1 & length(xmother) != length(abund_vec)) | 
+      length(xmother) != length(ymother) |
+      (length(xmother) != 1 & length(xmother) != length(abund_vec)) |
       (length(ymother) != 1 & length(ymother) != length(abund_vec))
    ) stop("Length of xmother and ymother should be the same and either 1 or equal to the number of species.")
-   
-   if(any(sapply(xmother, function(x) any(is.na(x)) & any(!is.na(x)))) | 
+
+   if(any(sapply(xmother, function(x) any(is.na(x)) & any(!is.na(x)))) |
       any(sapply(ymother, function(y) any(is.na(y)) & any(!is.na(y))))
    ) stop("xmother or ymother countains NA values where coordinates are expected.\nFor a given species, c(0.2), c(0.2, 0.6) or NA are correct entries but c(0.2, NA) is not.")
 
-   if(sum(sapply(xmother, is.na)) != sum(sapply(ymother, is.na))) stop("Unexpected NA value, xmother and ymother do not match.")
-   
+   if(sum(sapply(xmother, function(x) sum(is.na(x)))) != sum(sapply(ymother, function(x) sum(is.na(x))))) stop("Unexpected NA value, xmother and ymother do not match.")
+
    oneRangeForAll <- is.vector(xrange) & is.vector(yrange)
    if(oneRangeForAll) {
       if(length(xmother) > 1 & length(ymother) > 1) if(any(c(unlist(xmother) < xrange[1], unlist(xmother) > xrange[2],
@@ -738,30 +740,30 @@ sim_thomas_coords <- function(abund_vec,
             ))
       ) stop("xmother or ymother coordinates outside or range.")
    }
-   
-   
+
+
    abund_vec <- trunc(abund_vec)
-   
+
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "_")
-   
+
    abund_vec <- abund_vec[abund_vec > 0]
    cum_abund <- cumsum(abund_vec)
    s_local <- length(abund_vec)
    n <- sum(abund_vec)
-   
+
    if(oneRangeForAll)	{	# converting xrange and yrange from vectors to data.frames
       xrange <- data.frame(matrix(xrange, s_local, 2, byrow=TRUE))
       yrange <- data.frame(matrix(yrange, s_local, 2, byrow=TRUE))
    }
-   
+
    xext <- xrange[,2] - xrange[,1]
    yext <- yrange[,2] - yrange[,1]
    max_dim <- ifelse(xext >= yext, xext, yext)
-   
-   
-   
-   
+
+
+
+
    # if (length(sigma) == 2){
    #    # linear relationship between sigma and log(relabund)
    #    # sigma = a1 + b1 * log(relabund)
@@ -774,19 +776,19 @@ sim_thomas_coords <- function(abund_vec,
    #    a1 <- sigma[2] - b1*max(log_relabund)
    #    sigma_vec <- a1 + b1*log_relabund
    # }
-   
+
    if (length(sigma) == s_local){
       sigma_vec <- sigma
    } else {
       sigma_vec <- rep(sigma[1], times = s_local)
    }
-   
+
    method <- "default"
    if(any(!is.na(xmother)) | any(!is.na(ymother))) {
       method <- "coordinates_for_mother_points"
       stopifnot(length(xmother) == length(ymother))
       #stopifnot(all(!is.na(unlist(xmother)) & !is.na(unlist(ymother))))	# error message is not meaningful
-      
+
       # if(length(xmother) == 1 & length(ymother) == 1){
       # x_mother <- rep(xmother, n)
       # y_mother <- rep(ymother, n)
@@ -796,12 +798,12 @@ sim_thomas_coords <- function(abund_vec,
       # y_mother <- rep(ymother, times=abund_vec)
       # }
       #xmother <- rep(xmother, s_local)
-      #ymother <- rep(ymother, s_local)		
+      #ymother <- rep(ymother, s_local)
       mother_points <- sapply(xmother, function(x) ifelse(any(is.na(x)), 0, length(x)))
       n_mothers <- mother_points
-      
+
    }
-   
+
    # determine the number of points per cluster and the number of mother points
    if(method == 'default'){
       if (all(!is.na(mother_points))){
@@ -812,16 +814,16 @@ sim_thomas_coords <- function(abund_vec,
             n_mothers <- rep(mother_points[1], s_local)
          }
       } else {
-         
+
          if (all(!is.na(cluster_points))){
             method <- "cluster_points"
             if (length(cluster_points) == s_local)
                cluster_points <- cluster_points
             else
                cluster_points <- rep(cluster_points[1], s_local)
-            
+
             lambda_mother <- abund_vec / cluster_points
-            
+
          } else {
             lambda_mother <- cluster_points <- sqrt(abund_vec)
          }
@@ -829,22 +831,22 @@ sim_thomas_coords <- function(abund_vec,
          n_mothers <- ceiling(lambda_mother)
       }
    }
-   
-   
+
+
    x <- numeric(n)
    y <- numeric(n)
    spec_id <- factor(rep(names(abund_vec), times = abund_vec))
-   
+
    # All species with random distributions are dealt with first, together, if they have the same range. Random distribution if sigma is high, only one individual or 0 mother point/0 point per cluster
    if(oneRangeForAll)   {
       directToRunif <- ifelse(sigma_vec > 2*max_dim | n_mothers == 0 | abund_vec == 1, TRUE, FALSE)
-      
+
       x[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), xrange[1,1], xrange[1,2])
       y[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), yrange[1,1], yrange[1,2])
    } else {
       directToRunif <- logical(s_local)
    }
-   
+
    if (s_local == 1 & !directToRunif[1]){   # create map for first species only
       dat1 <- rThomas_rcpp(n_points=abund_vec[1],
                            n_mother_points = n_mothers[1],
@@ -852,16 +854,16 @@ sim_thomas_coords <- function(abund_vec,
                            xmin = xrange[1,1], xmax = xrange[1,2],
                            ymin = yrange[1,1], ymax = yrange[1,2],
                            xmother = xmother[[1]], ymother = ymother[[1]])
-      
+
       firstSpeciesRange <- 1:cum_abund[1]
       x[firstSpeciesRange] <- dat1[,"x"]
       y[firstSpeciesRange] <- dat1[,"y"]
-      
-      
+
+
    } else {
-      
+
       for (ispec in which(!directToRunif)){
-         
+
          # if (sigma_vec[ispec] < 2 * max_dim[ispec]){# & n_mothers[ispec] != 0){
          if(method=="coordinates_for_mother_points") {
             xmother_spec <- xmother[[ispec]]
@@ -883,13 +885,13 @@ sim_thomas_coords <- function(abund_vec,
          #    y1 <- stats::runif(abund_vec[ispec], yrange[ispec, 1], yrange[ispec, 2])
          #    dat1 <- data.frame(x = x1, y = y1)
          # }
-         
+
          irange <- ifelse(ispec == 1, 1, cum_abund[ispec-1] + 1):cum_abund[ispec]
          x[irange] <- dat1[,"x"]
          y[irange] <- dat1[,"y"]
       }
    }
-   
+
    sim_dat1 <- community(x, y, spec_id, xrange, yrange)
    return(sim_dat1)
 }
@@ -915,6 +917,15 @@ sim_thomas_coords <- function(abund_vec,
 #'
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
+#' @param xmother List of length equal to the number of species. Each list element
+#' is a vector of x coordinates for every mother points. If one element is NA, the
+#' the corresponding species is not clustered.
+#'
+#' @param ymother List of length equal to the number of species. Each list element
+#' is a vector of y coordinates for every mother points. If one element is NA, the
+#' the corresponding species is not clustered.
+#'
+#' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
 #'
 #' @details See the documentations of \code{\link{sim_sad}} and
 #'  \code{\link{sim_thomas_coords}} for details.

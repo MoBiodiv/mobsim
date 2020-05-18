@@ -48,6 +48,8 @@ species in the simulated local community? (logical)}
 
 \item{drop_zeros}{Should the function remove species with abundance zero
 from the output? (logical)}
+
+\item{seed}{Integer. Any integer passed to \code(set.seed) for reproducibility.}
 }
 \value{
 Object of class \code{sad}, which contains a named integer vector
