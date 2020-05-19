@@ -10,11 +10,11 @@
 #'
 #' @param sad_type Root name of the species abundance distribution model of the
 #'   species pool (character) - e.g., "lnorm" for the lognormal distribution
-#'   (\code{\link[stats]{rlnorm}}); "geom" for the geometric distribution
-#'   (\code{\link[stats]{rgeom}}), or "ls" for Fisher's log-series distribution
-#'   (\code{\link[sads]{rls}}).
+#'   (\code{\link[stats:lognormal]{stats::rlnorm}}); "geom" for the geometric distribution
+#'   (\code{\link[stats:Geometric]{stats::rgeom}}), or "ls" for Fisher's log-series distribution
+#'   (\code{\link[sads:dls]{sads::rls}}).
 #'
-#'   See the table in \strong{Details} below, or \code{\link[sads]{rsad}}
+#'   See the table in \strong{Details} below, or \code{\link[sads:rsad]{sads::rsad}}
 #'   for all SAD model options.
 #'
 #' @param sad_coef List with named arguments to be passed to the distribution
@@ -40,11 +40,11 @@
 #' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
 #'
 #' @details The function \code{sim_sad} was built using code of the function
-#'   \code{\link[sads]{rsad}} from the R package \code{\link{sads}}. However, in
-#'   contrast to \code{\link[sads]{rsad}}, the function \code{sim_sad} allows to
+#'   \code{\link[sads:rsad]{sads::rsad}} from the R package \code{\link{sads}}. However, in
+#'   contrast to \code{\link[sads:rsad]{sads::rsad}}, the function \code{sim_sad} allows to
 #'   define the number of individuals in the simulated local community. This is
 #'   implemented by converting the abundance distribution simulated based on
-#'   \code{\link[sads]{rsad}} into a relative abundance distribution. This
+#'   \code{\link[sads:rsad]{sads::rsad}} into a relative abundance distribution. This
 #'   relative abundance distribution is considered as the species pool for the
 #'   local community. In a second step the required no. of individuals \code{(n_sim)}
 #'   is sampled (with replacement) from this relative abundance distribution.
@@ -69,18 +69,18 @@
 #'
 #' \tabular{lllll}{
 #'    \strong{SAD function} \tab \strong{Distribution name} \tab \strong{coef #1} \tab \strong{coef #2} \tab \strong{coef #3} \cr
-#'    \code{\link[sads]{rbs}} \tab Mac-Arthur's brokenstick \tab N \tab S \tab \cr
-#'    \code{\link[stats]{rgamma}} \tab Gamma distribution \tab shape \tab rate \tab scale \cr
-#'    \code{\link[stats]{rgeom}} \tab Geometric distribution \tab prob \tab \tab \cr
-#'    \code{\link[stats]{rlnorm}} \tab	Log-normal distributions \tab	meanlog \tab sdlog \tab cv_abund \cr
-#'    \code{\link[sads]{rls}} \tab Fisher's log-series distribution \tab N \tab alpha \tab \cr
-#'    \code{\link[sads]{rmzsm}} \tab Metacommunity zero-sum multinomial \tab J \tab theta \tab \cr
-#'    \code{\link[stats]{rnbinom}} \tab Negative binomial distribution \tab size \tab	prob \tab mu \cr
-#'    \code{\link[sads]{rpareto}} \tab Pareto distribution \tab shape \tab scale \tab \cr
-#'    \code{\link[sads]{rpoilog}} \tab Poisson-lognormal distribution \tab	mu	 \tab sigma \tab cv_abund \cr
-#'    \code{\link[sads]{rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
-#'    \code{\link[sads]{rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
-#'    \code{\link[stats]{rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
+#'    \code{\link[sads:dbs]{sads::rbs}} \tab Mac-Arthur's brokenstick \tab N \tab S \tab \cr
+#'    \code{\link[stats:GammaDist]{stats:rgamma}} \tab Gamma distribution \tab shape \tab rate \tab scale \cr
+#'    \code{\link[stats:Geometric]{stats::rgeom}} \tab Geometric distribution \tab prob \tab \tab \cr
+#'    \code{\link[stats:lognormal]{stats::rlnorm}} \tab	Log-normal distributions \tab	meanlog \tab sdlog \tab cv_abund \cr
+#'    \code{\link[sads:dls]{sads::rls}} \tab Fisher's log-series distribution \tab N \tab alpha \tab \cr
+#'    \code{\link[sads:dmzsm]{sads::rmzsm}} \tab Metacommunity zero-sum multinomial \tab J \tab theta \tab \cr
+#'    \code{\link[stats:Binomial]{stats::rnbinom}} \tab Negative binomial distribution \tab size \tab	prob \tab mu \cr
+#'    \code{\link[sads:dpareto]{sads::rpareto}} \tab Pareto distribution \tab shape \tab scale \tab \cr
+#'    \code{\link[sads:dpoilog]{sads::rpoilog}} \tab Poisson-lognormal distribution \tab	mu	 \tab sigma \tab cv_abund \cr
+#'    \code{\link[sads:dpower]{sads::rpower}} \tab Power discrete distributions \tab s \tab \tab \cr
+#'    \code{\link[sads:dpowbend]{sads::rpowbend}} \tab Puyeo's Power-bend discrete distribution \tab s \tab omega \tab \cr
+#'    \code{\link[stats:Weibull]{stats::rweibull}} \tab Weibull distribution \tab shape \tab scale \tab \cr
 #'}
 #'
 #'
@@ -273,7 +273,7 @@ summary.sad <- function(object, ...)
 #'
 #' @param x Vector with species abundances (integer vector)
 #'
-#' @param ... Additional graphical parameters used in \code{\link[graphics]{plot}}
+#' @param ... Additional graphical parameters used in \code{\link[graphics:plot.default]{graphics::plot}}
 #' or \code{\link[graphics]{barplot}}
 #'
 #' @param method Plotting method, partial match to \code{"octave"} or \code{"rank"}
@@ -421,7 +421,7 @@ summary.community <- function(object, digits=2, ...)	# digits should be passed t
 #' @param x Community object
 #' @param col Colour vector to mark species identities
 #' @param pch Plotting character to mark species identities. pch 16 is advised for large datasets
-#' @param ... Other parameters to \link[graphics]{plot}
+#' @param ... Other parameters to \code{\link[graphics:plot.default]{graphics::plot}}
 #'
 #' @examples
 #' sim1 <- sim_thomas_community(30, 500)
@@ -569,7 +569,7 @@ sim_poisson_community <- function(s_pool,
 #' When \code{sigma} of any species is more than twice as large as the largest
 #' plot dimension, a random Poisson distribution is simulated, which is more
 #' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
-#' to the \code{scale} parameter of the function \code{rThomas} in the package
+#' to the \code{scale} parameter of the function \\code{\link[spatstat:rThomas]{spatstat::rThomas}} in the package
 #' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
 #'
 #'
@@ -601,7 +601,7 @@ sim_poisson_community <- function(s_pool,
 #' If \code{mother_points}=0, there will be no clustering even if \code{cluster_points}=400 (high clustering) because
 #' \code{cluster_points} is overridden.
 #' The parameter \code{cluster_points} corresponds to the
-#' \code{mu} parameter of \code{spatstat::rThomas}.
+#' \code{mu} parameter of \code{\link[spatstat:rThomas]{spatstat::rThomas}}.
 #'
 #' @param xrange Extent of the community in x-direction. If this a numeric vector
 #' of length 2, all species share the same range. To specify different x ranges for
@@ -645,7 +645,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @author Felix May, Alban Sagouis
 #'
-#' @seealso \code{\link[spatstat]{rThomas}}
+#' @seealso \code{\link[spatstat:rThomas]{spatstat::rThomas}}
 #'
 #' @examples
 #'

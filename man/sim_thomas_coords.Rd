@@ -26,7 +26,7 @@ is recycled and all species share the same cluster extent.
 When \code{sigma} of any species is more than twice as large as the largest
 plot dimension, a random Poisson distribution is simulated, which is more
 efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
-to the \code{scale} parameter of the function \code{rThomas} in the package
+to the \code{scale} parameter of the function \\code{\link[spatstat:rThomas]{spatstat::rThomas}} in the package
 \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.}
 
 \item{mother_points}{Number of mother points (= cluster centres).
@@ -57,7 +57,7 @@ number of points per cluster is determined from the abundance and from
 If \code{mother_points}=0, there will be no clustering even if \code{cluster_points}=400 (high clustering) because
 \code{cluster_points} is overridden.
 The parameter \code{cluster_points} corresponds to the
-\code{mu} parameter of \code{spatstat::rThomas}.}
+\code{mu} parameter of \code{\link[spatstat:rThomas]{spatstat::rThomas}}.}
 
 \item{xrange}{Extent of the community in x-direction. If this a numeric vector
 of length 2, all species share the same range. To specify different x ranges for
@@ -147,7 +147,7 @@ Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 CRC Press
 }
 \seealso{
-\code{\link[spatstat]{rThomas}}
+\code{\link[spatstat:rThomas]{spatstat::rThomas}}
 }
 \author{
 Felix May, Alban Sagouis

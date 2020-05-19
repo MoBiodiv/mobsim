@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{Community object}
 
-\item{...}{Other parameters to \link[graphics]{plot}}
+\item{...}{Other parameters to \code{\link[graphics:plot.default]{graphics::plot}}}
 
 \item{col}{Colour vector to mark species identities}
 

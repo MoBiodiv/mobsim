@@ -27,11 +27,11 @@ sim_thomas_community(
 
 \item{sad_type}{Root name of the species abundance distribution model of the
   species pool (character) - e.g., "lnorm" for the lognormal distribution
-  (\code{\link[stats]{rlnorm}}); "geom" for the geometric distribution
-  (\code{\link[stats]{rgeom}}), or "ls" for Fisher's log-series distribution
-  (\code{\link[sads]{rls}}).
+  (\code{\link[stats:lognormal]{stats::rlnorm}}); "geom" for the geometric distribution
+  (\code{\link[stats:Geometric]{stats::rgeom}}), or "ls" for Fisher's log-series distribution
+  (\code{\link[sads:dls]{sads::rls}}).
 
-  See the table in \strong{Details} below, or \code{\link[sads]{rsad}}
+  See the table in \strong{Details} below, or \code{\link[sads:rsad]{sads::rsad}}
   for all SAD model options.}
 
 \item{sad_coef}{List with named arguments to be passed to the distribution

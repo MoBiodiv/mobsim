@@ -10,7 +10,7 @@ Plot diversity-area relationships}
 \arguments{
 \item{x}{Dataframe generated function \code{\link{divar}}.}
 
-\item{...}{Additional graphical parameters used in \code{\link[graphics]{plot}}.}
+\item{...}{Additional graphical parameters used in \code{\link[graphics:plot.default]{graphics::plot}}.}
 }
 \description{
 -----------------------------------------------------------------------------
