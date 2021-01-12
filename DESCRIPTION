@@ -1,9 +1,8 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.1.0.9004
-Authors@R: 2020-05-18
-Date: 2017-11-02
+Version: 0.1.0.9006
+Date: 2020-05-18
 Description: Tools for the simulation, analysis and sampling of spatial biodiversity data (May
           et al. 2017) <doi:10.1101/209502>. In the simulation tools user define the numbers
           of species and individuals, the species abundance distribution and species
@@ -15,7 +14,7 @@ Imports: Rcpp, vegan, sads (>= 0.4.1), grDevices, utils, graphics, stats
 LinkingTo: Rcpp
 Suggests: rmarkdown, spatstat, testthat, knitr
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 URL: http://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim
 NeedsCompilation: yes
