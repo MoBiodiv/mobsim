@@ -18,7 +18,7 @@
 #' in x-direction (the distance between the left sides is measured)
 #' @param delta_y Distance between consecutive quadrats in transect and grid sampling
 #' in y-direction (the distance between the lower sides is measured)
-#' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
+#' @param seed Integer. Any integer passed to \code{set.seed} for reproducibility.
 #'
 #' @return  A list with two items, \code{spec_dat} and \code{xy_dat}.
 #' \code{spec_dat} is a data.frame with sampling quadrats in rows and species abundances

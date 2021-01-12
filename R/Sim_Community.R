@@ -37,7 +37,7 @@
 #' @param drop_zeros Should the function remove species with abundance zero
 #'    from the output? (logical)
 #'
-#' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
+#' @param seed Integer. Any integer passed to \code{set.seed} for reproducibility.
 #'
 #' @details The function \code{sim_sad} was built using code of the function
 #'   \code{\link[sads:rsad]{sads::rsad}} from the R package \code{\link{sads}}. However, in
@@ -925,7 +925,7 @@ sim_thomas_coords <- function(abund_vec,
 #' is a vector of y coordinates for every mother points. If one element is NA, the
 #' the corresponding species is not clustered.
 #'
-#' @param seed Integer. Any integer passed to \code(set.seed) for reproducibility.
+#' @param seed Integer. Any integer passed to \code{set.seed} for reproducibility.
 #'
 #' @details See the documentations of \code{\link{sim_sad}} and
 #'  \code{\link{sim_thomas_coords}} for details.
