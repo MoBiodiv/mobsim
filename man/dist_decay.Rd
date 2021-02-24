@@ -4,8 +4,13 @@
 \alias{dist_decay}
 \title{Distance decay of similarity}
 \usage{
-dist_decay(comm, prop_area = 0.005, n_samples = 20, method = "bray",
-  binary = F)
+dist_decay(
+  comm,
+  prop_area = 0.005,
+  n_samples = 20,
+  method = "bray",
+  binary = F
+)
 }
 \arguments{
 \item{comm}{\code{\link{community}} object}

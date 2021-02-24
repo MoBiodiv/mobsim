@@ -3,7 +3,7 @@ Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
 Version: 0.1.0
 Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
-Date: 2017-11-02
+Date: 2021-02-24
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
@@ -25,10 +25,10 @@ LinkingTo:
     Rcpp
 Suggests:
     rmarkdown,
-    spatstat,
+    spatstat.geom, spatstat.core, spatstat (>= 2.0-0),
     testthat,
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
 URL: http://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim

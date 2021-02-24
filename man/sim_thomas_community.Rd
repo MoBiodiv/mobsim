@@ -4,10 +4,18 @@
 \alias{sim_thomas_community}
 \title{Simulate community with clumped spatial positions.}
 \usage{
-sim_thomas_community(s_pool, n_sim, sad_type = "lnorm",
-  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE, sigma = 0.02,
-  cluster_points = NA, mother_points = NA, xrange = c(0, 1),
-  yrange = c(0, 1))
+sim_thomas_community(
+  s_pool,
+  n_sim,
+  sad_type = "lnorm",
+  sad_coef = list(cv_abund = 1),
+  fix_s_sim = FALSE,
+  sigma = 0.02,
+  cluster_points = NA,
+  mother_points = NA,
+  xrange = c(0, 1),
+  yrange = c(0, 1)
+)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}

@@ -4,9 +4,18 @@
 \alias{sample_quadrats}
 \title{Plot-based samples from a spatially-explicit census}
 \usage{
-sample_quadrats(comm, n_quadrats = 20, quadrat_area = 0.01, plot = TRUE,
-  method = "random", avoid_overlap = F, x0 = 0, y0 = 0, delta_x = 0.1,
-  delta_y = 0.1)
+sample_quadrats(
+  comm,
+  n_quadrats = 20,
+  quadrat_area = 0.01,
+  plot = TRUE,
+  method = "random",
+  avoid_overlap = F,
+  x0 = 0,
+  y0 = 0,
+  delta_x = 0.1,
+  delta_y = 0.1
+)
 }
 \arguments{
 \item{comm}{Community object from which the samples are generated}

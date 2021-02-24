@@ -4,9 +4,15 @@
 \alias{sim_sad}
 \title{Simulate species abundance distributions}
 \usage{
-sim_sad(s_pool, n_sim, sad_type = c("lnorm", "bs", "gamma", "geom", "ls",
-  "mzsm", "nbinom", "pareto", "poilog", "power", "powbend", "weibull"),
-  sad_coef = list(cv_abund = 1), fix_s_sim = FALSE, drop_zeros = TRUE)
+sim_sad(
+  s_pool,
+  n_sim,
+  sad_type = c("lnorm", "bs", "gamma", "geom", "ls", "mzsm", "nbinom", "pareto",
+    "poilog", "power", "powbend", "weibull"),
+  sad_coef = list(cv_abund = 1),
+  fix_s_sim = FALSE,
+  drop_zeros = TRUE
+)
 }
 \arguments{
 \item{s_pool}{Number of species in the pool (integer)}

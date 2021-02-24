@@ -4,8 +4,14 @@
 \alias{sim_thomas_coords}
 \title{Simulate clumped spatial coordinates}
 \usage{
-sim_thomas_coords(abund_vec, sigma = 0.02, mother_points = NA,
-  cluster_points = NA, xrange = c(0, 1), yrange = c(0, 1))
+sim_thomas_coords(
+  abund_vec,
+  sigma = 0.02,
+  mother_points = NA,
+  cluster_points = NA,
+  xrange = c(0, 1),
+  yrange = c(0, 1)
+)
 }
 \arguments{
 \item{abund_vec}{Species abundance vector (integer)}
@@ -36,7 +42,7 @@ If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
 number of points per cluster is determined from the abundance and from
 \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
-\code{mu} parameter of \code{spatstat::rThomas}.}
+\code{mu} parameter of \code{spatstat.core::rThomas}.}
 
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
@@ -102,7 +108,7 @@ Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 CRC Press
 }
 \seealso{
-\code{\link[spatstat]{rThomas}}
+\code{\link[spatstat.core]{rThomas}}
 }
 \author{
 Felix May
