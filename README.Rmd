@@ -13,11 +13,11 @@ knitr::opts_chunk$set(
 ```
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](http://cran.rstudio.com/web/packages/mobsim/index.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
 
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
@@ -31,7 +31,7 @@ The goal of the package `mobsim` is to facilitate understanding of scale-depende
 The package includes functions to simulate species distributions in space with controlled abundance distributions as well as controlled intraspecific aggregation. For analysis there are functions for species rarefaction and accumulation curves, species-area relationships,  endemics-area relationships and th distance-decay of community similarity.
 
 A detailed introduction of the package is available at 
-[bioRxiv](https://www.biorxiv.org/content/early/2017/10/26/209502).
+[bioRxiv](https://www.biorxiv.org/content/10.1101/209502v1).
 
 ## Installation
 
