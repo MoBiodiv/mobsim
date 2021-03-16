@@ -1,7 +1,7 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
 Date: 2021-02-24
 Description: Tools for the simulation, analysis and sampling of spatial
@@ -11,7 +11,7 @@ Description: Tools for the simulation, analysis and sampling of spatial
     aggregation. Functions for analysis include species rarefaction 
     and accumulation curves, species-area relationships and the distance
     decay of similarity. 
-License: GPL-3
+License: GPL (>= 3)
 LazyData: TRUE
 Imports:
     Rcpp,

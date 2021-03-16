@@ -21,6 +21,9 @@ knitr::opts_chunk$set(
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
+[![R-CMD-check](https://github.com/MoBiodiv/mobsim/workflows/R-CMD-check/badge.svg)](https://github.com/MoBiodiv/mobsim/actions)
+
+
 ## Overview
 
 The goal of the package `mobsim` is to facilitate understanding of scale-dependent biodiversity changes.
