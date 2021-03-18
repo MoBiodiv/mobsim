@@ -2,29 +2,22 @@
 
 This is a resubmission. In this version I have:
 
-* Formatted the reference according to the suggestions of Uwe Ligges and changed from 
-a reference using the bioRXiv labe to the DOI
-
-* Included a reference to the paper describing the package in the DESCRIPTION file, see
-[](https://www.biorxiv.org/content/early/2017/10/26/209502), as suggested by the CRAN team
-member Swetlana Herbrandt
-
-* Fixed small typos in the vignettes and documentation
+* Adjusted the package to spatstat 2.0 by following the advice of the spatstat developers
 
 ## Test environments
-* local ubuntu 16.04 LTS, R 3.4.2
-* win-builder (devel and release)
+* windows-latest (release), R version 4.0.4 (2021-02-15) 
+* macOS-latest (release), R version 4.0.4 (2021-02-15) 
+* ubuntu-20.04 (release), R version 4.0.4 (2021-02-15)
+* ubuntu-20.04 (devel), R Under development (unstable) (2021-03-16 r80091) 
+
+All tested on GitHub via GitHub actions
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+(on all three test environments)
 
-There was 1 NOTE:
 
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Felix May <felix.may@posteo.de>’
-
-It seems this is normal for the first submission of a package
 
 ## Downstream dependencies
 
