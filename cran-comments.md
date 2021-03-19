@@ -19,10 +19,4 @@ All tested on GitHub via GitHub actions
 
 
 
-## Downstream dependencies
 
-I ran devtools::revdep_check() locally
-
-0 packages with problems
-
-No ERRORs or WARNINGs found :)

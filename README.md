@@ -77,7 +77,9 @@ plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](inst/image/README-unnamed-chunk-4-1.png)
+![](README-unnamed-chunk-5-1.png)<!-- -->
+
+<!--![](inst/image/README-unnamed-chunk-4-1.png)-->
 
 ### Analysis of spatially-explicit community data
 
@@ -98,7 +100,9 @@ lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](inst/image/README-unnamed-chunk-6-1.png)
+![](README-unnamed-chunk-7-1.png)<!-- -->
+
+<!-- ![](inst/image/README-unnamed-chunk-6-1.png) -->
 
 ### Sampling of communities
 
@@ -112,4 +116,6 @@ samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](inst/image/README-unnamed-chunk-7-1.png)
+![](README-unnamed-chunk-8-1.png)<!-- -->
+
+<!-- ![](inst/image/README-unnamed-chunk-7-1.png)-->
