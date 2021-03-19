@@ -1,22 +1,35 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim) [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](http://cran.rstudio.com/web/packages/mobsim/index.html)
 
-[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
+
+[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
-Overview
---------
+[![R-CMD-check](https://github.com/MoBiodiv/mobsim/workflows/R-CMD-check/badge.svg)](https://github.com/MoBiodiv/mobsim/actions)
 
-The goal of the package `mobsim` is to facilitate understanding of scale-dependent biodiversity changes.
+## Overview
 
-The package includes functions to simulate species distributions in space with controlled abundance distributions as well as controlled intraspecific aggregation. For analysis there are functions for species rarefaction and accumulation curves, species-area relationships, endemics-area relationships and th distance-decay of community similarity.
+The goal of the package `mobsim` is to facilitate understanding of
+scale-dependent biodiversity changes.
 
-A detailed introduction of the package is available at [bioRxiv](https://www.biorxiv.org/content/early/2017/10/26/209502).
+The package includes functions to simulate species distributions in
+space with controlled abundance distributions as well as controlled
+intraspecific aggregation. For analysis there are functions for species
+rarefaction and accumulation curves, species-area relationships,
+endemics-area relationships and th distance-decay of community
+similarity.
 
-Installation
-------------
+A detailed introduction of the package is available at
+[bioRxiv](https://www.biorxiv.org/content/10.1101/209502v1).
+
+## Installation
 
 ``` r
 # The easiest way to get mobsim is to install from CRAN:
@@ -27,10 +40,10 @@ install.packages("mobsim")
 devtools::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
 ```
 
-Please enter bug reports on [github](https://github.com/MoBiodiv/mobsim/issues).
+Please enter bug reports on
+[github](https://github.com/MoBiodiv/mobsim/issues).
 
-Getting help
-------------
+## Getting help
 
 You can get an overview of the available functions in `mobsim`:
 
@@ -44,10 +57,11 @@ Or have a look at tutorials in the vignette:
 browseVignettes("mobsim")
 ```
 
-Examples
---------
+## Examples
 
-Here is an example of how to simulate two communities, which just differ in their spatial aggregation of species, but have the same species abundance distribution and the same total number of individuals.
+Here is an example of how to simulate two communities, which just differ
+in their spatial aggregation of species, but have the same species
+abundance distribution and the same total number of individuals.
 
 ### Simulation of communities
 
@@ -67,7 +81,9 @@ plot(comm_agg)
 
 ### Analysis of spatially-explicit community data
 
-`mobsim` mobsim offer functions to analyse spatially-explicit community data. For example the species-area relationship of a community can be easily evaluated.
+`mobsim` mobsim offer functions to analyse spatially-explicit community
+data. For example the species-area relationship of a community can be
+easily evaluated.
 
 ``` r
 sar_rand <- divar(comm_rand)
@@ -86,7 +102,9 @@ legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 
 ### Sampling of communities
 
-Simulated or observed communities can be also sampled inorder to test whether biodiversity changes are correctly detected and revealed by any sampling design.
+Simulated or observed communities can be also sampled inorder to test
+whether biodiversity changes are correctly detected and revealed by any
+sampling design.
 
 ``` r
 par(mfrow = c(1,2))

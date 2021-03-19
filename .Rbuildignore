@@ -5,3 +5,7 @@ cran-comments.md
 ^README\.Rmd$
 ^README-.*\.png$
 ^NEWS\.md$
+^LICENSE\.md$
+^examples$
+^\.travis\.yml$
+^\.github$
