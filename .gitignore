@@ -7,5 +7,4 @@ mobsim.Rproj
 .Rhistory
 revdep/
 .Rproj.user
-.png
-
+*.png
