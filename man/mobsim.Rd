@@ -37,6 +37,8 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{sim_poisson_community}}
 
 \code{\link{sim_thomas_community}}
+
+\code{\link{rThomas_rcpp}}
 }
 
 \section{Functions to analyse species abundances and distributions}{
@@ -61,6 +63,8 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{divar}}
 
 \code{\link{dist_decay}}
+
+\code{\link{dist_decay_quadrats}}
 
 \code{\link{sample_quadrats}}
 }

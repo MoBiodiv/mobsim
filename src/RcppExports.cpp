@@ -37,3 +37,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_mobsim_sSAC1_C", (DL_FUNC) &_mobsim_sSAC1_C, 3},
+    {"_mobsim_rThomas_rcpp", (DL_FUNC) &_mobsim_rThomas_rcpp, 9},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_mobsim(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
