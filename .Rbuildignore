@@ -8,3 +8,4 @@ cran-comments.md
 ^examples$
 ^\.travis\.yml$
 ^\.github$
+^CRAN-RELEASE$
