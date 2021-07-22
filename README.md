@@ -79,8 +79,6 @@ plot(comm_agg)
 
 ![](README-unnamed-chunk-5-1.png)<!-- -->
 
-<!--![](inst/image/README-unnamed-chunk-4-1.png)-->
-
 ### Analysis of spatially-explicit community data
 
 `mobsim` mobsim offer functions to analyse spatially-explicit community
@@ -102,8 +100,6 @@ legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 
 ![](README-unnamed-chunk-7-1.png)<!-- -->
 
-<!-- ![](inst/image/README-unnamed-chunk-6-1.png) -->
-
 ### Sampling of communities
 
 Simulated or observed communities can be also sampled inorder to test
@@ -117,7 +113,3 @@ samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
 ![](README-unnamed-chunk-8-1.png)<!-- -->
-
-<!-- ![](inst/image/README-unnamed-chunk-7-1.png)-->
-
-This is just a test
