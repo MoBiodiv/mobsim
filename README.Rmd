@@ -117,5 +117,7 @@ samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 
 <!-- ![](inst/image/README-unnamed-chunk-7-1.png)-->
 
+This is just a test
+
 
 
