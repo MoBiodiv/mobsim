@@ -727,10 +727,10 @@ sim_thomas_coords <- function(abund_vec,
       if (length(xmother) > 1 & length(ymother) > 1) if (any(c(unlist(xmother) < xrange[1], unlist(xmother) > xrange[2],
             unlist(ymother) < yrange[1], unlist(ymother) > yrange[2]), na.rm = TRUE)) stop("xmother or ymother coordinates outside of range.")
    } else {
-      if(class(xrange) != class(yrange)) stop("xrange and yrange have to objects of the same class.")
+      if(class(xrange) != class(yrange)) stop("xrange and yrange have to be objects of the same class.")
       if(
          nrow(xrange) != length(abund_vec) | nrow(yrange) != length(abund_vec) |
-         ncol(xrange) != 2 | ncol(yrange != 2)
+         ncol(xrange) != 2 | ncol(yrange) != 2
       ) stop("Expected dimensions for xrange and yrange are nrow = length(abund_vec), ncol=2.")
       if(any(c(
             sapply(1:length(xmother), function(i) xmother[[i]] < xrange[i, 1] |
