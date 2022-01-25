@@ -558,7 +558,7 @@ sim_poisson_community <- function(s_pool,
 #' plot dimension, a random Poisson distribution is simulated, which is more
 #' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
 #' to the \code{scale} parameter of the function \code{rThomas} in the package
-#' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
+#' \href{https://CRAN.R-project.org/package=spatstat.random}{spatstat.random}.
 #'
 #'
 #' @param mother_points Number of mother points (= cluster centres).
@@ -576,7 +576,7 @@ sim_poisson_community <- function(s_pool,
 #' a specific mean number of points per cluster.  If no value is provided, the
 #' number of points per cluster is determined from the abundance and from
 #' \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
-#' \code{mu} parameter of \code{spatstat.core::rThomas}.
+#' \code{mu} parameter of \code{spatstat.random::rThomas}.
 #'
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
@@ -616,7 +616,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @author Felix May
 #'
-#' @seealso \code{\link[spatstat.core]{rThomas}}
+#' @seealso \code{\link[spatstat.random]{rThomas}}
 #'
 #' @examples
 #'

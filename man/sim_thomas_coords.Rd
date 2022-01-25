@@ -25,7 +25,7 @@ When \code{sigma} of any species is more than twice as large as the largest
 plot dimension, a random Poisson distribution is simulated, which is more
 efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
 to the \code{scale} parameter of the function \code{rThomas} in the package
-\href{https://CRAN.R-project.org/package=spatstat}{spatstat}.}
+\href{https://CRAN.R-project.org/package=spatstat.random}{spatstat.random}.}
 
 \item{mother_points}{Number of mother points (= cluster centres).
 If this is a single value, all species have the same number of clusters.
@@ -42,7 +42,7 @@ If this is a vector of the same length as \code{abund_vec}, each species has
 a specific mean number of points per cluster.  If no value is provided, the
 number of points per cluster is determined from the abundance and from
 \code{mother_points}.  The parameter \code{cluster_points} corresponds to the
-\code{mu} parameter of \code{spatstat.core::rThomas}.}
+\code{mu} parameter of \code{spatstat.random::rThomas}.}
 
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
@@ -108,7 +108,7 @@ Wiegand and Moloney 2014. Handbook of Spatial Point-Pattern Analysis in Ecology.
 CRC Press
 }
 \seealso{
-\code{\link[spatstat.core]{rThomas}}
+\code{\link[spatstat.random]{rThomas}}
 }
 \author{
 Felix May

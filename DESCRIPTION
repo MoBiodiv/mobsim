@@ -25,7 +25,7 @@ LinkingTo:
     Rcpp
 Suggests:
     rmarkdown,
-    spatstat.geom, spatstat.core, spatstat (>= 2.0-0),
+    spatstat.geom, spatstat.random,
     testthat,
     knitr
 VignetteBuilder: knitr
