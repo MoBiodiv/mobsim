@@ -570,8 +570,8 @@ sim_poisson_community <- function(s_pool,
 #' When \code{sigma} of any species is more than twice as large as the largest
 #' plot dimension, a random Poisson distribution is simulated, which is more
 #' efficient than a Thomas cluster process. The parameter \code{sigma} corresponds
-#' to the \code{scale} parameter of the function \code{\link[spatstat.core]{rThomas}} in the package
-#' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
+#' to the \code{scale} parameter of the function \code{\link[spatstat.random]{rThomas}} in the package
+#' \href{https://CRAN.R-project.org/package=spatstat.random}{spatstat.random}.
 #'
 #'
 #' @param mother_points Number of mother points (= cluster centres).
@@ -602,7 +602,7 @@ sim_poisson_community <- function(s_pool,
 #' If \code{mother_points}=0, there will be no clustering even if \code{cluster_points}=400 (high clustering) because
 #' \code{cluster_points} is overridden.
 #' The parameter \code{cluster_points} corresponds to the
-#' \code{mu} parameter of \code{spatstat.core::rThomas}.
+#' \code{mu} parameter of \code{spatstat.random::rThomas}.
 #'
 #' @param xrange Extent of the community in x-direction. If this a numeric vector
 #' of length 2, all species share the same range. To specify different x ranges for
@@ -614,7 +614,7 @@ sim_poisson_community <- function(s_pool,
 #' @details To generate a Thomas cluster process of a single species this
 #' function uses a C++ re-implementation of the function
 #' \code{rThomas} in the package
-#' \href{https://CRAN.R-project.org/package=spatstat}{spatstat}.
+#' \href{https://CRAN.R-project.org/package=spatstat.random}{spatstat.random}.
 #'
 #' There is an inherent link between the parameters \code{abund_vec},
 #' \code{mother_points}, and \code{cluster_points}. For every species the
@@ -646,7 +646,7 @@ sim_poisson_community <- function(s_pool,
 #'
 #' @author Felix May, Alban Sagouis
 #'
-#' @seealso \code{\link[spatstat.core]{rThomas}}
+#' @seealso \code{\link[spatstat.random]{rThomas}}
 #'
 #' @examples
 #'
