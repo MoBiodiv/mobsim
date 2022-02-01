@@ -127,10 +127,10 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
             ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
 
             if (xmin < comm$x_min_max[1] || xmax > comm$x_min_max[2])
-               stop ("x-extent of sampling desing is larger than landscape")
+               stop ("x-extent of sampling design is larger than landscape")
 
             if (ymin < comm$y_min_max[1] || ymax > comm$y_min_max[2])
-               stop ("y-extent of sampling desing is larger than landscape")
+               stop ("y-extent of sampling design is larger than landscape")
 
             xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
             ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
@@ -148,10 +148,10 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
             y1 <- seq(from = y0, by = delta_y, len = grid_dim)
 
             if (min(x1) < comm$x_min_max[1] || max(x1) > comm$x_min_max[2])
-               stop ("x-extent of sampling desing is larger than landscape")
+               stop ("x-extent of sampling design is larger than landscape")
 
             if (min(y1) < comm$y_min_max[1] || max(y1) > comm$y_min_max[2])
-               stop ("y-extent of sampling desing is larger than landscape")
+               stop ("y-extent of sampling design is larger than landscape")
 
             coords <- expand.grid(xpos = x1, ypos = y1)
 
