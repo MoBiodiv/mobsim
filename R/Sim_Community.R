@@ -160,12 +160,12 @@ sim_sad <- function(s_pool, n_sim,
   if (sad_type %in% c("bs", "ls", "mzsm")) {
     S <- switch(sad_type,
                 bs = sad_coef$S,
-                ls = sad_coef$alpha * log ( 1 + sad_coef$N / sad_coef$alpha ),
+                ls = sad_coef$alpha * log( 1 + sad_coef$N / sad_coef$alpha ),
                 mzsm = sum(sad_coef$theta / (1:sad_coef$J) *
                              (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1))
     )
     S <- round(S)
-    if (!is.null(s_pool)){
+    if (!is.null(s_pool)) {
       warning(paste("For the selected SAD model the value of s_pool is ignored.
   s_pool calculated from the SAD model coefficients is", S, "species."))
     }
@@ -176,11 +176,11 @@ sim_sad <- function(s_pool, n_sim,
     s_pool <- round(s_pool, digits = 0)
   }
 
-  if (s_pool > 1){
+  if (s_pool > 1) {
 
     #alternative parameterization for lnorm and poilog
     if ((sad_type == "lnorm" || sad_type == "poilog") &&
-        names(sad_coef)[1] == "cv_abund"){
+        names(sad_coef)[1] == "cv_abund") {
       mean_abund <- n_sim/s_pool
       sd_abund <-  mean_abund * sad_coef$cv_abund
       sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 + 1))
@@ -197,17 +197,17 @@ sim_sad <- function(s_pool, n_sim,
     }
 
     # Generates the "community"
-    if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")){
-      sadr <- utils::getFromNamespace(paste("r", sad_type, sep=""), ns = "stats")
+    if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")) {
+      sadr <- utils::getFromNamespace(paste("r", sad_type, sep = ""), ns = "stats")
     } else {
-      sadr <- utils::getFromNamespace(paste("r", sad_type, sep=""), ns = "sads")
+      sadr <- utils::getFromNamespace(paste("r", sad_type, sep = ""), ns = "sads")
     }
     abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
     # abund_pool <- abund_pool[abund_pool > 0]
     rel_abund_pool <- abund_pool/sum(abund_pool)
     rel_abund_pool <- sort(rel_abund_pool, decreasing = T)
-    names(rel_abund_pool) <- paste("species",seq_along(rel_abund_pool), sep="_")	# underslash addition for readability
+    names(rel_abund_pool) <- paste("species",seq_along(rel_abund_pool), sep = "_")	# underslash addition for readability
 
     sample_vec <- sample(x = names(rel_abund_pool),
                          size = n_sim, replace = TRUE,
@@ -217,13 +217,13 @@ sim_sad <- function(s_pool, n_sim,
     abund_local <- table(sample_vec)
 
     s_local <- sum(abund_local > 0)
-    if (fix_s_sim == TRUE & s_local < s_pool){
+    if (fix_s_sim == TRUE & s_local < s_pool) {
       s_diff <- s_pool - s_local
       abund_local[abund_local == 0] <- 1
       n <- sum(abund_local)
 
       #randomly remove individuals until target level is reached
-      while (n > n_sim){
+      while (n > n_sim) {
         rel_abund <- abund_local/sum(abund_local)
         # draw proportional to relative abundance
         irand <- sample(1:s_pool, size = 1, prob = rel_abund)
@@ -309,11 +309,11 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
   x <- x[x > 0]
 
   if (method == "rank")
-    graphics::plot(sort(as.numeric(x), decreasing = TRUE), type="b", log="y",
-                   xlab="Species rank", ylab="Species abundance",
+    graphics::plot(sort(as.numeric(x), decreasing = TRUE), type = "b", log = "y",
+                   xlab = "Species rank", ylab = "Species abundance",
                    main = "Rank-abundance curve", las = 1, ...)
 
-  if (method == "octave"){
+  if (method == "octave") {
 
     # code adopted from untb:preston()
     max_abund <- max(x)
@@ -332,7 +332,7 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
 
     graphics::barplot(height = as.numeric(abund_dist),
                       names.arg = names(abund_dist),
-                      xlab = "Abundance class", ylab ="No. of species",
+                      xlab = "Abundance class", ylab = "No. of species",
                       main = "Preston octave plot", las = 1, ...)
   }
 }
@@ -366,13 +366,14 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
 #'
 #' @export
 #'
+#'
 community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
   if (length(xrange) < 2 | length(yrange) < 2) stop("Error: missing ranges for x or y!")
 
-  if(is.vector(xrange) & is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
-    xrange <- data.frame(matrix(xrange, length(unique(spec_id)), 2, byrow=TRUE))
-    yrange <- data.frame(matrix(yrange, length(unique(spec_id)), 2, byrow=TRUE))
+  if (is.vector(xrange) & is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
+    xrange <- data.frame(matrix(xrange, length(unique(spec_id)), 2, byrow = TRUE))
+    yrange <- data.frame(matrix(yrange, length(unique(spec_id)), 2, byrow = TRUE))
   }
 
   if (min(x) < min(xrange[,1])) stop("Error: Inappropriate ranges for x!")
@@ -411,7 +412,7 @@ summary.community <- function(object, digits=2, ...)	# digits should be passed t
   cat("No. of species: ", length(unique(object$census$species)), "\n")
   cat("x-extent: ", object$x_min_max, "\n")
   cat("y-extent: ", object$y_min_max, "\n\n")
-  print(summary(object$census, digits=digits))
+  print(summary(object$census, digits = digits))
 }
 
 #' Plot spatial community object
@@ -954,7 +955,7 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  ymother=NA,
                                  xrange = c(0,1),
                                  yrange = c(0,1),
-                                 seed=NULL
+                                 seed = NULL
 )
 {
   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
@@ -968,8 +969,8 @@ sim_thomas_community <- function(s_pool, n_sim,
                                sigma = sigma,
                                mother_points = mother_points,
                                cluster_points = cluster_points,
-                               xmother=xmother,
-                               ymother=ymother,
+                               xmother = xmother,
+                               ymother = ymother,
                                xrange = xrange,
                                yrange = yrange)
 
