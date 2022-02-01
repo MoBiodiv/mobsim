@@ -706,15 +706,15 @@ sim_thomas_coords <- function(abund_vec,
   }
   if ((!is.na(cluster_points) & any(!is.na(mother_points))) | (!is.na(cluster_points) & any(!is.na(xmother)))) warning("Parametre cluster_points overidden by other parametre.")	# cluster_points is overridden if mother_points or xmother and ymother are given.
 
-  if ((length(mother_points) > 1 & any(is.na(mother_points))) | any(na.omit(mother_points) < 0 )) stop("If specified, mother_points should include only positive integers (or 0 for a random distribution).")
+  if ((length(mother_points) > 1 & any(is.na(mother_points))) | any(stats::na.omit(mother_points) < 0 )) stop("If specified, mother_points should include only positive integers (or 0 for a random distribution).")
 
   if (length(mother_points) != 1 & length(mother_points) != length(abund_vec)) stop("Length of mother_points should be either 1 or equal to the number of species.")
 
   # xmother ymother
   if (
-    length(na.omit(xmother)) != length(na.omit(ymother)) ||
-    (length(na.omit(xmother)) != 0L && length(xmother) != length(abund_vec)) ||
-    (length(na.omit(ymother)) != 0L && length(ymother) != length(abund_vec))
+    length(stats::na.omit(xmother)) != length(stats::na.omit(ymother)) ||
+    (length(stats::na.omit(xmother)) != 0L && length(xmother) != length(abund_vec)) ||
+    (length(stats::na.omit(ymother)) != 0L && length(ymother) != length(abund_vec))
   ) stop("Length of xmother and ymother should be the same and either 1 or equal to the number of species.")
 
   if (
@@ -843,8 +843,8 @@ sim_thomas_coords <- function(abund_vec,
   if (oneRangeForAll)   {
     directToRunif <- ifelse(sigma_vec > 2*max_dim | n_mothers == 0 | abund_vec == 1, TRUE, FALSE)
 
-    x[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), xrange[1,1], xrange[1,2])
-    y[spec_id %in% names(directToRunif)[directToRunif]] <- runif(sum(abund_vec[directToRunif]), yrange[1,1], yrange[1,2])
+    x[spec_id %in% names(directToRunif)[directToRunif]] <- stats::runif(sum(abund_vec[directToRunif]), xrange[1,1], xrange[1,2])
+    y[spec_id %in% names(directToRunif)[directToRunif]] <- stats::runif(sum(abund_vec[directToRunif]), yrange[1,1], yrange[1,2])
   } else {
     directToRunif <- logical(s_local)
   }
