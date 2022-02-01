@@ -32,5 +32,7 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
+Encoding: UTF-8
+Source: https://prograide.com/pregunta/73922/avertissement-concernant-lutf-8-avec-roxygen2
 URL: https://github.com/AlbanSagouis/mobsim
 BugReports: https://github.com/AlbanSagouis/mobsim
