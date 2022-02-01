@@ -22,8 +22,7 @@ Imports:
     grDevices,
     utils,
     graphics,
-    stats,
-    data.table
+    stats
 LinkingTo:
     Rcpp
 Suggests:
