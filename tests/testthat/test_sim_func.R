@@ -1,10 +1,13 @@
 context("Simulation functions")
 
 test_that("classes are correct", {
-   sad1 <- sim_sad(s_pool = 100, n_sim = 1000)
+   sad1 <- sim_sad(s_pool = 100L, n_sim = 1000L)
+   expect_is(sad1, "sad")
+   expect_is(sad1, "integer")
+
    xmother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
    ymother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
-   expect_is(sad1, "sad")
+
    expect_is(sim_poisson_coords(sad1), "community")
    expect_is(sim_poisson_community(100, 1000), "community")
    expect_is(sim_thomas_coords(sad1), "community")
@@ -18,14 +21,21 @@ test_that("classes are correct", {
    expect_is(community_to_sad(sim_poisson_community(100,1000)), "sad")
 })
 
-test_that("The function sim_thomas_coords handles wrong mother_points parametres", {
+test_that("sim_sad() - respects seed argument", {
+   expect_equal(
+      sim_sad(s_pool = 100L, n_sim = 1000L, seed = 42L),
+      sim_sad(s_pool = 100L, n_sim = 1000L, seed = 42L)
+   )
+})
+
+test_that("sim_thomas_coords() - handles wrong mother_points parametres", {
    expect_error(sim_thomas_coords(sad1, mother_points = -1))  # mother_points is negative
    expect_error(sim_thomas_coords(sad1, mother_points = sample(size = 100, -2:2, replace = TRUE)))  # mother_points countains negative values
    expect_error(sim_thomas_coords(sad1, mother_points = rep(1, 4)))  # mother_points is too short
    expect_error(sim_thomas_coords(sad1, mother_points = rep(1, 1000)))  # mother_points is too long
 })
 
-test_that("The function sim_thomas_coords handles wrong xmother and ymother parametres", {
+test_that("sim_thomas_coords() - handles wrong xmother and ymother parametres", {
    sad2 <- sim_sad(s_pool = 2, n_sim = 100)
    xmother <- lapply(1:length(sad2), function(x) runif(2, 0, 1))
 
@@ -34,7 +44,7 @@ test_that("The function sim_thomas_coords handles wrong xmother and ymother para
    expect_error(sim_thomas_coords(sad2, xmother = xmother, ymother = list(2, c(0.2, 0.3))))
 })
 
-test_that("The function sim_thomas_coords handles wrong xrange and yrange parametres", {
+test_that("sim_thomas_coords() - handles wrong xrange and yrange parametres", {
    expect_error(sim_thomas_coords(sad2, xmother = xmother, ymother = xmother, xrange = c(0, 0.1)))   # xmother and ymother outside of range
    expect_error(sim_thomas_coords(sad2, xmother = xmother, ymother = xmother, xrange = data.frame(c(0,1), c(0,0.1))))   # xrange and y range have different class
    expect_error(sim_thomas_coords(sad2, xmother = xmother, ymother = xmother,
@@ -45,7 +55,7 @@ test_that("The function sim_thomas_coords handles wrong xrange and yrange parame
                                   yrange = data.frame(c(0,1), c(0,1), c(0,1))))  # xrange and yrange have too many rows
 })
 
-test_that("The function sim_thomas_coords throws warnings when expected", {
+test_that("sim_thomas_coords() - throws warnings when expected", {
    sad1 <- sim_sad(s_pool = 100, n_sim = 1000)
    xmother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
    ymother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
@@ -53,7 +63,7 @@ test_that("The function sim_thomas_coords throws warnings when expected", {
    expect_warning(sim_thomas_coords(sad1, mother_points = 1, cluster_points = 2))
 })
 
-test_that("The function rThomas_rcpp behaves as expected", {
+test_that("rThomas_rcpp() - behaves as expected", {
    expect_is(rThomas_rcpp(20, n_mother_points = 1, xmother = .5, ymother = .5, sigma = 0.2), "data.frame")
    expect_equal(nrow(rThomas_rcpp(20, n_mother_points = 1, xmother = .5, ymother = .5, sigma = 0.2)), 20)
    expect_error(rThomas_rcpp(20, n_mother_points = 2, sigma = 0.2))
