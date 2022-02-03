@@ -1,4 +1,4 @@
-context("Simulation functions")
+context("Testing simulation functions")
 
 test_that("classes are correct", {
    sad1 <- sim_sad(s_pool = 100L, n_sim = 1000L)
