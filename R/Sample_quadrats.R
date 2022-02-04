@@ -12,7 +12,7 @@
 #' @param plot Should the sampling design be plotted? (logical)
 #' @param method Available methods are \code{"random", "transect", "grid"}
 #' @param avoid_overlap For the random sampling try to generate a design
-#' without overlap of quadrats (logical)
+#' without overlap of quadrats (logical). Default is TRUE.
 #' @param x0,y0 Lower left corner of the first quadrat in transect and grid sampling
 #' @param delta_x Distance between consecutive quadrats in transect and grid sampling
 #' in x-direction (the distance between the left sides is measured)
@@ -38,7 +38,7 @@
 #'
 sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                             plot = TRUE, method = "random",
-                            avoid_overlap = F,
+                            avoid_overlap = TRUE,
                             x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
                             seed=NULL)
 {
