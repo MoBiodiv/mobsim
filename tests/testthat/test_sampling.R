@@ -1,75 +1,105 @@
-context("Testing sample_quadrats general behaviour")
+# Tests for sample_quadrats are encapsulated inside the function testing_sampling()
+# because tests are repeated to check the 3 methods of placing quadrats.
 
-test_that("fails correctly", {
-   sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
+testing_sampling <- function(method = "random", avoid_overlap = TRUE, mock_spatstat_absence = FALSE) {
 
-   expect_error(sample_quadrats(data.frame(c(1:5), c(1:5))))
-   expect_error(sample_quadrats(sim_com1, quadrat_area = 1))
-   expect_error(sample_quadrats(sim_com1, quadrat_area = 0.01, method = "foo"))
+   if (method %in% c("grid","transect")) {
+      context(paste("Testing sample_quadrats() -", method))
+   } else {
+      if (!avoid_overlap) {
+         context("Testing sample_quadrats() - random with overlap")
+      } else {
+         if (mock_spatstat_absence) {
+            mockery::stub(where = sample_quadrats, what = "requireNamespace", how = FALSE, depth = 1L)
+            context("Testing sample_quadrats() - random without overlap - runif")
+         } else {
+            context("Testing sample_quadrats() - random without overlap - spatstat")
+         }
+      }
+   }
+   test_that("fails correctly", {
+      sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
 
-   expect_warning(sample_quadrats(sim_com1, quadrat_area = 0.9, n_quadrats = 2L, plot = FALSE))
-})
+      expect_error(sample_quadrats(data.frame(c(1:5), c(1:5)), method = method, avoid_overlap = avoid_overlap))
+      expect_error(sample_quadrats(sim_com1, quadrat_area = 1, method = method, avoid_overlap = avoid_overlap))
+      expect_error(sample_quadrats(sim_com1, quadrat_area = 0.01, method = "foo", avoid_overlap = avoid_overlap))
+      if (method == "transect") {
+         expect_error(sample_quadrats(sim_com1, quadrat_area = 0.9, n_quadrats = 2L,
+                                      plot = FALSE, method = method, avoid_overlap = avoid_overlap))
+      } else {
+         expect_warning(sample_quadrats(sim_com1, quadrat_area = 0.9, n_quadrats = 2L,
+                                        plot = FALSE, method = method, avoid_overlap = avoid_overlap))
+      }
+   })
 
-test_that("classes are correct", {
-   sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
-   comm_mat1 <- sample_quadrats(sim_com1, plot = FALSE, n_quadrats = 2L)
+   test_that("classes are correct", {
+      sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
+      comm_mat1 <- sample_quadrats(sim_com1, plot = FALSE, n_quadrats = 2L,
+                                   method = method, avoid_overlap = avoid_overlap)
 
-   expect_is(comm_mat1, "list")
-   expect_is(comm_mat1[[1]], "data.frame")
-   expect_is(comm_mat1[[2]], "data.frame")
-})
+      expect_is(comm_mat1, "list")
+      expect_is(comm_mat1[[1]], "data.frame")
+      expect_is(comm_mat1[[2]], "data.frame")
+   })
 
-test_that("dimensions are correct", {
-   sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
-   n_quadrats <- 10L
-   comm_matGrid <- sample_quadrats(
-      sim_com1, n_quadrats = n_quadrats,
-      method = "grid", plot = FALSE
-   )
-   comm_matTransect <- sample_quadrats(
-      sim_com1, n_quadrats = n_quadrats,
-      method = "transect", plot = FALSE
-   )
-   comm_matRandom <- sample_quadrats(
-      sim_com1, n_quadrats = n_quadrats,
-      method = "random", plot = FALSE, seed = 2
-   )
+   test_that("dimensions are correct", {
+      S = 5L
+      sim_com1 <- sim_poisson_community(s_pool = S, n_sim = 50L, fix_s_sim = TRUE)
+      n_quadrats <- 10L
+      comm_mat <- sample_quadrats(
+         sim_com1, n_quadrats = n_quadrats,
+         method = method, plot = FALSE,
+         avoid_overlap = avoid_overlap
+      )
 
+      expect_vector(comm_mat, size = 2L)
+      expect_equal(dim(comm_mat[[1]]), c(n_quadrats, S))
+      expect_equal(dim(comm_mat[[2]]), c(n_quadrats, 2L))
 
-   expect_vector(comm_matGrid, size = 2L)
-   expect_equal(dim(comm_matGrid[[1]]), c(n_quadrats, 5L))
-   expect_equal(dim(comm_matGrid[[2]]), c(n_quadrats, 2))
+   })
 
-   expect_vector(comm_matTransect, size = 2L)
-   expect_equal(dim(comm_matTransect[[1]]), c(n_quadrats, 5L))
-   expect_equal(dim(comm_matTransect[[2]]), c(n_quadrats, 2))
+   test_that("samples are within range", {
+      quadrat_area <- 0.002
+      sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
+      comm_mat1 <- sample_quadrats(
+         sim_com1, n_quadrats = 10L, quadrat_area = quadrat_area,
+         method = method, plot = FALSE,
+         avoid_overlap = avoid_overlap
+      )
 
-   expect_vector(comm_matTransect, size = 2L)
-   expect_equal(dim(comm_matTransect[[1]]), c(n_quadrats, 5L))
-   expect_equal(dim(comm_matTransect[[2]]), c(n_quadrats, 2))
-})
+      expect_true(sim_com1$x_min_max[1] <=  min(comm_mat1[[2]][,"x"]) && max(comm_mat1[[2]][,"x"]) + sqrt(quadrat_area) <= sim_com1$x_min_max[2])
+      expect_true(sim_com1$y_min_max[1] <=  min(comm_mat1[[2]][,"y"]) && max(comm_mat1[[2]][,"y"]) + sqrt(quadrat_area) <= sim_com1$y_min_max[2])
+   })
 
-test_that("samples are within range", {
-   quadrat_area <- 0.002
-   sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
-   comm_mat1 <- sample_quadrats(
-      sim_com1, n_quadrats = 50L, quadrat_area = quadrat_area,
-      method = "grid", plot = FALSE
-   )
+   test_that("seed parameter is respected", {
+      sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
 
-   expect_true(sim_com1$x_min_max[1] <=  min(comm_mat1[[2]][,"x"]) && max(comm_mat1[[2]][,"x"]) + sqrt(quadrat_area) <= sim_com1$x_min_max[2])
-   expect_true(sim_com1$y_min_max[1] <=  min(comm_mat1[[2]][,"y"]) && max(comm_mat1[[2]][,"y"]) + sqrt(quadrat_area) <= sim_com1$y_min_max[2])
-})
+      expect_equal(
+         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 5L, method = method, avoid_overlap = avoid_overlap),
+         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 5L, method = method, avoid_overlap = avoid_overlap)
+      )
+   })
 
-test_that("seed parameter is respected", {
-   sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
-
-   expect_equal(
-      sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 5L),
-      sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 5L)
-   )
-})
+} # end of testing_sampling()
 
 
-context("Testing sample_quadrats with spatstat.random installed")
-context("Testing sample_quadrats without spatstat.random")
+# if avoid_overlap = FALSE, random sampling is used
+testing_sampling(method = "random", avoid_overlap = FALSE)
+
+# if avoid_overlap = TRUE and package spatstat.random is installed (hence requireNamespace = TRUE inside sample_quadrats), spatstat.random is always used BUT we also want to test without the package so a stub is created to force requireNamespace("spatstat.random", quietly = TRUE) to return FALSE.
+if (requireNamespace("spatstat.random", quietly = TRUE)) {
+
+   testing_sampling(method = "random", avoid_overlap = TRUE)
+   testing_sampling(method = "random", avoid_overlap = TRUE, mock_spatstat_absence = TRUE)
+
+} else {
+
+   testing_sampling(method = "random", avoid_overlap = TRUE)
+
+}
+
+# If method is not "random", avoid_overlap is ignored.
+testing_sampling(method = "transect")
+
+testing_sampling(method = "grid")
+
