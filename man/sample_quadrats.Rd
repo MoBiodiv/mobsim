@@ -10,7 +10,7 @@ sample_quadrats(
   quadrat_area = 0.01,
   plot = TRUE,
   method = "random",
-  avoid_overlap = F,
+  avoid_overlap = TRUE,
   x0 = 0,
   y0 = 0,
   delta_x = 0.1,
@@ -30,7 +30,7 @@ sample_quadrats(
 \item{method}{Available methods are \code{"random", "transect", "grid"}}
 
 \item{avoid_overlap}{For the random sampling try to generate a design
-without overlap of quadrats (logical)}
+without overlap of quadrats (logical). Default is TRUE.}
 
 \item{x0, y0}{Lower left corner of the first quadrat in transect and grid sampling}
 
