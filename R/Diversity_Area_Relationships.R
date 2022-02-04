@@ -328,7 +328,7 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
    prop_area <- prop_area[prop_area <= 1]
 
    if (class(comm) != "community")
-      stop("divar requires a community object as input. See ?community.")
+      stop("dist_decay requires a community object as input. See ?community.")
 
    dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
