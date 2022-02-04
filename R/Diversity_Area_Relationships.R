@@ -323,9 +323,11 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
                        method = "bray", binary = F)
 {
-   if (any(prop_area > 1))
-      warning("Subplot areas larger than the community size are ignored!")
-   prop_area <- prop_area[prop_area <= 1]
+   if (prop_area > 1)
+      stop("prop_area cannot be larger than 1")
+
+   if (length(prop_area) != 1L)
+      stop("prop_area has to be of length 1")
 
    if (class(comm) != "community")
       stop("dist_decay requires a community object as input. See ?community.")
