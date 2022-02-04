@@ -1,6 +1,18 @@
+mobsim 0.2.1
+================================================================================
+
+### POTENTIAL CODE BREAK
+* in sample_quadrats() default value for avoid_overlap was changed from FALSE to TRUE
+
+### MINOR IMPROVEMENTS
+* spatstat.core updated ton spatstat.random. Thanks to @rubak for pointing it out.
+* significant increase of test code coverage 
+
+### ACKNOWLEDGEMENTS CHANGES
+* new contributor to the package: @AlbanSagouis
+
 mobsim 0.2.0
 ================================================================================
 
-- Update of `sim_thomas_process`.
-
-- Addition of `dist_decay_quadrats`.
+* Update of `sim_thomas_process`.
+* Addition of `dist_decay_quadrats`.

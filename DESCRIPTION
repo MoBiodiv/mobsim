@@ -1,7 +1,7 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.2.9001
+Version: 0.2.0.9010
 Authors@R: c(person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de", role = c("aut"))
     )
@@ -28,7 +28,7 @@ LinkingTo:
 Suggests:
     rmarkdown,
     spatstat.geom, spatstat.random,
-    testthat,
+    testthat, mockery,
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
