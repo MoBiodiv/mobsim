@@ -10,6 +10,7 @@ mobsim 0.2.1
 
 ### ACKNOWLEDGEMENTS CHANGES
 * new contributor to the package: @AlbanSagouis
+* added a CITATION file for easier citation of the 2018 article in MEE by May et al.
 
 mobsim 0.2.0
 ================================================================================
