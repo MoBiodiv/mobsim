@@ -5,7 +5,7 @@ mobsim 0.2.1
 * in sample_quadrats() default value for avoid_overlap was changed from FALSE to TRUE
 
 ### MINOR IMPROVEMENTS
-* spatstat.core updated ton spatstat.random. Thanks to @rubak for pointing it out.
+* spatstat.core updated to spatstat.random. Thanks to @rubak for pointing it out.
 * significant increase of test code coverage 
 
 ### ACKNOWLEDGEMENTS CHANGES
