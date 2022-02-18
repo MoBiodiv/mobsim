@@ -1,0 +1,23 @@
+citHeader("To cite mobsim in publications use:")
+
+citEntry(entry = "Article",
+  title        = "mobsim: An R package for the simulation and measurement of biodiversity across spatial scales",
+  author       = personList(as.person("Felix May"),
+                   as.person("Katharina Gerstner"),
+				   as.person("Dan McGlinn"),
+				   as.person("Xiao Xiao"),
+				   as.person("Jonathan M. Chase")),
+  journal      = "Methods in Ecology and Evolution",
+  year         = "2018",
+  volume       = "9",
+  number       = "6",
+  pages        = "1401-1408",
+  url          = "https://doi.org/10.1111/2041-210X.12986",
+
+  textVersion  =
+  paste("May, F, Gerstner, K, McGlinn, DJ, Xiao, X,",
+		"Chase, JM. mobsim: An r package for the simulation",
+		"and measurement of biodiversity across spatial scales.",
+		"Methods in Ecology and Evolution. 2018; 9:1401–1408.",
+		"https://doi.org/10.1111/2041-210X.12986")
+)
