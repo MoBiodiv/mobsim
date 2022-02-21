@@ -3,7 +3,7 @@ mobsim 0.2.1
 
 ### POTENTIAL CODE BREAK
 * In sample_quadrats() default value for `avoid_overlap` argument was changed from FALSE to TRUE.
-* sim_sad() now stops if s_pool or n_sim is not a whole number.
+* sim_sad() now throws an error if s_pool or n_sim is not a whole number.
 
 ### NEW FEATURES
 In `sim_thomas_community()` and `sim_thomas_coords()` users can now specify:

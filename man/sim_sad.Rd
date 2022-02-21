@@ -5,8 +5,8 @@
 \title{Simulate species abundance distributions}
 \usage{
 sim_sad(
-  s_pool,
-  n_sim,
+  s_pool = NULL,
+  n_sim = NULL,
   sad_type = c("lnorm", "bs", "gamma", "geom", "ls", "mzsm", "nbinom", "pareto",
     "poilog", "power", "powbend", "weibull"),
   sad_coef = list(cv_abund = 1),

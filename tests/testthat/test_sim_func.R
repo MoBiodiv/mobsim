@@ -1,7 +1,7 @@
 context("Testing simulation functions")
 
 test_that("classes are correct", {
-   sad1 <- sim_sad(s_pool = 100L, n_sim = 1000L)
+   sad1 <- sim_sad(s_pool = 3L, n_sim = 10L)
    expect_is(sad1, "sad")
    expect_is(sad1, "integer")
 
@@ -9,23 +9,138 @@ test_that("classes are correct", {
    ymother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
 
    expect_is(sim_poisson_coords(sad1), "community")
-   expect_is(sim_poisson_community(100, 1000), "community")
+   expect_is(sim_poisson_community(3L, 10L), "community")
    expect_is(sim_thomas_coords(sad1), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 0), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 100), "community")
    expect_is(sim_thomas_coords(sad1, mother_points = 4.2), "community")
    expect_is(sim_thomas_coords(sad1, xmother = xmother, ymother = ymother), "community")
    expect_is(sim_thomas_coords(sad1), "community")
-   expect_is(sim_thomas_community(100, 1000), "community")
-   expect_is(community(runif(100), runif(100), rep("specA",100)), "community")
-   expect_is(community_to_sad(sim_poisson_community(100,1000)), "sad")
+   expect_is(sim_thomas_community(3L, 10L), "community")
+   expect_is(community(runif(10L), runif(10L), rep("specA", 10L)), "community")
+   expect_is(community_to_sad(sim_poisson_community(3L, 10L)), "sad")
+})
+
+test_that("sim_sad() - correct assertions", {
+   expect_error(sim_sad(n_sim = 100L, sad_type = "lnorm"))
+   expect_error(sim_sad(s_pool = NA, n_sim = 100L, sad_type = "lnorm"), "The argument s_pool is mandatory for the selected sad and has to be a positive integer number.")
+   expect_error(sim_sad(s_pool = 3.5, n_sim = 100L, sad_type = "lnorm"), "s_pool has to be a positive integer number")
+   expect_error(sim_sad(s_pool = 0L, n_sim = 100L, sad_type = "lnorm"), "s_pool has to be a positive integer number")
+
+   expect_error(sim_sad(s_pool = 3L, sad_type = "lnorm"))
+   expect_error(sim_sad(s_pool = 3L, n_sim = NA, sad_type = "lnorm"))
+   expect_error(sim_sad(s_pool = 3L, n_sim = 100.5, sad_type = "lnorm"), "n_sim has to be a positive integer number")
+   expect_error(sim_sad(s_pool = 3L, n_sim = 0L, sad_type = "lnorm"), "n_sim has to be a positive integer number")
+
+   expect_error(sim_sad(s_pool = 3L, n_sim = 100L, sad_type = "lnorm", sad_coef = 0.1), "coef must be a named list!")
+   expect_error(sim_sad(s_pool = 3L, n_sim = 100L, sad_type = "wrong_sad_type"))
+
+   expect_error(sim_sad(sad_type = "bs", sad_coef = list(S = 4L)))
+
+   expect_warning(sim_sad(s_pool = 3L, sad_type = "bs", sad_coef = list(S = 4L, N = 10L)))
+   expect_warning(sim_sad(n_sim = 10L, sad_type = "bs", sad_coef = list(S = 4L, N = 10L)))
 })
 
 test_that("sim_sad() - respects seed argument", {
    expect_equal(
-      sim_sad(s_pool = 100L, n_sim = 1000L, seed = 42L),
-      sim_sad(s_pool = 100L, n_sim = 1000L, seed = 42L)
+      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L),
+      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L)
    )
+   expect_equal(
+      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L),
+      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L),
+      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L),
+      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L),
+      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L),
+      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
+      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L),
+      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L),
+      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
+      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
+   )
+})
+
+test_that("sim_sad() - results are as expected", {
+   expect_equal(names(sim_sad(s_pool = 3L, n_sim = 10L))[1L], "species_1")
+   n_sim <- 10L
+   s_pool <- 3L
+
+   sadNorm <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "lnorm", fix_s_sim = TRUE)
+   expect_equal(sum(sadNorm), n_sim)
+   expect_equal(length(sadNorm), s_pool)
+
+   sadBs <- sim_sad(sad_type = "bs", sad_coef = list(S = s_pool, N = n_sim), fix_s_sim = TRUE)
+   expect_equal(sum(sadBs), n_sim)
+   expect_equal(length(sadBs), s_pool)
+
+   sadGamma <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "gamma", sad_coef = list(shape = 1, scale = 1), fix_s_sim = TRUE)
+   expect_equal(sum(sadGamma), n_sim)
+   expect_equal(length(sadGamma), s_pool)
+
+   sadGeom <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "geom",  sad_coef = list(prob = 0.5), fix_s_sim = TRUE)
+   expect_equal(sum(sadGeom), n_sim)
+   expect_equal(length(sadGeom), s_pool)
+
+   sadLs <- sim_sad(sad_type = "ls", sad_coef = list(N = n_sim, alpha = 3), fix_s_sim = TRUE)
+   expect_equal(sum(sadLs), n_sim)
+
+   # expect_equal(sum(sim_sad(sad_type = "mzsm", sad_coef = list(n = 3L, J = n_sim, theta = 4))), n_sim)
+
+   sadNbinom <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "nbinom", sad_coef = list(size = 100L, prob = 0.5), fix_s_sim = TRUE)
+   expect_equal(sum(sadNbinom), n_sim)
+   expect_equal(length(sadNbinom), s_pool)
+
+   sadPareto <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "pareto", sad_coef = list(shape = 2), fix_s_sim = TRUE)
+   expect_equal(sum(sadPareto), n_sim)
+   expect_equal(length(sadPareto), s_pool)
+
+   sadPoilog <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "poilog", fix_s_sim = TRUE)
+   expect_equal(sum(sadPoilog), n_sim)
+   expect_equal(length(sadPoilog), s_pool)
+
+   sadPower <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "power", sad_coef = list(s = 2), fix_s_sim = TRUE)
+   expect_equal(sum(sadPower), n_sim)
+   expect_equal(length(sadPower), s_pool)
+
+   # expect_equal(sum(sim_sad(s_pool = 3L, n_sim = n_sim, sad_type = "powbend", sad_coef = list(s = 2, omega = 3))), n_sim)
+
+   sadWeibull <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "weibull", sad_coef = list(shape = 2), fix_s_sim = TRUE)
+   expect_equal(sum(sadWeibull), n_sim)
+   expect_equal(length(sadWeibull), s_pool)
+})
+
+test_that("species richness and abundance are correct in sim_sad() and sim_thomas_community()", {
+   sad1 <- sim_sad(3L, 10L, fix_s_sim = T)
+   expect_equal(length(sad1), 3L)
+   expect_equal(sum(sad1), 10L)
+
+   sim1 <- sim_thomas_community(3L, 10L, fix_s_sim = T)
+   expect_equal(nrow(sim1$census), 10L)
+   expect_equal(length(table(sim1$census$species)), 3L)
 })
 
 test_that("sim_thomas_coords() - handles wrong mother_points parametres", {
@@ -56,9 +171,9 @@ test_that("sim_thomas_coords() - handles wrong xrange and yrange parametres", {
 })
 
 test_that("sim_thomas_coords() - throws warnings when expected", {
-   sad1 <- sim_sad(s_pool = 100, n_sim = 1000)
-   xmother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
-   ymother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
+   sad1 <- sim_sad(s_pool = 3L, n_sim = 10L)
+   xmother <- lapply(1L:length(sad1), function(x) runif(1, 0, 1))
+   ymother <- lapply(1L:length(sad1), function(x) runif(1, 0, 1))
    expect_warning(sim_thomas_coords(sad1, mother_points = 1, xmother = xmother, ymother = ymother))
    expect_warning(sim_thomas_coords(sad1, mother_points = 1, cluster_points = 2))
 })
@@ -69,15 +184,6 @@ test_that("rThomas_rcpp() - behaves as expected", {
    expect_error(rThomas_rcpp(20, n_mother_points = 2, sigma = 0.2))
 })
 
-test_that("species richness and abundance are correct in sim_sad() and sim_thomas_community()", {
-   sad1 <- sim_sad(100,1000, fix_s_sim = T)
-   expect_equal(length(sad1), 100)
-   expect_equal(sum(sad1), 1000)
-
-   sim1 <- sim_thomas_community(100, 1000, fix_s_sim = T)
-   expect_equal(nrow(sim1$census), 1000)
-   expect_equal(length(table(sim1$census$species)), 100)
-})
 
 if (FALSE) {
    sad2 <- sim_sad(4, 100)
