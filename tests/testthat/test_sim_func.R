@@ -1,4 +1,4 @@
-context("Testing simulation functions")
+# Testing simulation functions
 
 test_that("classes are correct", {
    sad1 <- sim_sad(s_pool = 3L, n_sim = 10L)
@@ -41,48 +41,6 @@ test_that("sim_sad() - correct assertions", {
    expect_warning(sim_sad(n_sim = 10L, sad_type = "bs", sad_coef = list(S = 4L, N = 10L)))
 })
 
-test_that("sim_sad() - respects seed argument", {
-   expect_equal(
-      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L),
-      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L),
-      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L),
-      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L),
-      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L),
-      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L),
-      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
-      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L),
-      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L),
-      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L)
-   )
-   expect_equal(
-      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
-      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
-   )
-})
 
 test_that("sim_sad() - results are as expected", {
    expect_equal(names(sim_sad(s_pool = 3L, n_sim = 10L))[1L], "species_1")
@@ -133,14 +91,75 @@ test_that("sim_sad() - results are as expected", {
    expect_equal(length(sadWeibull), s_pool)
 })
 
-test_that("species richness and abundance are correct in sim_sad() and sim_thomas_community()", {
-   sad1 <- sim_sad(3L, 10L, fix_s_sim = T)
-   expect_equal(length(sad1), 3L)
-   expect_equal(sum(sad1), 10L)
+test_that("sim_sad() - edge case s_pool = 1", {
+   n_sim <- 100L
+   s_pool <- 1L
+   sad1lnorm <- sim_sad(s_pool = s_pool, n_sim = n_sim, sad_type = "lnorm", sad_coef = list(cv_abund = 1))
 
-   sim1 <- sim_thomas_community(3L, 10L, fix_s_sim = T)
-   expect_equal(nrow(sim1$census), 10L)
-   expect_equal(length(table(sim1$census$species)), 3L)
+   expect_equal(sum(sad1lnorm), n_sim)
+   expect_equal(length(sad1lnorm), s_pool)
+
+   sad1bs <- sim_sad(sad_type = "bs", sad_coef = list(S = s_pool, N = n_sim))
+
+   expect_equal(sum(sad1bs), n_sim)
+   expect_equal(length(sad1bs), s_pool)
+
+   expect_error(sim_sad(s_pool = 1, n_sim = 0))
+})
+
+
+test_that("sim_sad() - respects seed argument", {
+   expect_equal(
+      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L),
+      sim_sad(sad_type = "lnorm", s_pool = 10L, n_sim = 500L, seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L),
+      sim_sad(sad_type = "bs", sad_coef = list(S = 4L, N = 10L), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L),
+      sim_sad(sad_type = "gamma", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 1, scale = 1), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L),
+      sim_sad(sad_type = "geom",  s_pool = 10L, n_sim = 500L, sad_coef = list(prob = 0.5), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L),
+      sim_sad(sad_type = "ls", sad_coef = list(N = 500L, alpha = 3), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L),
+      sim_sad(sad_type = "nbinom", s_pool = 10L, n_sim = 500L, sad_coef = list(size = 100L, prob = 0.5), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
+      sim_sad(sad_type = "pareto", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L),
+      sim_sad(sad_type = "poilog", s_pool = 10L, n_sim = 500L, seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L),
+      sim_sad(sad_type = "power", s_pool = 10L, n_sim = 500L, sad_coef = list(s = 2), seed = 42L)
+   )
+   expect_equal(
+      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L),
+      sim_sad(sad_type = "weibull", s_pool = 10L, n_sim = 500L, sad_coef = list(shape = 2), seed = 42L)
+   )
+})
+
+test_that("sim_thomas_community() calls sim_sad() correctly", {
+   s_pool <- 10L
+   n_sim <- 100L
+
+   sad1 <- sim_sad(s_pool, n_sim, fix_s_sim = TRUE, seed = 42L)
+   sim1 <- sim_thomas_community(s_pool, n_sim, fix_s_sim = TRUE, seed = 42L)
+
+   expect_equal(sum(sad1), nrow(sim1$census))
+   expect_equal(length(sad1), length(table(sim1$census$species)))
 })
 
 test_that("sim_thomas_coords() - handles wrong mother_points parametres", {

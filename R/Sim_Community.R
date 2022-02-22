@@ -149,7 +149,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 
    if (!is.null(seed)) set.seed(seed)
 
-   # Handles parameters that give the community size ----
+   # Handles parameters that give the community size + assertions ----
    if (sad_type %in% c("bs", "ls", "mzsm")) {
       S <- switch(sad_type,
                   bs = sad_coef$S,
@@ -165,10 +165,10 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
       s_pool <- S
       n_sim <- sad_coef$N
 
-   } else {
+   } else {   # sad_type is one of lnorm", "gamma", "geom", "nbinom", "pareto", "poilog", "power", "powbend", "weibull"
       if (is.null(s_pool) || is.na(s_pool)) stop("The argument s_pool is mandatory for the selected sad and has to be a positive integer number.")
       if (round(s_pool, 0L) != s_pool || s_pool <= 0) stop("s_pool has to be a positive integer number")
-      # if (is.null(n_sim) || is.na(n_sim)) stop("The argument n_sim is mandatory for the selected sad and has to be a positive integer number.")
+      if (is.null(n_sim) || is.na(n_sim)) stop("The argument n_sim is mandatory for the selected sad and has to be a positive integer number.")
       if (round(n_sim, 0L) != n_sim || n_sim <= 0) stop("n_sim has to be a positive integer number")
       if (class(sad_coef) != "list" || is.null(names(sad_coef))) stop("coef must be a named list!")
    }
@@ -179,8 +179,6 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
    if (isTRUE(s_pool == 1) && !is.null(n_sim)) {
       abund_local <- n_sim
 
-      if (isTRUE(drop_zeros))   abund_local <- abund_local[abund_local > 0]
-
       class(abund_local) <- c("sad","integer")
       return(abund_local) # return early
    }
@@ -190,7 +188,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 
    # Alternative parameterization for lnorm and poilog ----
    if ((sad_type == "lnorm" || sad_type == "poilog") &&
-       names(sad_coef)[1L] == "cv_abund") {
+       "cv_abund" %in% names(sad_coef)) {
       mean_abund <- n_sim/s_pool
       sd_abund <-  mean_abund * sad_coef$cv_abund
       sigma1 <- sqrt(log(sd_abund^2/mean_abund^2 + 1))
@@ -206,7 +204,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
          sad_coef <- list("mu" = mu1, "sig" = sigma1)
    }
 
-   # Generates the "community"
+   # Generates the "community" ----
    if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")) {
       sadr <- utils::getFromNamespace(paste("r", sad_type, sep = ""), ns = "stats")
    } else {
@@ -231,7 +229,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
       abund_local[abund_local == 0L] <- 1L
       N <- sum(abund_local)
 
-      #randomly remove individuals until target level is reached
+      ## randomly remove individuals until target level is reached ----
       while (N > n_sim) {
          rel_abund <- abund_local/sum(abund_local)
          # draw proportional to relative abundance
