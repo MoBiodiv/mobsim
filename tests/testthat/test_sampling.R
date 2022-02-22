@@ -31,15 +31,73 @@ testing_sampling <- function(method = "random", avoid_overlap = TRUE, mock_spats
                                         plot = FALSE, method = method, avoid_overlap = avoid_overlap))
       }
    })
+   test_that("sampling_transects() - fails correctly", {
+      expect_error(
+         sampling_transects(n_quadrats = 2L,
+                            xmin = 0, xmax = 1,
+                            ymin = 0, ymax = 1,
+                            x0 = 0, y0 = 0, delta_x = 1, delta_y = 0.1,
+                            quadrat_size = sqrt(0.01)
+         )
+      )
+
+      expect_error(
+         sampling_transects(n_quadrats = 2L,
+                            xmin = 0, xmax = 1,
+                            ymin = 0, ymax = 1,
+                            x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 1,
+                            quadrat_size = sqrt(0.01)
+         )
+      )
+
+      expect_warning(
+         sampling_transects(n_quadrats = 10L,
+                            xmin = 0, xmax = 1,
+                            ymin = 0, ymax = 1,
+                            x0 = 0.4, y0 = 0.4, delta_x = 0.01, delta_y = 0.01,
+                            quadrat_size = 0.1
+         )
+      )
+   })
+
+   test_that("sampling_grids() - fails correctly", {
+      expect_error(
+         sampling_grids(n_quadrats = 2L,
+                        xmin = 0.1, xmax = 1, # xmin is larger than x0
+                        ymin = 0, ymax = 1,
+                        x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
+                        quadrat_size = 0.01
+         )
+      )
+
+      expect_error(
+         sampling_grids(n_quadrats = 2L,
+                        xmin = 0, xmax = 1,
+                        ymin = 0.1, ymax = 1, # ymin is larger than y0
+                        x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
+                        quadrat_size = 0.01
+         )
+      )
+
+      expect_warning(
+         sampling_grids(n_quadrats = 10L,
+                        xmin = 0, xmax = 1,
+                        ymin = 0, ymax = 1,
+                        x0 = 0.4, y0 = 0.4, delta_x = 0.01, delta_y = 0.01,
+                        quadrat_size = 0.1
+         )
+      )
+   })
+
 
    test_that("classes are correct", {
       sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
       comm_mat1 <- sample_quadrats(sim_com1, plot = FALSE, n_quadrats = 2L,
                                    method = method, avoid_overlap = avoid_overlap)
 
-      expect_is(comm_mat1, "list")
-      expect_is(comm_mat1[[1]], "data.frame")
-      expect_is(comm_mat1[[2]], "data.frame")
+      expect_type(comm_mat1, "list")
+      expect_s3_class(comm_mat1[[1]], "data.frame")
+      expect_s3_class(comm_mat1[[2]], "data.frame")
    })
 
    test_that("dimensions are correct", {
@@ -79,6 +137,22 @@ testing_sampling <- function(method = "random", avoid_overlap = TRUE, mock_spats
          sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 5L, method = method, avoid_overlap = avoid_overlap)
       )
    })
+
+   test_that("sample_quadrats() - edge case where n_quadrats == 1", {
+      sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
+      quadrat_area <- 0.01
+      expect_equal(
+         as.numeric(
+            sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 1L, quadrat_area = quadrat_area,
+                            method = method, avoid_overlap = avoid_overlap)$xy_dat
+         ),
+         as.numeric(
+            sampling_one_quadrat(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+                                 ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area), seed = 42L)
+         )
+      )
+   })
+
 
 } # end of testing_sampling()
 

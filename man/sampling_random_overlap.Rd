@@ -4,7 +4,15 @@
 \alias{sampling_random_overlap}
 \title{Creates square quadrats randomly distributed that may overlap each other}
 \usage{
-sampling_random_overlap(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size)
+sampling_random_overlap(
+  n_quadrats,
+  xmin,
+  xmax,
+  ymin,
+  ymax,
+  quadrat_size,
+  seed = NULL
+)
 }
 \arguments{
 \item{n_quadrats}{Number of sampling quadrats}
@@ -18,6 +26,8 @@ sampling_random_overlap(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size)
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
 
 \item{quadrat_size}{(numeric) width of a square quadrat}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the

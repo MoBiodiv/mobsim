@@ -5,7 +5,15 @@
 \title{Creates square quadrats randomly distributed but without overlapping each
 other}
 \usage{
-sampling_random_bruteforce(n_quadrats, min_dist, xmin, xmax, ymin, ymax)
+sampling_random_bruteforce(
+  n_quadrats,
+  min_dist,
+  xmin,
+  xmax,
+  ymin,
+  ymax,
+  seed = NULL
+)
 }
 \arguments{
 \item{n_quadrats}{Number of sampling quadrats}
@@ -19,6 +27,8 @@ sampling_random_bruteforce(n_quadrats, min_dist, xmin, xmax, ymin, ymax)
 \item{ymin}{(numeric) minimum possible value on the y axis a quadrat can cover.}
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the

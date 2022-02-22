@@ -69,8 +69,8 @@ test_that("divar() - classes and dimensions are correct", {
    n_scales <- 10L
    div <- divar(comm = comm1, prop_area = seq(0.1, 1, length = n_scales))
 
-   expect_is(div, "divar")
-   expect_is(div, "data.frame")
+   expect_s3_class(div, "divar")
+   expect_s3_class(div, "data.frame")
    expect_equal(dim(div), c(n_scales, 13L))
 })
 
@@ -78,8 +78,8 @@ test_that("divar() - condition handling", {
    comm1 <- sim_thomas_coords(sim_sad(5L, 50L, fix_s_sim = TRUE))
    n_scales <- 10L
 
-   expect_is(divar(comm = comm1, prop_area = seq(0, 1, length = n_scales)), "data.frame")
-   expect_is(divar(comm = comm1, prop_area = 1), "data.frame")
+   expect_s3_class(divar(comm = comm1, prop_area = seq(0, 1, length = n_scales)), "data.frame")
+   expect_s3_class(divar(comm = comm1, prop_area = 1), "data.frame")
    expect_error(divar(comm = comm1, prop_area = c(NA, seq(0, 1, length = n_scales))))
 })
 

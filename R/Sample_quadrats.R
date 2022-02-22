@@ -45,8 +45,6 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
    if (class(comm) != "community")
       stop("comm has to be a community object")
 
-   if (!is.null(seed)) set.seed(seed)
-
    method <- match.arg(method, c("random", "transect", "grid"))
 
    quadrat_size <- sqrt(quadrat_area)
@@ -56,7 +54,13 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 
    if (quadrat_size < community_size) {
 
-      if (n_quadrats > 1) {
+      if (n_quadrats == 1) {
+         xy_dat <- sampling_one_quadrat(
+            xmin = comm$x_min_max[1], xmax = comm$x_min_max[2] - quadrat_size,
+            ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size,
+            seed = seed
+         )
+      } else {
 
          min_dist <- sqrt(2*quadrat_area)
 
@@ -70,14 +74,16 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                   xy_dat <- sampling_random_spatstat(
                      n_quadrats = n_quadrats, min_dist = min_dist,
                      xmin = comm$x_min_max[1], xmax = comm$x_min_max[2] - quadrat_size,
-                     ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size
+                     ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size,
+                     seed = seed
                   )
 
                } else {
                   xy_dat <- sampling_random_bruteforce(
                      n_quadrats = n_quadrats, min_dist = min_dist,
                      xmin = comm$x_min_max[1], xmax = comm$x_min_max[2] - quadrat_size,
-                     ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size
+                     ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size,
+                     seed = seed
                   )
 
                } # end of no spatstat
@@ -87,7 +93,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                   n_quadrats = n_quadrats,
                   xmin = comm$x_min_max[1], xmax = comm$x_min_max[2] - quadrat_size,
                   ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size,
-                  quadrat_size = quadrat_size
+                  quadrat_size = quadrat_size, seed = seed
                )
             }
 
@@ -99,7 +105,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                xmin = comm$x_min_max[1], xmax = comm$x_min_max[2],
                ymin = comm$y_min_max[1], ymax = comm$y_min_max[2],
                x0 = x0, y0 = y0, delta_x = delta_x, delta_y = delta_y,
-               quadrat_size = quadrat_size
+               quadrat_size = quadrat_size, seed = seed
             )
          } # end transect
 
@@ -110,17 +116,9 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                xmin = comm$x_min_max[1], xmax = comm$x_min_max[2],
                ymin = comm$y_min_max[1], ymax = comm$y_min_max[2],
                x0 = x0, y0 = y0, delta_x = delta_x, delta_y = delta_y,
-               quadrat_size = quadrat_size
+               quadrat_size = quadrat_size, seed = seed
             )
          } # end grid
-
-      } else { # if n_quadrats == 1
-
-         xy_dat <- sampling_one_quadrat(
-            xmin = comm$x_min_max[1], xmax = comm$x_min_max[2] - quadrat_size,
-            ymin = comm$y_min_max[1], ymax = comm$y_min_max[2] - quadrat_size
-         )
-
       }
 
       comm_tab <- mapply(abund_rect, xy_dat$x, xy_dat$y,
@@ -160,6 +158,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 #'
 #' Efficient algorithm from package \code{spatstat.random} is used.
 #' Produces similar results as \code{\link{sampling_random_bruteforce}}.
+#' @inheritParams  sample_quadrats
 #' @param n_quadrats Number of sampling quadrats
 #' @param min_dist (numeric) minimal distance between two quadrats to avoid overlap.
 #' @param xmin (numeric) minimum possible value on the x axis a quadrat can cover.
@@ -172,7 +171,8 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 #' @export
 #'
 
-sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax) {
+sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
    hc_mod <- list(cif = "hardcore", par = list(beta = n_quadrats, hc = min_dist),
                   w = spatstat.geom::owin(c(xmin, xmax), c(ymin, ymax)))
    hc_points <- spatstat.random::rmh(model = hc_mod, start = list(n.start = n_quadrats),
@@ -199,7 +199,8 @@ sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, yma
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_random_bruteforce <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax) {
+sampling_random_bruteforce <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
    count <- 0L
 
    xpos <- stats::runif(n_quadrats, min = xmin, max = xmax)
@@ -231,7 +232,8 @@ sampling_random_bruteforce <- function(n_quadrats, min_dist, xmin, xmax, ymin, y
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_random_overlap <- function(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size) {
+sampling_random_overlap <- function(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
    xpos <- stats::runif(n_quadrats, min = xmin, max = xmax)
    ypos <- stats::runif(n_quadrats, min = ymin, max = ymax)
 
@@ -252,8 +254,8 @@ sampling_random_overlap <- function(n_quadrats, xmin, xmax, ymin, ymax, quadrat_
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
-
+sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
 
    t_xmin <- x0
    t_ymin <- y0
@@ -271,7 +273,7 @@ sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta
    ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
 
    coords <- data.frame(x = xpos, y = ypos)
-   if (min(stats::dist(coords)) < 0.9999*quadrat_size)
+   if (min(stats::dist(coords)) < 0.9999*quadrat_size) # impossible situation with the assertions above
       warning("There are overlapping sampling squares in the design")
    return(coords)
 }
@@ -287,7 +289,8 @@ sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
+sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
    grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
 
    x1 <- seq(from = x0, by = delta_x, len = grid_dim)
@@ -315,7 +318,8 @@ sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, 
 #' lower left corner of the square quadrat.
 #' @export
 #'
-sampling_one_quadrat <- function(xmin, xmax, ymin, ymax) {
+sampling_one_quadrat <- function(xmin, xmax, ymin, ymax, seed = NULL) {
+   if (!is.null(seed)) set.seed(seed)
    data.frame(
       x = stats::runif(1L, min = xmin, max = xmax),
       y = stats::runif(1L, min = ymin, max = ymax)

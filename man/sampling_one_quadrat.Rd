@@ -4,7 +4,7 @@
 \alias{sampling_one_quadrat}
 \title{Creates one square quadrat randomly located in the landscape}
 \usage{
-sampling_one_quadrat(xmin, xmax, ymin, ymax)
+sampling_one_quadrat(xmin, xmax, ymin, ymax, seed = NULL)
 }
 \arguments{
 \item{xmin}{(numeric) minimum possible value on the x axis a quadrat can cover.}
@@ -14,6 +14,8 @@ sampling_one_quadrat(xmin, xmax, ymin, ymax)
 \item{ymin}{(numeric) minimum possible value on the y axis a quadrat can cover.}
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the
