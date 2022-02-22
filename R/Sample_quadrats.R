@@ -44,6 +44,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
 {
    if (class(comm) != "community")
       stop("comm has to be a community object")
+   if (round(n_quadrats, 0) != n_quadrats) stop("n_quadrats has to be an integer")
 
    method <- match.arg(method, c("random", "transect", "grid"))
 
@@ -105,7 +106,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                xmin = comm$x_min_max[1], xmax = comm$x_min_max[2],
                ymin = comm$y_min_max[1], ymax = comm$y_min_max[2],
                x0 = x0, y0 = y0, delta_x = delta_x, delta_y = delta_y,
-               quadrat_size = quadrat_size, seed = seed
+               quadrat_size = quadrat_size
             )
          } # end transect
 
@@ -116,7 +117,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                xmin = comm$x_min_max[1], xmax = comm$x_min_max[2],
                ymin = comm$y_min_max[1], ymax = comm$y_min_max[2],
                x0 = x0, y0 = y0, delta_x = delta_x, delta_y = delta_y,
-               quadrat_size = quadrat_size, seed = seed
+               quadrat_size = quadrat_size
             )
          } # end grid
       }
@@ -254,9 +255,7 @@ sampling_random_overlap <- function(n_quadrats, xmin, xmax, ymin, ymax, quadrat_
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size, seed = NULL) {
-   if (!is.null(seed)) set.seed(seed)
-
+sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
    t_xmin <- x0
    t_ymin <- y0
 
@@ -273,7 +272,7 @@ sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta
    ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
 
    coords <- data.frame(x = xpos, y = ypos)
-   if (min(stats::dist(coords)) < 0.9999*quadrat_size) # impossible situation with the assertions above
+   if (min(stats::dist(coords)) < 0.9999*quadrat_size)
       warning("There are overlapping sampling squares in the design")
    return(coords)
 }
@@ -289,8 +288,7 @@ sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size, seed = NULL) {
-   if (!is.null(seed)) set.seed(seed)
+sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
    grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
 
    x1 <- seq(from = x0, by = delta_x, len = grid_dim)

@@ -14,8 +14,7 @@ sampling_transects(
   y0,
   delta_x,
   delta_y,
-  quadrat_size,
-  seed = NULL
+  quadrat_size
 )
 }
 \arguments{
@@ -40,8 +39,6 @@ in x-direction (the distance between the left sides is measured)}
 in y-direction (the distance between the lower sides is measured)}
 
 \item{quadrat_size}{(numeric) width of the quadrats.}
-
-\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the
