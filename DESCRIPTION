@@ -1,11 +1,11 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.2.0.9013
+Version: 0.2.0.9014
 Authors@R: c(person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de", role = c("aut"))
     )
-Date: 2022-02-14
+Date: 2022-02-23
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
@@ -30,6 +30,7 @@ Suggests:
     spatstat.geom, spatstat.random,
     testthat (>= 3.0.0), mockery,
     knitr
+Config/testthat/edition: 3
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Encoding: UTF-8

@@ -15,7 +15,7 @@ sampling_one_quadrat(xmin, xmax, ymin, ymax, seed = NULL)
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
 
-\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
+\item{seed}{(integer) Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the

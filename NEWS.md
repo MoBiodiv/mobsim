@@ -17,6 +17,9 @@ In `sim_thomas_community()` and `sim_thomas_coords()` users can now specify:
 * increased speed for sim_thomas_coords() when there is no clustering.
 * significant increase of test code coverage.
 
+### DEPENDENCE
+testthat version 3.0.0 or above is needed to test and build from source.
+
 ### ACKNOWLEDGEMENTS CHANGES
 * new contributor to the package: @AlbanSagouis
 * added a CITATION file for easier citation of the 2018 article in MEE by May et al.

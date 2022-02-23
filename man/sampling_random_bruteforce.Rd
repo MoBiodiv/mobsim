@@ -2,7 +2,7 @@
 % Please edit documentation in R/Sample_quadrats.R
 \name{sampling_random_bruteforce}
 \alias{sampling_random_bruteforce}
-\title{Creates square quadrats randomly distributed but without overlapping each
+\title{Creates coordinates (lower left corner of a quadrat) randomly distributed but without overlapping each
 other}
 \usage{
 sampling_random_bruteforce(
@@ -18,7 +18,8 @@ sampling_random_bruteforce(
 \arguments{
 \item{n_quadrats}{Number of sampling quadrats}
 
-\item{min_dist}{(numeric) minimal distance between two quadrats to avoid overlap.}
+\item{min_dist}{(numeric) minimal distance between two points to avoid overlap.
+Equal to the length of a quadrat diagonal}
 
 \item{xmin}{(numeric) minimum possible value on the x axis a quadrat can cover.}
 
@@ -28,7 +29,7 @@ sampling_random_bruteforce(
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
 
-\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
+\item{seed}{(integer) Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the
