@@ -16,6 +16,10 @@ test_that("sim_thomas_community() - default argument values are as expected", {
 test_that("sim_thomas_coords() - default argument values are as expected", {
    expect_snapshot_output(sim_thomas_coords(abund_vec = 1:4, seed = 42L))
 })
+test_that("rThomas_rcpp() - default argument values are as expected", {
+   set.seed(42L)
+   expect_snapshot_output(rThomas_rcpp(n_points = 100L, n_mother_points = 2L, xmother = NA, ymother = NA, sigma = 0.2))
+})
 
 
 test_that("sim_thomas_coords() - handles wrong mother_points parametres", {
