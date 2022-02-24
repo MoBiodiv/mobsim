@@ -612,6 +612,8 @@ sim_poisson_community <- function(s_pool,
 #' @param yrange Extent of the community in y-direction. If this a numeric vector
 #' of length 2, all species share the same range. To specify different y ranges for
 #' all species, \code{xrange} should be a data.frame with 2 columns, min and max.
+#'@param seed Integer. Any integer passed to \code{set.seed} for reproducibility.
+#'
 #'
 #' @details To generate a Thomas cluster process of a single species this
 #' function uses a C++ re-implementation of the function
@@ -698,9 +700,12 @@ sim_thomas_coords <- function(abund_vec,
                               ymother = NA,	# list of vectors
                               cluster_points = NA,
                               xrange = c(0,1),
-                              yrange = c(0,1)
-)
+                              yrange = c(0,1),
+                              seed = NULL
+                              )
 {
+   if (!is.null(seed)) set.seed(seed)
+
    # mother_points
    if ((any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(mother_points))) {
       mother_points <- NA
@@ -911,26 +916,7 @@ sim_thomas_coords <- function(abund_vec,
 #' \code{\link{sim_thomas_coords}}
 #'
 #' @inheritParams sim_sad
-#'
-#' @param sigma Mean displacement (along each coordinate axes) of a point from
-#' its mother point (= cluster centre).
-#'
-#' @param mother_points Number of mother points (= cluster centres).
-#'
-#' @param cluster_points Mean number of points per cluster.
-#'
-#' @param xrange Extent of the community in x-direction (numeric vector of length 2)
-#' @param yrange Extent of the community in y-direction (numeric vector of length 2)
-#' @param xmother List of length equal to the number of species. Each list element
-#' is a vector of x coordinates for every mother points. If one element is NA, the
-#' the corresponding species is not clustered.
-#'
-#' @param ymother List of length equal to the number of species. Each list element
-#' is a vector of y coordinates for every mother points. If one element is NA, the
-#' the corresponding species is not clustered.
-#'
-#' @param seed Integer. Any integer passed to \code{set.seed} for reproducibility.
-#'
+#' @inheritParams sim_thomas_coords
 #' @details See the documentations of \code{\link{sim_sad}} and
 #'  \code{\link{sim_thomas_coords}} for details.
 #'
@@ -974,7 +960,8 @@ sim_thomas_community <- function(s_pool, n_sim,
                                 xmother = xmother,
                                 ymother = ymother,
                                 xrange = xrange,
-                                yrange = yrange)
+                                yrange = yrange,
+                                seed = seed)
 
    return(sim_dat)
 }

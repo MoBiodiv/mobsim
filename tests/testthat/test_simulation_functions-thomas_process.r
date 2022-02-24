@@ -9,6 +9,15 @@ test_that("sim_thomas_community() calls sim_sad() correctly", {
    expect_equal(length(sad1), length(table(sim1$census$species)))
 })
 
+test_that("sim_thomas_community() - default argument values are as expected", {
+   expect_snapshot_output(sim_thomas_community(s_pool = 3L, n_sim = 100L, seed = 42L))
+})
+
+test_that("sim_thomas_coords() - default argument values are as expected", {
+   expect_snapshot_output(sim_thomas_coords(abund_vec = 1:4, seed = 42L))
+})
+
+
 test_that("sim_thomas_coords() - handles wrong mother_points parametres", {
    expect_error(sim_thomas_coords(sad1, mother_points = -1))  # mother_points is negative
    expect_error(sim_thomas_coords(sad1, mother_points = sample(size = 100, -2:2, replace = TRUE)))  # mother_points countains negative values
@@ -49,3 +58,5 @@ test_that("rThomas_rcpp() - behaves as expected", {
    expect_equal(nrow(rThomas_rcpp(20, n_mother_points = 1, xmother = .5, ymother = .5, sigma = 0.2)), 20)
    expect_error(rThomas_rcpp(20, n_mother_points = 2, sigma = 0.2))
 })
+
+

@@ -2,39 +2,39 @@
 
     $spec_dat
            species_1 species_10 species_2 species_3 species_4 species_5 species_6
-    site1          1          0         0         1         0         0         0
-    site2          0          0         0         0         0         0         0
-    site3          0          0         0         0         0         0         0
+    site1          0          1         1         0         0         0         0
+    site2          0          0         1         0         0         0         0
+    site3          0          0         1         0         0         0         0
     site4          0          0         0         0         0         0         0
     site5          0          0         0         0         0         0         0
-    site6          1          0         0         0         1         0         0
-    site7          0          0         0         0         0         0         0
+    site6          0          0         0         0         0         0         0
+    site7          1          0         0         0         1         2         0
     site8          0          0         0         0         0         0         0
     site9          0          0         0         0         0         0         0
     site10         0          0         0         0         0         0         0
-    site11         0          0         0         0         2         0         0
-    site12         1          0         0         1         0         0         0
-    site13         0          0         0         0         0         0         0
-    site14         0          0         0         0         0         0         0
-    site15         0          0         0         0         0         0         0
-    site16         0          0         0         0         0         0         0
-    site17         0          0         0         0         0         1         0
-    site18         0          0         1         1         1         0         0
+    site11         0          0         0         0         0         0         0
+    site12         0          0         0         0         1         0         0
+    site13         1          0         0         0         0         0         0
+    site14         0          0         1         0         0         0         0
+    site15         1          0         0         1         0         0         0
+    site16         2          0         0         0         0         0         0
+    site17         0          0         0         0         0         0         1
+    site18         0          0         0         0         1         0         0
     site19         0          0         0         0         0         0         0
-    site20         0          0         0         0         0         0         0
+    site20         1          0         1         0         0         0         0
            species_7 species_8 species_9
     site1          0         0         0
     site2          0         0         0
     site3          0         0         0
-    site4          0         0         0
+    site4          0         1         0
     site5          0         0         0
     site6          0         0         0
     site7          0         0         0
-    site8          1         0         0
+    site8          0         0         0
     site9          0         0         0
-    site10         0         0         0
+    site10         0         1         0
     site11         0         0         0
-    site12         0         0         0
+    site12         0         0         1
     site13         0         0         0
     site14         0         0         0
     site15         0         0         0

@@ -18,6 +18,9 @@ test_that("sim_sad() - correct assertions", {
    expect_warning(sim_sad(n_sim = 10L, sad_type = "bs", sad_coef = list(S = 4L, N = 10L)))
 })
 
+test_that("default argument values are as expected", {
+   expect_snapshot_output(sim_sad(s_pool = 3L, n_sim = 100L, seed = 42L))
+})
 
 test_that("sim_sad() - results are as expected", {
    expect_equal(names(sim_sad(s_pool = 3L, n_sim = 10L))[1L], "species_1")
