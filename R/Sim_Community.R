@@ -480,6 +480,7 @@ community_to_sad <- function(comm)
 #' @param abund_vec Species abundance vector (integer)
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
+#' @inheritParams sim_sad
 #'
 #' @return A community object as defined by \code{\link{community}}.
 #'
@@ -495,9 +496,12 @@ community_to_sad <- function(comm)
 #'
 sim_poisson_coords <- function(abund_vec,
                                xrange = c(0,1),
-                               yrange = c(0,1)
+                               yrange = c(0,1),
+                               seed = NULL
 )
 {
+   if (!is.null(seed)) set.seed(seed)
+
    abund_vec <- trunc(abund_vec)
    if (length(names(abund_vec)) < length(abund_vec))
       names(abund_vec) <-  paste("species", formatC(x = seq_along(abund_vec), width = nchar(length(abund_vec)), format = "d", flag = "0"), sep = "_")
@@ -523,6 +527,7 @@ sim_poisson_coords <- function(abund_vec,
 #' @inheritParams sim_sad
 #' @param xrange Extent of the community in x-direction (numeric vector of length 2)
 #' @param yrange Extent of the community in y-direction (numeric vector of length 2)
+#' @inheritParams sim_sad
 #'
 #' @return A community object as defined by \code{\link{community}}.
 
@@ -541,16 +546,19 @@ sim_poisson_community <- function(s_pool,
                                   sad_coef = list("cv_abund" = 1),
                                   fix_s_sim = FALSE,
                                   xrange= c(0,1),
-                                  yrange = c(0,1)
+                                  yrange = c(0,1),
+                                  seed = NULL
 )
 {
    abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
                         sad_type = sad_type,
                         sad_coef = sad_coef,
-                        fix_s_sim = fix_s_sim)
+                        fix_s_sim = fix_s_sim,
+                        seed = seed)
 
    sim_dat <- sim_poisson_coords(abund_vec = abund_vec,
-                                 xrange = xrange, yrange = yrange)
+                                 xrange = xrange, yrange = yrange,
+                                 seed = seed)
    return(sim_dat)
 }
 
