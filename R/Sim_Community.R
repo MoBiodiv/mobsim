@@ -214,7 +214,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 
    rel_abund_pool <- abund_pool/sum(abund_pool)
    rel_abund_pool <- sort(rel_abund_pool, decreasing = TRUE)
-   names(rel_abund_pool) <- paste("species", seq_along(rel_abund_pool), sep = "_")	# underslash addition for readability
+   names(rel_abund_pool) <- paste("species", formatC(x = seq_along(rel_abund_pool), width = nchar(length(rel_abund_pool)), format = "d", flag = "0"), sep = "_")	# underslash addition for readability
 
    sample_vec <- sample(x = names(rel_abund_pool),
                         size = n_sim, replace = TRUE,
@@ -500,7 +500,7 @@ sim_poisson_coords <- function(abund_vec,
 {
    abund_vec <- trunc(abund_vec)
    if (length(names(abund_vec)) < length(abund_vec))
-      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "")
+      names(abund_vec) <-  paste("species", formatC(x = seq_along(abund_vec), width = nchar(length(abund_vec)), format = "d", flag = "0"), sep = "_")
 
    abund_vec <- abund_vec[abund_vec > 0]
 
@@ -510,8 +510,8 @@ sim_poisson_coords <- function(abund_vec,
 
    spec_id <- factor(rep(names(abund_vec), times = abund_vec))
 
-   sim_dat1 <- community(x, y, spec_id, xrange, yrange)
-   return(sim_dat1)
+   sim_dat <- community(x, y, spec_id, xrange, yrange)
+   return(sim_dat)
 }
 
 #' Simulate community with random spatial positions.
@@ -544,11 +544,10 @@ sim_poisson_community <- function(s_pool,
                                   yrange = c(0,1)
 )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
-                   sad_type = sad_type,
-                   sad_coef = sad_coef,
-                   fix_s_sim = fix_s_sim)
-   abund_vec <- sim1
+   abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
+                        sad_type = sad_type,
+                        sad_coef = sad_coef,
+                        fix_s_sim = fix_s_sim)
 
    sim_dat <- sim_poisson_coords(abund_vec = abund_vec,
                                  xrange = xrange, yrange = yrange)
@@ -702,7 +701,7 @@ sim_thomas_coords <- function(abund_vec,
                               xrange = c(0,1),
                               yrange = c(0,1),
                               seed = NULL
-                              )
+)
 {
    if (!is.null(seed)) set.seed(seed)
 
@@ -754,7 +753,7 @@ sim_thomas_coords <- function(abund_vec,
    abund_vec <- trunc(abund_vec)
 
    if (length(names(abund_vec)) < length(abund_vec))
-      names(abund_vec) <- paste("species", 1:length(abund_vec), sep = "_")
+      names(abund_vec) <- paste("species", formatC(x = seq_along(abund_vec), width = nchar(length(abund_vec)), format = "d", flag = "0"), sep = "_")
 
    abund_vec <- abund_vec[abund_vec > 0]
    cum_abund <- cumsum(abund_vec)
@@ -901,8 +900,9 @@ sim_thomas_coords <- function(abund_vec,
       }
    }
 
-   sim_dat1 <- community(x, y, spec_id, xrange, yrange)
-   return(sim_dat1)
+   sim_dat <- community(x, y, spec_id, xrange, yrange)
+
+   return(sim_dat)
 }
 
 
@@ -946,23 +946,21 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  seed = NULL
 )
 {
-   sim1 <- sim_sad(s_pool = s_pool, n_sim = n_sim,
-                   sad_type = sad_type,
-                   sad_coef = sad_coef,
-                   fix_s_sim = fix_s_sim,
-                   seed = seed)
-   abund_vec <- sim1
+   abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
+                        sad_type = sad_type,
+                        sad_coef = sad_coef,
+                        fix_s_sim = fix_s_sim,
+                        seed = seed)
 
-   sim_dat <- sim_thomas_coords(abund_vec = abund_vec,
-                                sigma = sigma,
-                                mother_points = mother_points,
-                                cluster_points = cluster_points,
-                                xmother = xmother,
-                                ymother = ymother,
-                                xrange = xrange,
-                                yrange = yrange,
-                                seed = seed)
-
+   sim_dat <-  sim_thomas_coords(abund_vec = abund_vec,
+                                 sigma = sigma,
+                                 mother_points = mother_points,
+                                 cluster_points = cluster_points,
+                                 xmother = xmother,
+                                 ymother = ymother,
+                                 xrange = xrange,
+                                 yrange = yrange,
+                                 seed = seed)
    return(sim_dat)
 }
 

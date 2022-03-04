@@ -1,11 +1,11 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.2.0.9014
+Version: 0.2.0.9015
 Authors@R: c(person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de", role = c("aut"))
     )
-Date: 2022-02-23
+Date: 2022-03-04
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
