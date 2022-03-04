@@ -4,6 +4,7 @@ mobsim 0.2.1
 ### POTENTIAL CODE BREAK
 * In sample_quadrats() default value for `avoid_overlap` argument was changed from FALSE to TRUE.
 * sim_sad() now throws an error if s_pool or n_sim is not a whole number.
+* sim_sad() and other simulation functions now number species with leading zeroes (species_001, species_002, etc)
 
 ### NEW FEATURES
 In `sim_thomas_community()` and `sim_thomas_coords()` users can now specify:
