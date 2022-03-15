@@ -18,7 +18,7 @@ sampling_grids(
 )
 }
 \arguments{
-\item{n_quadrats}{Number of sampling quadrats}
+\item{n_quadrats}{(integer) Number of sampling quadrats}
 
 \item{xmin}{(numeric) minimum possible value on the x axis a quadrat can cover.}
 
@@ -28,14 +28,14 @@ sampling_grids(
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
 
-\item{x0}{Lower left corner of the first quadrat in transect and grid sampling}
+\item{x0}{(numeric value) Lower left corner of the first quadrat in transect and grid sampling}
 
-\item{y0}{Lower left corner of the first quadrat in transect and grid sampling}
+\item{y0}{(numeric value) Lower left corner of the first quadrat in transect and grid sampling}
 
-\item{delta_x}{Distance between consecutive quadrats in transect and grid sampling
+\item{delta_x}{(numeric value) Distance between consecutive quadrats in transect and grid sampling
 in x-direction (the distance between the left sides is measured)}
 
-\item{delta_y}{Distance between consecutive quadrats in transect and grid sampling
+\item{delta_y}{(numeric value) Distance between consecutive quadrats in transect and grid sampling
 in y-direction (the distance between the lower sides is measured)}
 
 \item{quadrat_size}{(numeric) width of the quadrats.}

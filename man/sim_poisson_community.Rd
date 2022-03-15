@@ -11,7 +11,8 @@ sim_poisson_community(
   sad_coef = list(cv_abund = 1),
   fix_s_sim = FALSE,
   xrange = c(0, 1),
-  yrange = c(0, 1)
+  yrange = c(0, 1),
+  seed = NULL
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ species in the simulated local community? (logical)}
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
 \item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 A community object as defined by \code{\link{community}}.

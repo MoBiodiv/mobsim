@@ -2,12 +2,24 @@
 % Please edit documentation in R/Sample_quadrats.R
 \name{sampling_random_overlap}
 \alias{sampling_random_overlap}
-\title{Creates square quadrats randomly distributed that may overlap each other}
+\title{Creates coordinates (lower left corner of a quadrat) randomly distributed
+that may overlap each other}
 \usage{
-sampling_random_overlap(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size)
+sampling_random_overlap(
+  n_quadrats,
+  min_dist,
+  xmin,
+  xmax,
+  ymin,
+  ymax,
+  seed = NULL
+)
 }
 \arguments{
 \item{n_quadrats}{Number of sampling quadrats}
+
+\item{min_dist}{(numeric) minimal distance between two points to avoid overlap.
+Equal to the length of a quadrat diagonal}
 
 \item{xmin}{(numeric) minimum possible value on the x axis a quadrat can cover.}
 
@@ -17,12 +29,13 @@ sampling_random_overlap(n_quadrats, xmin, xmax, ymin, ymax, quadrat_size)
 
 \item{ymax}{(numeric) maximum possible value on the y axis a quadrat can cover.}
 
-\item{quadrat_size}{(numeric) width of a square quadrat}
+\item{seed}{(integer) Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 a data.frame with 2 columns x and y giving  the coordinates of the
 lower left corner of the square quadrats.
 }
 \description{
-Creates square quadrats randomly distributed that may overlap each other
+Creates coordinates (lower left corner of a quadrat) randomly distributed
+that may overlap each other
 }

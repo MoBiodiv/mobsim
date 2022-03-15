@@ -12,7 +12,8 @@ sim_thomas_coords(
   ymother = NA,
   cluster_points = NA,
   xrange = c(0, 1),
-  yrange = c(0, 1)
+  yrange = c(0, 1),
+  seed = NULL
 )
 }
 \arguments{
@@ -66,6 +67,8 @@ all species, \code{xrange} should be a data.frame with 2 columns, min and max.}
 \item{yrange}{Extent of the community in y-direction. If this a numeric vector
 of length 2, all species share the same range. To specify different y ranges for
 all species, \code{xrange} should be a data.frame with 2 columns, min and max.}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 A community object as defined by \code{\link{community}}.
