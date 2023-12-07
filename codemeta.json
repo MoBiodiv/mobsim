@@ -7,31 +7,27 @@
   "codeRepository": "https://github.com/AlbanSagouis/mobsim",
   "issueTracker": "https://github.com/AlbanSagouis/mobsim",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.0.9011",
+  "version": "0.2.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.1.2 (2021-11-01)",
-  "provider": {
-    "@id": "https://cran.r-project.org",
-    "@type": "Organization",
-    "name": "Comprehensive R Archive Network (CRAN)",
-    "url": "https://cran.r-project.org"
-  },
+  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
   "author": [
     {
       "@type": "Person",
       "givenName": "Felix",
       "familyName": "May",
-      "email": "felix.may@posteo.de"
+      "email": "felix.may@fu-berlin.de",
+      "@id": "https://orcid.org/0000-0002-1106-8188"
     },
     {
       "@type": "Person",
       "givenName": "Alban",
       "familyName": "Sagouis",
-      "email": "alban.sagouis@idiv.de"
+      "email": "alban.sagouis@idiv.de",
+      "@id": "https://orcid.org/0000-0002-3827-1063"
     }
   ],
   "maintainer": [
@@ -39,7 +35,8 @@
       "@type": "Person",
       "givenName": "Felix",
       "familyName": "May",
-      "email": "felix.may@posteo.de"
+      "email": "felix.may@fu-berlin.de",
+      "@id": "https://orcid.org/0000-0002-1106-8188"
     }
   ],
   "softwareSuggestions": [
@@ -83,6 +80,7 @@
       "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
+      "version": ">= 3.0.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -174,9 +172,14 @@
       "identifier": "stats",
       "name": "stats"
     },
+    "8": {
+      "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "3709.306KB",
+  "fileSize": "1719.797KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -193,9 +196,8 @@
           "familyName": "Gerstner"
         },
         {
-          "@type": "Person",
-          "givenName": "Dan",
-          "familyName": "McGlinn"
+          "@type": "Organization",
+          "name": "DanMcGlinn"
         },
         {
           "@type": "Person",
@@ -209,8 +211,10 @@
         }
       ],
       "name": "mobsim: An R package for the simulation and measurement of biodiversity across spatial scales",
-      "url": "https://doi.org/10.1111/2041-210X.12986",
-      "pagination": "1401-1408",
+      "identifier": "https://doi.org/10.1111/2041-210X.12986",
+      "pagination": "-7",
+      "@id": "https://doi.org/10.1111/2041-210X.12986",
+      "sameAs": "https://doi.org/10.1111/2041-210X.12986",
       "isPartOf": {
         "@type": "PublicationIssue",
         "issueNumber": "6",
@@ -222,5 +226,9 @@
         }
       }
     }
-  ]
+  ],
+  "releaseNotes": "https://github.com/AlbanSagouis/mobsim/blob/master/NEWS.md",
+  "readme": "https://github.com/AlbanSagouis/mobsim/blob/master/README.md",
+  "contIntegration": "https://github.com/MoBiodiv/mobsim/actions",
+  "developmentStatus": "https://www.repostatus.org/"
 }

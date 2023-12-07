@@ -63,5 +63,4 @@ quadrat_area = 0.002, method = "grid")
 specnumber(comm_mat1$spec_dat)
 diversity(comm_mat1$spec_dat, index = "shannon")
 
-
 }

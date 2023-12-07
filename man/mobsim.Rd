@@ -71,6 +71,4 @@ is described by its xy-coordinates and a species identity label.
 
 \author{
 Felix May
-
-Felix May
 }

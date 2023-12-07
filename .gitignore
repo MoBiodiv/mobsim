@@ -8,3 +8,7 @@ mobsim.Rproj
 revdep/
 .Rproj.user
 mobsim_package.Rproj
+
+.DS_Store
+/doc/
+/Meta/

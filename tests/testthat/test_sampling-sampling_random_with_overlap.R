@@ -59,15 +59,17 @@ test_that("seed parameter is respected", {
    sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
 
    expect_equal(
-      sampling_random_overlap(n_quadrats = 5L,
+      suppressWarnings(
+        sampling_random_overlap(n_quadrats = 5L,
                               xmin = 0, xmax = 1,
                               ymin = 0, ymax = 1,
                               min_dist = sqrt(2 * 0.01),
-                              seed = 42L),
-      sampling_random_overlap(n_quadrats = 5L,
+                              seed = 42L)),
+      suppressWarnings(
+        sampling_random_overlap(n_quadrats = 5L,
                               xmin = 0, xmax = 1,
                               ymin = 0, ymax = 1,
                               min_dist = sqrt(2 * 0.01),
-                              seed = 42L)
+                              seed = 42L))
    )
 })

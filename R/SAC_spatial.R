@@ -108,22 +108,23 @@ rare_curve <- function(abund_vec)
 #' plot(sac1)
 #'
 #' @export
+#' @importFrom methods is
 #'
 spec_sample_curve <- function(comm, method = c("accumulation" ,"rarefaction"))
 {
-   if (class(comm) != "community")
+   if (!is(comm, "community"))
       stop("spec_sample_curve requires a community object as input. See ?community.")
 
    out_dat <- data.frame(n = 1:nrow(comm$census))
 
    method <- match.arg(method, several.ok = TRUE)
 
-   if ("accumulation" %in% method){
+   if ("accumulation" %in% method) {
       out_dat$spec_accum <- sSAC1_C(comm$census$x, comm$census$y,
                                     as.integer(comm$census$species))
    }
 
-   if ("rarefaction" %in% method){
+   if ("rarefaction" %in% method) {
       abund <- community_to_sad(comm)
       out_dat$spec_rarefied <- rare_curve(abund)
 
@@ -156,19 +157,19 @@ plot.spec_sample_curve <- function(x, ...)
                   ylab = "Expected no.of species",
                   main = "Species sampling curves", ...)
 
-   if (ncol(x) == 2){
-      if (names(x)[2] == "spec_accum"){
+   if (ncol(x) == 2) {
+      if (names(x)[2] == "spec_accum") {
          legend_text <- c("Accumulation")
          line_col <- "red"
       }
-      if (names(x)[2] == "spec_rarefied"){
+      if (names(x)[2] == "spec_rarefied") {
          legend_text <- c("Rarefaction")
          line_col <- "blue"
       }
       graphics::lines(x[[1]], x[[2]], col = line_col)
    }
 
-   if (ncol(x) == 3){
+   if (ncol(x) == 3) {
       legend_text <- c("Accumulation","Rarefaction")
       line_col <- c("red","blue")
       graphics::lines(x[[1]], x[[2]], col = line_col[1])
@@ -177,4 +178,3 @@ plot.spec_sample_curve <- function(x, ...)
 
    graphics::legend("bottomright", legend = legend_text, lty = 1, col = line_col)
 }
-
