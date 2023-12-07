@@ -4,10 +4,10 @@
   "identifier": "mobsim",
   "description": "Tools for the simulation, analysis and sampling of spatial biodiversity data (May et al. 2017) <doi:10.1101/209502>. In the simulation tools user define the numbers of species and individuals, the species abundance distribution and species aggregation. Functions for analysis include species rarefaction and accumulation curves, species-area relationships and the distance decay of similarity. ",
   "name": "mobsim: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes",
-  "codeRepository": "https://github.com/AlbanSagouis/mobsim",
-  "issueTracker": "https://github.com/AlbanSagouis/mobsim",
+  "codeRepository": "https://github.com/MoBiodiv/mobsim",
+  "issueTracker": "https://github.com/MoBiodiv/mobsim",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -227,8 +227,8 @@
       }
     }
   ],
-  "releaseNotes": "https://github.com/AlbanSagouis/mobsim/blob/master/NEWS.md",
-  "readme": "https://github.com/AlbanSagouis/mobsim/blob/master/README.md",
+  "releaseNotes": "https://github.com/MoBiodiv/mobsim/blob/master/NEWS.md",
+  "readme": "https://github.com/MoBiodiv/mobsim/blob/master/README.md",
   "contIntegration": "https://github.com/MoBiodiv/mobsim/actions",
   "developmentStatus": "https://www.repostatus.org/"
 }

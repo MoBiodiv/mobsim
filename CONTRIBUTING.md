@@ -3,7 +3,7 @@
 ## Opening issues
 
 The easiest way to note any behavioural curiosities or to request any new
-features is by opening a [github issue](https://github.com/albansagouis/mobsim/issues).
+features is by opening a [github issue](https://github.com/MoBiodiv/mobsim/issues).
 
 
 ## Development guidelines
