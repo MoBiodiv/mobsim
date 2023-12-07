@@ -8,7 +8,7 @@ test_that("fails correctly", {
 
 test_that("classes are as expected", {
    comm_mat1 <- sample_quadrats(
-      sim_poisson_community(s_pool = 5L, n_sim = 50L),
+      comm = sim_poisson_community(s_pool = 5L, n_sim = 50L),
       plot = FALSE, n_quadrats = 2L,
       method = "random", avoid_overlap = FALSE
    )
@@ -20,7 +20,8 @@ test_that("classes are as expected", {
 
 test_that("dimensions are as expected", {
    S = 5L
-   sim_com1 <- sim_poisson_community(s_pool = S, n_sim = 50L, fix_s_sim = TRUE)
+   sim_com1 <- sim_poisson_community(
+      s_pool = S, n_sim = 50L, fix_s_sim = TRUE)
    n_quadrats <- 10L
    comm_mat <- sample_quadrats(
       sim_com1, n_quadrats = n_quadrats,
@@ -34,10 +35,11 @@ test_that("dimensions are as expected", {
 })
 
 test_that("default argument values are as expected", {
-   comm <- sim_thomas_community(s_pool = 10L, n_sim = 100L,
-                                sad_type = "lnorm", sad_coef = list(cv_abund = 1), fix_s_sim = TRUE,
-                                sigma = 1, mother_points = 0L, xrange = c(0, 1), yrange = c(0, 1),
-                                seed = 42L)
+   comm <- sim_thomas_community(
+      s_pool = 10L, n_sim = 100L,
+      sad_type = "lnorm", sad_coef = list(cv_abund = 1), fix_s_sim = TRUE,
+      sigma = 1, mother_points = 0L, xrange = c(0, 1), yrange = c(0, 1),
+      seed = 42L)
    expect_snapshot_output(sample_quadrats(comm = comm, seed = 42L))
 })
 
@@ -46,13 +48,24 @@ test_that("calls the correct subfunction if method is random, with overlap", {
    quadrat_area <- 0.01
    expect_equal(
       as.matrix(
-         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L, quadrat_area = quadrat_area,
-                         method = "random", avoid_overlap = FALSE)$xy_dat,
-         rownames.force = FALSE),
+         suppressWarnings(
+            sample_quadrats(
+               comm = sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L,
+               quadrat_area = quadrat_area,
+               method = "random", avoid_overlap = FALSE)$xy_dat
+         ),
+         rownames.force = FALSE
+      ),
       as.matrix(
-         sampling_random_overlap(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
-                                 ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
-                                 min_dist = sqrt(2*quadrat_area), n_quadrats = 10L, seed = 42L)
+         suppressWarnings(
+            sampling_random_overlap(
+               xmin = sim_com1$x_min_max[1L],
+               xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+               ymin = sim_com1$y_min_max[1L],
+               ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
+               min_dist = sqrt(2*quadrat_area),
+               n_quadrats = 10L, seed = 42L)
+         )
       )
    )
 })
@@ -63,30 +76,41 @@ test_that("calls the correct subfunction if method is random, without overlap, w
    quadrat_area <- 0.01
    expect_equal(
       as.matrix(
-         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L, quadrat_area = quadrat_area,
-                         method = "random", avoid_overlap = TRUE)$xy_dat,
+         sample_quadrats(
+            comm = sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L,
+            quadrat_area = quadrat_area,
+            method = "random", avoid_overlap = TRUE)$xy_dat,
          rownames.force = FALSE),
       as.matrix(
-         sampling_random_spatstat(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
-                                  ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
-                                  min_dist = sqrt(2*quadrat_area), n_quadrats = 10L, seed = 42L)
+         sampling_random_spatstat(
+            xmin = sim_com1$x_min_max[1L],
+            xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+            ymin = sim_com1$y_min_max[1L],
+            ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
+            min_dist = sqrt(2*quadrat_area), n_quadrats = 10L, seed = 42L)
       )
    )
 })
 
 test_that("calls the correct subfunction if method is random, without overlap, without spatstat", {
-   mockery::stub(where = sample_quadrats, what = "requireNamespace", how = FALSE, depth = 1L)
+   mockery::stub(where = sample_quadrats,
+                 what = "requireNamespace", how = FALSE, depth = 1L)
+
    sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
    quadrat_area <- 0.01
    expect_equal(
       as.matrix(
-         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L, quadrat_area = quadrat_area,
-                         method = "random", avoid_overlap = TRUE)$xy_dat,
+         sample_quadrats(
+            comm = sim_com1, seed = 42L, plot = FALSE, n_quadrats = 10L, quadrat_area = quadrat_area,
+            method = "random", avoid_overlap = TRUE)$xy_dat,
          rownames.force = FALSE),
       as.matrix(
-         sampling_random_bruteforce(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
-                                    ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
-                                    min_dist = sqrt(2*quadrat_area), n_quadrats = 10L, seed = 42L)
+         sampling_random_bruteforce(
+            xmin = sim_com1$x_min_max[1L],
+            xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+            ymin = sim_com1$y_min_max[1L],
+            ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
+            min_dist = sqrt(2*quadrat_area), n_quadrats = 10L, seed = 42L)
       )
    )
 })
@@ -96,8 +120,10 @@ test_that("calls the correct subfunction if method is transects", {
    quadrat_area <- 0.01
    expect_equal(
       as.matrix(
-         sample_quadrats(sim_com1, plot = FALSE, n_quadrats = 5L, quadrat_area = quadrat_area,
-                         method = "transect")$xy_dat,
+         sample_quadrats(
+            comm = sim_com1, plot = FALSE, n_quadrats = 5L,
+            quadrat_area = quadrat_area,
+            method = "transect")$xy_dat,
          rownames.force = FALSE),
       as.matrix(
          sampling_transects(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
@@ -116,10 +142,13 @@ test_that("calls the correct subfunction if method is grid", {
                          method = "grid")$xy_dat,
          rownames.force = FALSE),
       as.matrix(
-         sampling_grids(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
-                        ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
-                        x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
-                        quadrat_size = sqrt(quadrat_area), n_quadrats = 5L),
+         sampling_grids(
+            xmin = sim_com1$x_min_max[1L],
+            xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+            ymin = sim_com1$y_min_max[1L],
+            ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
+            x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
+            quadrat_size = sqrt(quadrat_area), n_quadrats = 5L),
          rownames.force = FALSE)
    )
 })
@@ -129,12 +158,18 @@ test_that("calls the correct subfunction if edge case where n_quadrats == 1", {
    quadrat_area <- 0.01
    expect_equal(
       as.numeric(
-         sample_quadrats(sim_com1, seed = 42L, plot = FALSE, n_quadrats = 1L, quadrat_area = quadrat_area,
-                         method = "random", avoid_overlap = TRUE)$xy_dat
+         sample_quadrats(
+            comm = sim_com1, seed = 42L, plot = FALSE, n_quadrats = 1L,
+            quadrat_area = quadrat_area,
+            method = "random", avoid_overlap = TRUE)$xy_dat
       ),
       as.numeric(
-         sampling_one_quadrat(xmin = sim_com1$x_min_max[1L], xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
-                              ymin = sim_com1$y_min_max[1L], ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area), seed = 42L)
+         sampling_one_quadrat(
+            xmin = sim_com1$x_min_max[1L],
+            xmax = sim_com1$x_min_max[2L] - sqrt(quadrat_area),
+            ymin = sim_com1$y_min_max[1L],
+            ymax = sim_com1$y_min_max[2L] - sqrt(quadrat_area),
+            seed = 42L)
       )
    )
 })

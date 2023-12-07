@@ -33,7 +33,7 @@
 #' specnumber(comm_mat1$spec_dat)
 #' diversity(comm_mat1$spec_dat, index = "shannon")
 #'
-#'
+#' @importFrom methods is
 #' @export
 #'
 sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
@@ -42,7 +42,7 @@ sample_quadrats <- function(comm, n_quadrats = 20, quadrat_area = 0.01,
                             x0 = 0, y0 = 0, delta_x = 0.1, delta_y = 0.1,
                             seed = NULL)
 {
-   if (class(comm) != "community")
+   if (!is(comm, "community"))
       stop("comm has to be a community object")
    if (round(n_quadrats, 0) != n_quadrats) stop("n_quadrats has to be an integer")
 

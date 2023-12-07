@@ -6,13 +6,13 @@ sSAC1_C <- function(x, y, id_spec) {
 }
 
 #' Thomas process individual distribution simulation for one species
-#' 
+#'
 #' Usually used internally inside \code{\link{sim_thomas_coords}}
 #' This function randomly draws points (individuals) around one or several mother points using Rcpp.
 #' The function is an efficient re-implementation of the rThomas function from the spatstat package.
-#' 
+#'
 #' @name rThomas_rcpp
-#' 
+#'
 #' @param n_points The total number of points (individuals).
 #' @param n_mother_points Number of mother points (= cluster centres).
 #' @param xmother Vector of \code{n_mother_points} x coordinates for the mother points.

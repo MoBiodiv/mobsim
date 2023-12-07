@@ -115,7 +115,7 @@
 #' # Different important SAD models
 #'
 #' # Fisher's log-series
-#' sad_logseries <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "ls",
+#' sad_logseries <- sim_sad(s_pool = NULL, n_sim = NULL, sad_type = "ls",
 #'                          sad_coef = list("N" = 1e5, "alpha" = 20))
 #'
 #' # Poisson log-normal
@@ -123,7 +123,7 @@
 #'                       sad_coef = list("mu" = 5, "sig" = 0.5))
 #'
 #' # Mac-Arthur's broken stick
-#' sad_broken_stick <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "bs",
+#' sad_broken_stick <- sim_sad(s_pool = NULL, n_sim = NULL, sad_type = "bs",
 #'                             sad_coef = list("N" = 1e5, "S" = 100))
 #'
 #' # Plot all SADs together as rank-abundance curves
@@ -133,7 +133,8 @@
 #' lines(1:length(sad_broken_stick), sad_broken_stick, type = "b", col = 4)
 #' legend("topright", c("Log-series","Log-normal","Poisson log-normal","Broken stick"),
 #'        col = 1:4, pch = 1)
-#'
+#' @importFrom methods is
+#' @importFrom sads rsad
 #' @export
 
 sim_sad <- function(s_pool = NULL, n_sim = NULL,
@@ -151,11 +152,12 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 
    # Handles parameters that give the community size + assertions ----
    if (sad_type %in% c("bs", "ls", "mzsm")) {
-      S <- switch(sad_type,
-                  bs = sad_coef$S,
-                  ls = sad_coef$alpha * log( 1 + sad_coef$N / sad_coef$alpha ),
-                  mzsm = sum(sad_coef$theta / (1:sad_coef$J) *
-                                (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1))
+      S <- switch(
+         sad_type,
+         bs = sad_coef$S,
+         ls = sad_coef$alpha * log( 1 + sad_coef$N / sad_coef$alpha ),
+         mzsm = sum(sad_coef$theta / (1:sad_coef$J) *
+                       (1 - (1:sad_coef$J)/sad_coef$J)^(sad_coef$theta - 1))
       )
       S <- round(S)
       if (!is.null(s_pool)) warning(paste("For the selected SAD model the value of s_pool is ignored.
@@ -170,7 +172,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
       if (round(s_pool, 0L) != s_pool || s_pool <= 0) stop("s_pool has to be a positive integer number")
       if (is.null(n_sim) || is.na(n_sim)) stop("The argument n_sim is mandatory for the selected sad and has to be a positive integer number.")
       if (round(n_sim, 0L) != n_sim || n_sim <= 0) stop("n_sim has to be a positive integer number")
-      if (class(sad_coef) != "list" || is.null(names(sad_coef))) stop("coef must be a named list!")
+      if (!is(sad_coef, "list") || is.null(names(sad_coef))) stop("coef must be a named list!")
    }
 
 
@@ -179,7 +181,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
    if (isTRUE(s_pool == 1) && !is.null(n_sim)) {
       abund_local <- n_sim
 
-      class(abund_local) <- c("sad","integer")
+      class(abund_local) <- c("sad", "integer")
       return(abund_local) # return early
    }
 
@@ -206,15 +208,20 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 
    # Generates the "community" ----
    if (sad_type %in% c("gamma","geom","lnorm","nbinom","weibull")) {
-      sadr <- utils::getFromNamespace(paste("r", sad_type, sep = ""), ns = "stats")
+      sadr <- utils::getFromNamespace(paste0("r", sad_type), ns = "stats")
    } else {
-      sadr <- utils::getFromNamespace(paste("r", sad_type, sep = ""), ns = "sads")
+      sadr <- utils::getFromNamespace(paste0("r", sad_type), ns = "sads")
    }
    abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
    rel_abund_pool <- abund_pool/sum(abund_pool)
    rel_abund_pool <- sort(rel_abund_pool, decreasing = TRUE)
-   names(rel_abund_pool) <- paste("species", formatC(x = seq_along(rel_abund_pool), width = nchar(length(rel_abund_pool)), format = "d", flag = "0"), sep = "_")	# underslash addition for readability
+   names(rel_abund_pool) <- paste(
+      "species",
+      formatC(x = seq_along(rel_abund_pool),
+              width = nchar(length(rel_abund_pool)),
+              format = "d", flag = "0"),
+      sep = "_")
 
    sample_vec <- sample(x = names(rel_abund_pool),
                         size = n_sim, replace = TRUE,
@@ -310,35 +317,43 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
 
    x <- x[x > 0]
 
-   if (method == "rank")
-      graphics::plot(sort(as.numeric(x), decreasing = TRUE), type = "b", log = "y",
-                     xlab = "Species rank", ylab = "Species abundance",
-                     main = "Rank-abundance curve", las = 1, ...)
+   switch(method,
+          rank = graphics::plot(sort(as.numeric(x), decreasing = TRUE),
+                                type = "b", log = "y",
+                                xlab = "Species rank",
+                                ylab = "Species abundance",
+                                main = "Rank-abundance curve", las = 1, ...),
 
-   if (method == "octave") {
+          octave = {
 
-      # code adopted from untb:preston()
-      max_abund <- max(x)
-      n <- 1 + ceiling(log(max_abund)/log(2)) # number of abundance classes
+             # code adopted from untb:preston()
+             max_abund <- max(x)
+             n <- 1 + ceiling(log(max_abund)/log(2)) # number of abundance classes
 
-      if (n < 2) breaks <- c(0, 1)
-      else       breaks <- c(0, 2^(0:(n - 2)), max_abund)
+             if (n < 2) {
+                breaks <- c(0, 1)
+             } else { breaks <- c(0, 2^(0:(n - 2)), max_abund) }
 
-      r <- graphics::hist(x, plot = FALSE, breaks = breaks, right = TRUE)
-      abund_dist <- r$counts
+             r <- graphics::hist(x, plot = FALSE, breaks = breaks,
+                                 right = TRUE)
+             abund_dist <- r$counts
 
-      if (n <= 2) names(abund_dist) <- c("1","2")[1:n]
-      else        names(abund_dist) <- c("1", "2",
-                                         paste(breaks[-c(1:2, length(breaks))] + 1,
-                                               "-", breaks[-c(1:3)], sep = ""))
+             if (n <= 2) {
+                names(abund_dist) <- c("1","2")[1:n]
+             } else {
+                names(abund_dist) <- c("1", "2",
+                                       paste(breaks[-c(1:2, length(breaks))] + 1,
+                                             "-", breaks[-c(1:3)], sep = ""))
+             }
 
-      graphics::barplot(height = as.numeric(abund_dist),
-                        names.arg = names(abund_dist),
-                        xlab = "Abundance class", ylab = "No. of species",
-                        main = "Preston octave plot", las = 1, ...)
-   }
+             graphics::barplot(height = as.numeric(abund_dist),
+                               names.arg = names(abund_dist),
+                               xlab = "Abundance class",
+                               ylab = "No. of species",
+                               main = "Preston octave plot", las = 1, ...)
+          }
+   )
 }
-
 #' Create spatial community object
 #'
 #' Creates a spatial community object with defined extent and with coordinates
@@ -371,11 +386,14 @@ plot.sad <- function(x, ..., method = c("octave","rank"))
 #'
 community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 {
-   if (length(xrange) < 2 | length(yrange) < 2) stop("Error: missing ranges for x or y!")
+   if (length(xrange) < 2 || length(yrange) < 2) {
+      stop("Error: missing ranges for x or y!") }
 
-   if (is.vector(xrange) & is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
-      xrange <- data.frame(matrix(xrange, length(unique(spec_id)), 2, byrow = TRUE))
-      yrange <- data.frame(matrix(yrange, length(unique(spec_id)), 2, byrow = TRUE))
+   if (is.vector(xrange) && is.vector(yrange))	{	# converting xrange and yrange from vectors to data.frames
+      xrange <- data.frame(matrix(data = xrange, byrow = TRUE,
+                                  nrow = length(unique(spec_id)), ncol = 2))
+      yrange <- data.frame(matrix(data = yrange, byrow = TRUE,
+                                  nrow = length(unique(spec_id)), ncol = 2))
    }
 
    if (min(x) < min(xrange[,1])) stop("Error: Inappropriate ranges for x!")
@@ -408,7 +426,7 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #'
 #' @export
 #'
-summary.community <- function(object, digits=2, ...)	# digits should be passed through ... instead.
+summary.community <- function(object, digits = 2, ...)	# digits should be passed through ... instead.
 {
    cat("No. of individuals: ", nrow(object$census), "\n")
    cat("No. of species: ", length(unique(object$census$species)), "\n")
@@ -459,11 +477,12 @@ plot.community <- function(x, ..., col = NULL, pch = NULL)
 #' plot(sad1, method = "rank")
 #' plot(sad1, method = "octave")
 #'
+#' @importFrom methods is
 #' @export
 #'
 community_to_sad <- function(comm)
 {
-   if (class(comm) != "community")
+   if (!is(comm, "community"))
       stop("community_to_sad requires a community object as input. See ?community.")
 
    abund <- table(comm$census$species)

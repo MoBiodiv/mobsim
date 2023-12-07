@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
@@ -23,7 +23,7 @@ The package includes functions to simulate species distributions in
 space with controlled abundance distributions as well as controlled
 intraspecific aggregation. For analysis there are functions for species
 rarefaction and accumulation curves, species-area relationships,
-endemics-area relationships and th distance-decay of community
+endemics-area relationships and the distance-decay of community
 similarity.
 
 A detailed introduction of the package is available at

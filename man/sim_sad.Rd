@@ -131,7 +131,7 @@ legend("topright", c("fix_s_sim = TRUE","fix_s_sim = FALSE"),
 # Different important SAD models
 
 # Fisher's log-series
-sad_logseries <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "ls",
+sad_logseries <- sim_sad(s_pool = NULL, n_sim = NULL, sad_type = "ls",
                          sad_coef = list("N" = 1e5, "alpha" = 20))
 
 # Poisson log-normal
@@ -139,7 +139,7 @@ sad_poilog <- sim_sad(s_pool = 100, n_sim = 10000, sad_type = "poilog",
                       sad_coef = list("mu" = 5, "sig" = 0.5))
 
 # Mac-Arthur's broken stick
-sad_broken_stick <- sim_sad(s_pool = NULL, n_sim = 10000, sad_type = "bs",
+sad_broken_stick <- sim_sad(s_pool = NULL, n_sim = NULL, sad_type = "bs",
                             sad_coef = list("N" = 1e5, "S" = 100))
 
 # Plot all SADs together as rank-abundance curves
@@ -149,7 +149,6 @@ lines(1:length(sad_poilog), sad_poilog, type = "b", col = 3)
 lines(1:length(sad_broken_stick), sad_broken_stick, type = "b", col = 4)
 legend("topright", c("Log-series","Log-normal","Poisson log-normal","Broken stick"),
        col = 1:4, pch = 1)
-
 }
 \author{
 Felix May

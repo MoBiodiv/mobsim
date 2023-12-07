@@ -1,35 +1,27 @@
 ## Resubmission
 
-This is a resubmission. In this version I have:
+This is a resubmission. In this version we have:
 
-* Formatted the reference according to the suggestions of Uwe Ligges and changed from 
-a reference using the bioRXiv labe to the DOI
-
-* Included a reference to the paper describing the package in the DESCRIPTION file, see
-[](https://www.biorxiv.org/content/early/2017/10/26/209502), as suggested by the CRAN team
-member Swetlana Herbrandt
-
-* Fixed small typos in the vignettes and documentation
+* Fixed the problems that caused mobsim to be archived on CRAN: essentially by
+removing the dependency on spatstat.core and using spatstat.random and 
+spatstat.geom instead.
+* Fixed inst/CITATION and DESCRIPTION
+* Added features to major functions
 
 ## Test environments
-* local ubuntu 16.04 LTS, R 3.4.2
-* win-builder (devel and release)
+* local - Darwin, R 4.3.1
+* win-builder (release and devel)
+* r hub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
+* r hub - Fedora Linux, R-devel, clang, gfortran
 
 ## R CMD check results
-
-There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Felix May <felix.may@posteo.de>’
-
-It seems this is normal for the first submission of a package
+0 errors | 1 warnings | 0 notes
 
 ## Downstream dependencies
 
-I ran devtools::revdep_check() locally
+We ran revdepcheck::revdep_check() locally and no packages depend on mobsim
+any more.
 
-0 packages with problems
+Best wishes,
 
-No ERRORs or WARNINGs found :)
+Felix may and Alban Sagouis

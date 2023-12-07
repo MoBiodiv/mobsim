@@ -1,11 +1,15 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 cran-comments.md
+CONTRIBUTING.md
+codemeta.json
 ^revdep$
 ^README\.Rmd$
 ^README-.*\.png$
-^NEWS\.md$
 ^LICENSE\.md$
 ^examples$
 ^\.travis\.yml$
 ^\.github$
+^doc$
+^Meta$
+^codemeta\.json$
