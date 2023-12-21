@@ -107,7 +107,7 @@ richness are indicated by changing slopes and shapes of the curves.
 
 # Change in spatial distributions
 
-Finally we change the spatial patterns of species, by simulating clumpoing of 
+Finally we change the spatial patterns of species, by simulating clumping of 
 conspecific individuals using a Thomas process model instead of a Poisson
 
 ```{r, fig.width = 7, fig.height = 3.5}
