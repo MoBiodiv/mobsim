@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
 
@@ -77,7 +76,7 @@ plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](inst/image/README-unnamed-chunk-4-1.png)
+![](README-unnamed-chunk-5-1.png)<!-- -->
 
 ### Analysis of spatially-explicit community data
 
@@ -98,7 +97,7 @@ lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](inst/image/README-unnamed-chunk-6-1.png)
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 ### Sampling of communities
 
@@ -112,4 +111,4 @@ samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](inst/image/README-unnamed-chunk-7-1.png)
+![](README-unnamed-chunk-8-1.png)<!-- -->

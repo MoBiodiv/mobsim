@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 ```
 <!-- badges: start -->
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://CRAN.R-project.org/package=mobsim)
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
@@ -75,13 +75,11 @@ library(mobsim)
 comm_rand <- sim_poisson_community(s_pool = 30, n_sim = 300)
 comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300, sigma = 0.05, mother_points = 1)
 ```
-```{r, fig.width=8, fig.height=4.5, eval=F}
+```{r, fig.width=8, fig.height=4.5, eval=T}
 par(mfrow = c(1,2))
 plot(comm_rand)
 plot(comm_agg)
 ```
-
-![](inst/image/README-unnamed-chunk-4-1.png)
 
 ### Analysis of spatially-explicit community data
 
@@ -93,7 +91,7 @@ sar_rand <- divar(comm_rand)
 sar_agg <- divar(comm_agg)
 ```
 
-```{r, fig.width=10, fig.height=5, eval = F}
+```{r, fig.width=5, fig.height=5, eval = T}
 plot(m_species ~ prop_area, data = sar_rand, type = "b", log = "xy",
      xlab = "Proportion of area sampled",ylab = "No. of species",
      ylim = c(3,30))
@@ -101,21 +99,18 @@ lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](inst/image/README-unnamed-chunk-6-1.png)
-
 ### Sampling of communities
 
 Simulated or observed communities can be also sampled inorder to test whether
 biodiversity changes are correctly detected and revealed by any sampling
 design.
 
-```{r, eval = F}
+```{r, fig.width=9, fig.height=5, eval = T}
 par(mfrow = c(1,2))
 samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](inst/image/README-unnamed-chunk-7-1.png)
 
 
 

@@ -17,8 +17,6 @@ spatstat.geom instead.
 ## R CMD check results
 0 errors | 1 warnings | 0 notes
 
-## Downstream dependencies
-
 We ran revdepcheck::revdep_check() locally and no packages depend on mobsim
 any more.
 
