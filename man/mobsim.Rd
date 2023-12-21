@@ -21,22 +21,7 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{sim_poisson_community}}
 
 \code{\link{sim_thomas_community}}
-}
 
-\section{Functions to analyse species abundances and distributions}{
-
-
-\code{\link{rare_curve}}
-
-\code{\link{spec_sample_curve}}
-
-\code{\link{divar}}
-
-\code{\link{dist_decay}}
-
-\code{\link{sample_quadrats}}
-}
-
-\author{
+  \author{
 Felix May
 }

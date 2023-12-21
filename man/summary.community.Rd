@@ -4,10 +4,12 @@
 \alias{summary.community}
 \title{Print summary of spatial community object}
 \usage{
-\method{summary}{community}(object, ...)
+\method{summary}{community}(object, digits = 2, ...)
 }
 \arguments{
 \item{object}{Community object of class \code{\link{community}}}
+
+\item{digits}{Integer. Number of digits to print}
 
 \item{...}{Additional arguments passed to \code{\link{print}}.}
 }

@@ -16,6 +16,8 @@
 #'
 #' \code{\link{sim_thomas_community}}
 #'
+#' \code{\link{rThomas_rcpp}}
+#'
 #'
 #' @section Functions to analyse species abundances and distributions:
 #'
@@ -26,6 +28,8 @@
 #' \code{\link{divar}}
 #'
 #' \code{\link{dist_decay}}
+#'
+#' \code{\link{dist_decay_quadrats}}
 #'
 #' \code{\link{sample_quadrats}}
 #'

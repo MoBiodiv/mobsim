@@ -1,22 +1,25 @@
 ## Resubmission
 
-This is a resubmission. In this version I have:
+This is a resubmission. In this version we have:
 
-* Adjusted the package to spatstat 2.0 by following the advice of the spatstat developers
+* Fixed the problems that caused mobsim to be archived on CRAN: essentially by
+removing the dependency on spatstat.core and using spatstat.random and 
+spatstat.geom instead.
+* Fixed inst/CITATION and DESCRIPTION
+* Added features to major functions
 
 ## Test environments
-* windows-latest (release), R version 4.0.4 (2021-02-15) 
-* macOS-latest (release), R version 4.0.4 (2021-02-15) 
-* ubuntu-20.04 (release), R version 4.0.4 (2021-02-15)
-* ubuntu-20.04 (devel), R Under development (unstable) (2021-03-16 r80091) 
-
-All tested on GitHub via GitHub actions
+* local - Darwin, R 4.3.1
+* win-builder (release and devel)
+* r hub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
+* r hub - Fedora Linux, R-devel, clang, gfortran
 
 ## R CMD check results
+0 errors | 1 warnings | 0 notes
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
-(on all three test environments)
+We ran revdepcheck::revdep_check() locally and no packages depend on mobsim
+any more.
 
+Best wishes,
 
-
-
+Felix may and Alban Sagouis

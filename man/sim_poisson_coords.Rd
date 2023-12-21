@@ -4,7 +4,7 @@
 \alias{sim_poisson_coords}
 \title{Simulate random spatial coordinates}
 \usage{
-sim_poisson_coords(abund_vec, xrange = c(0, 1), yrange = c(0, 1))
+sim_poisson_coords(abund_vec, xrange = c(0, 1), yrange = c(0, 1), seed = NULL)
 }
 \arguments{
 \item{abund_vec}{Species abundance vector (integer)}
@@ -12,6 +12,8 @@ sim_poisson_coords(abund_vec, xrange = c(0, 1), yrange = c(0, 1))
 \item{xrange}{Extent of the community in x-direction (numeric vector of length 2)}
 
 \item{yrange}{Extent of the community in y-direction (numeric vector of length 2)}
+
+\item{seed}{Integer. Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 A community object as defined by \code{\link{community}}.

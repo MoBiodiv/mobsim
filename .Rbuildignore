@@ -1,6 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 cran-comments.md
+CONTRIBUTING.md
+codemeta.json
 ^revdep$
 ^README\.Rmd$
 ^README-.*\.png$
@@ -8,4 +10,6 @@ cran-comments.md
 ^examples$
 ^\.travis\.yml$
 ^\.github$
-^CRAN-RELEASE$
+^doc$
+^Meta$
+^codemeta\.json$

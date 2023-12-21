@@ -1,0 +1,234 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "mobsim",
+  "description": "Tools for the simulation, analysis and sampling of spatial biodiversity data (May et al. 2017) <doi:10.1101/209502>. In the simulation tools user define the numbers of species and individuals, the species abundance distribution and species aggregation. Functions for analysis include species rarefaction and accumulation curves, species-area relationships and the distance decay of similarity. ",
+  "name": "mobsim: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes",
+  "codeRepository": "https://github.com/MoBiodiv/mobsim",
+  "issueTracker": "https://github.com/MoBiodiv/mobsim",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "0.3.0",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Felix",
+      "familyName": "May",
+      "email": "felix.may@fu-berlin.de",
+      "@id": "https://orcid.org/0000-0002-1106-8188"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Alban",
+      "familyName": "Sagouis",
+      "email": "alban.sagouis@idiv.de",
+      "@id": "https://orcid.org/0000-0002-3827-1063"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Felix",
+      "familyName": "May",
+      "email": "felix.may@fu-berlin.de",
+      "@id": "https://orcid.org/0000-0002-1106-8188"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat.geom",
+      "name": "spatstat.geom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.geom"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat.random",
+      "name": "spatstat.random",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.random"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "version": ">= 3.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "mockery",
+      "name": "mockery",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=mockery"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    }
+  ],
+  "softwareRequirements": {
+    "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "Rcpp",
+      "name": "Rcpp",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=Rcpp"
+    },
+    "2": {
+      "@type": "SoftwareApplication",
+      "identifier": "vegan",
+      "name": "vegan",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vegan"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "sads",
+      "name": "sads",
+      "version": ">= 0.4.1",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sads"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "grDevices",
+      "name": "grDevices"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "utils",
+      "name": "utils"
+    },
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "graphics",
+      "name": "graphics"
+    },
+    "7": {
+      "@type": "SoftwareApplication",
+      "identifier": "stats",
+      "name": "stats"
+    },
+    "8": {
+      "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods"
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "1719.797KB",
+  "citation": [
+    {
+      "@type": "ScholarlyArticle",
+      "datePublished": "2018",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": "Felix",
+          "familyName": "May"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Katharina",
+          "familyName": "Gerstner"
+        },
+        {
+          "@type": "Organization",
+          "name": "DanMcGlinn"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Xiao",
+          "familyName": "Xiao"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Jonathan", "M."],
+          "familyName": "Chase"
+        }
+      ],
+      "name": "mobsim: An R package for the simulation and measurement of biodiversity across spatial scales",
+      "identifier": "https://doi.org/10.1111/2041-210X.12986",
+      "pagination": "-7",
+      "@id": "https://doi.org/10.1111/2041-210X.12986",
+      "sameAs": "https://doi.org/10.1111/2041-210X.12986",
+      "isPartOf": {
+        "@type": "PublicationIssue",
+        "issueNumber": "6",
+        "datePublished": "2018",
+        "isPartOf": {
+          "@type": ["PublicationVolume", "Periodical"],
+          "volumeNumber": "9",
+          "name": "Methods in Ecology and Evolution"
+        }
+      }
+    }
+  ],
+  "releaseNotes": "https://github.com/MoBiodiv/mobsim/blob/master/NEWS.md",
+  "readme": "https://github.com/MoBiodiv/mobsim/blob/master/README.md",
+  "contIntegration": "https://github.com/MoBiodiv/mobsim/actions",
+  "developmentStatus": "https://www.repostatus.org/"
+}

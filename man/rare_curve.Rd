@@ -18,7 +18,7 @@ Expected species richness as a function of sample size
 \details{
 This function essentially evaluates \code{\link{spec_sample}} for
 sample sizes from 1 to \code{sum(abund_vec)}. It is similar to the function
-\code{\link[vegan]{rarecurve}} in the R package \code{\link{vegan}}.
+\code{\link[vegan:rarefy]{vegan:rarecurve}} in the R package \code{\link{vegan}}.
 }
 \examples{
 sad1 <- sim_sad(100, 2000, sad_type = "lnorm", sad_coef = list("meanlog" = 2,

@@ -10,34 +10,37 @@ sample_quadrats(
   quadrat_area = 0.01,
   plot = TRUE,
   method = "random",
-  avoid_overlap = F,
+  avoid_overlap = TRUE,
   x0 = 0,
   y0 = 0,
   delta_x = 0.1,
-  delta_y = 0.1
+  delta_y = 0.1,
+  seed = NULL
 )
 }
 \arguments{
 \item{comm}{Community object from which the samples are generated}
 
-\item{n_quadrats}{Number of sampling quadrats}
+\item{n_quadrats}{(integer) Number of sampling quadrats}
 
-\item{quadrat_area}{Area of the sampling quadrats}
+\item{quadrat_area}{(numeric) Area of the sampling quadrats}
 
-\item{plot}{Should the sampling design be plotted? (logical)}
+\item{plot}{(logical) Should the sampling design be plotted? default to TRUE.}
 
-\item{method}{Available methods are \code{"random", "transect", "grid"}}
+\item{method}{(character) Available methods are \code{"random", "transect", "grid"}}
 
-\item{avoid_overlap}{For the random sampling try to generate a design
-without overlap of quadrats (logical)}
+\item{avoid_overlap}{(logical) For the random sampling try to generate a design
+without overlap of quadrats . Default is TRUE.}
 
-\item{x0, y0}{Lower left corner of the first quadrat in transect and grid sampling}
+\item{x0, y0}{(numeric value) Lower left corner of the first quadrat in transect and grid sampling}
 
-\item{delta_x}{Distance between consecutive quadrats in transect and grid sampling
+\item{delta_x}{(numeric value) Distance between consecutive quadrats in transect and grid sampling
 in x-direction (the distance between the left sides is measured)}
 
-\item{delta_y}{Distance between consecutive quadrats in transect and grid sampling
+\item{delta_y}{(numeric value) Distance between consecutive quadrats in transect and grid sampling
 in y-direction (the distance between the lower sides is measured)}
+
+\item{seed}{(integer) Any integer passed to \code{set.seed} for reproducibility.}
 }
 \value{
 A list with two items, \code{spec_dat} and \code{xy_dat}.
@@ -59,6 +62,5 @@ comm_mat1 <- sample_quadrats(sim_com1, n_quadrats = 100,
 quadrat_area = 0.002, method = "grid")
 specnumber(comm_mat1$spec_dat)
 diversity(comm_mat1$spec_dat, index = "shannon")
-
 
 }

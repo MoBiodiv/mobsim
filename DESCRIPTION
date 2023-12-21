@@ -1,9 +1,16 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.2.0
-Authors@R: person("Felix", "May", email = "felix.may@posteo.de", role = c("aut","cre"))
-Date: 2021-03-19
+Version: 0.3.0
+Authors@R: c(
+    person("Felix", "May", email = "felix.may@fu-berlin.de",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0002-1106-8188")),
+    person("Alban", "Sagouis", email = "alban.sagouis@idiv.de",
+        role = "aut",
+        comment = c(ORCID = "0000-0002-3827-1063"))
+  )
+Date: 2023-12-12
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
@@ -12,7 +19,6 @@ Description: Tools for the simulation, analysis and sampling of spatial
     and accumulation curves, species-area relationships and the distance
     decay of similarity. 
 License: GPL (>= 3)
-LazyData: TRUE
 Imports:
     Rcpp,
     vegan,
@@ -20,15 +26,20 @@ Imports:
     grDevices,
     utils,
     graphics,
-    stats
+    stats,
+    methods
 LinkingTo:
     Rcpp
 Suggests:
     rmarkdown,
-    spatstat.geom, spatstat.core, spatstat (>= 2.0-0),
-    testthat,
+    spatstat.geom, spatstat.random,
+    testthat (>= 3.0.0), mockery,
     knitr
+Config/testthat/edition: 3
+Config/testthat/parallel: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
+Language: en-GB
+Encoding: UTF-8
 URL: https://github.com/MoBiodiv/mobsim
 BugReports: https://github.com/MoBiodiv/mobsim

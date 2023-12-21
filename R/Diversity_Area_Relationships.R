@@ -64,12 +64,12 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
    abund <- abund[abund > 0]
    relabund <- abund/sum(abund)
 
-   shannon <- - sum(relabund * log(relabund))
+   shannon <- -sum(relabund * log(relabund))
 
    n <- sum(abund)
    if (n > 1)
       #simpson <- (n/(n-1)) * (1 - sum(relabund^2))
-      simpson <- 1- sum(relabund^2)
+      simpson <- 1 - sum(relabund^2)
    else
       simpson <- NA
 
@@ -123,12 +123,11 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
    area <- dx_plot * dy_plot * prop_area
    square_size <- sqrt(area)
 
-   if (square_size <= min(c(dx_plot, dy_plot))){
+   if (square_size <= min(c(dx_plot, dy_plot))) {
       dx_rect <- square_size
       dy_rect <- square_size
-   } else
-   {
-      if (dx_plot >= dy_plot){
+   } else {
+      if (dx_plot >= dy_plot) {
          dx_rect <- dx_plot*prop_area
          dy_rect <- dy_plot
       } else {
@@ -143,7 +142,7 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
                                 max = comm$y_min_max[2] - dy_rect)
 
    div_plots <- mapply(div_rect, xpos, ypos,
-                       MoreArgs=list(xsize = dx_rect, ysize = dy_rect,
+                       MoreArgs = list(xsize = dx_rect, ysize = dy_rect,
                                      comm = comm))
    if (exclude_zeros == T)
       div_plots <- div_plots[, div_plots["n_species",] > 0]
@@ -204,7 +203,7 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
       warning("Subplot areas larger than the community size are ignored!")
    prop_area <- prop_area[prop_area <= 1]
 
-   if (class(comm) != "community")
+   if (!is(comm, "community"))
       stop("DiVAR requires a community object as input. See ?community.")
 
    n_scales <- length(prop_area)
@@ -230,7 +229,7 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 #'
 #' @param x Dataframe generated function \code{\link{divar}}.
 #'
-#' @param ... Additional graphical parameters used in \code{\link[graphics]{plot}}.
+#' @param ... Additional graphical parameters used in \code{\link[graphics:plot.default]{graphics::plot}}.
 
 #'
 #' @export
@@ -292,7 +291,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
    y <- comm$census$y
 
    # logical vector which trees are in the sampling rectangle
-   in_rect <- (x >= x0 & x < (x0+xsize) & y >= y0 & y < (y0+ysize))
+   in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
 
    abund <- table(comm$census$species[in_rect])
    return(abund)
@@ -310,31 +309,35 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' @param binary Perform presence/absence standardization before analysis?
 #' See \code{\link[vegan]{vegdist}}
 #'
-#' @return Dataframe with distances between subplot pairs and the respective
-#' similarity indices
+#' @return Object of class  \code{dist_decay}: a dataframe with distances between
+#' subplot pairs and the respective similarity indices.
 #'
 #' @examples
 #' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 #' dd1 <- dist_decay(sim_com1, prop_area = 0.005, n_samples = 20)
 #' plot(dd1)
 #'
+#' @importFrom methods is
 #'@export
 #'
 dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
                        method = "bray", binary = F)
 {
-   if (any(prop_area > 1))
-      warning("Subplot areas larger than the community size are ignored!")
-   prop_area <- prop_area[prop_area <= 1]
+   if (prop_area > 1)
+      stop("prop_area cannot be larger than 1")
 
-   if (class(comm) != "community")
-      stop("divar requires a community object as input. See ?community.")
+   if (length(prop_area) != 1L)
+      stop("prop_area has to be of length 1")
+
+   if (!is(comm, "community"))
+      stop("dist_decay requires a community object as input. See ?community.")
 
    dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
    area <- dx_plot * dy_plot * prop_area
 
-   samples1 <- sample_quadrats(comm, n_quadrats = n_samples, quadrat_area = area,
+   samples1 <- sample_quadrats(comm, n_quadrats = n_samples,
+                               quadrat_area = area,
                                avoid_overlap = T, plot = F)
    com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0,]
    d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0,])
@@ -354,15 +357,60 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
    return(dat_out)
 }
 
+#' Distance decay of similarity with user-defined quadrats
+#'
+#' Estimate pairwise similarities of communities in quadrats as
+#' function of distance. The function allows the user to compute
+#' distance decay between the quadrats of his/her choice.
+#'
+#' @param samples A list given by \code{\link{sample_quadrats}}
+#' @param method Choice of (dis)similarity index. See \code{\link[vegan]{vegdist}}
+#' @param binary Perform presence/absence standardization before analysis?
+#' See \code{\link[vegan]{vegdist}}
+#'
+#' @return Object of class  \code{dist_decay}: a dataframe with distances between
+#' subplot pairs and the respective similarity indices.
+#'
+#' @examples
+#' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
+#' par(mfrow=c(1,2))
+#' samples <- sample_quadrats(sim_com1, avoid_overlap=TRUE, quadrat_area=.005,
+#'                            n_quadrats=50, plot=TRUE)
+#' dd_quadrats <- dist_decay_quadrats(samples)
+#' plot(dd_quadrats)
+#'
+#'@export
+#'
+dist_decay_quadrats <- function(samples, method = "bray", binary = F)
+{
+   com_mat <- samples$spec_dat[rowSums(samples$spec_dat) > 0,]
+   d <- stats::dist(samples$xy_dat[rowSums(samples$spec_dat) > 0,])
+
+   similarity <- 1 - vegan::vegdist(com_mat, method = method,
+                                    binary = binary)
+   similarity[!is.finite(similarity)] <- NA
+
+   dat_out <- data.frame(distance = as.numeric(d),
+                         similarity = as.numeric(similarity))
+
+   # order by increasing distance
+   dat_out <- dat_out[order(dat_out$distance), ]
+
+   class(dat_out) <- c("dist_decay", "data.frame")
+
+   return(dat_out)
+}
+
+
 #' Plot distance decay of similarity
 #'
 #' @param x Dataframe generated by \code{\link{dist_decay}}
 #'
-#' @param ... Additional graphical parameters used in \code{\link[graphics]{plot}}.
+#' @param ... Additional graphical parameters used in \code{\link[graphics:plot.default]{praphics::plot}}.
 #'
 #' @details The function plots the similarity indices between all pairs of
 #' subplots as function of distance. To indicate the relationship a
-#' \code{\link[stats]{loess}} smoother is added to the plot.
+#' \code{\link[stats:loess]{stats::loess}} smoother is added to the plot.
 #'
 #' @examples
 #' sim_com1 <- sim_thomas_community(100, 10000)
@@ -380,6 +428,8 @@ plot.dist_decay <- function(x, ...)
    pred_sim <- stats::predict(dd_loess)
    graphics::lines(x$distance, pred_sim, col = "red", lwd = 2)
 }
+
+
 
 # -----------------------------------------------------------
 # abund.rand.rect <- function(prop_area = 0.25, community,

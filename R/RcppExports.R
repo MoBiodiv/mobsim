@@ -5,7 +5,32 @@ sSAC1_C <- function(x, y, id_spec) {
     .Call(`_mobsim_sSAC1_C`, x, y, id_spec)
 }
 
-rThomas_rcpp <- function(n_points, n_mother_points, sigma, mu, xmin = 0, xmax = 1, ymin = 0, ymax = 1) {
-    .Call(`_mobsim_rThomas_rcpp`, n_points, n_mother_points, sigma, mu, xmin, xmax, ymin, ymax)
+#' Thomas process individual distribution simulation for one species
+#'
+#' Usually used internally inside \code{\link{sim_thomas_coords}}
+#' This function randomly draws points (individuals) around one or several mother points using Rcpp.
+#' The function is an efficient re-implementation of the rThomas function from the spatstat package.
+#'
+#' @name rThomas_rcpp
+#'
+#' @param n_points The total number of points (individuals).
+#' @param n_mother_points Number of mother points (= cluster centres).
+#' @param xmother Vector of \code{n_mother_points} x coordinates for the mother points.
+#' @param ymother Vector of \code{n_mother_points} y coordinates for the mother points.
+#' @param sigma Mean displacement (along each coordinate axes) of a point from
+#' its mother point (= cluster centre).
+#' @param xmin Left limit, \code{default}=0.
+#' @param xmax Right limit, \code{default}=1.
+#' @param ymin Bottom limit, \code{default}=0.
+#' @param ymax Top limit, \code{default}=1.
+#'
+#' @return A dataframe with x and y coordinates.
+#'
+#' @author Felix May, Alban Sagouis
+#' @export
+NULL
+
+rThomas_rcpp <- function(n_points, n_mother_points, xmother, ymother, sigma, xmin = 0, xmax = 1, ymin = 0, ymax = 1) {
+    .Call(`_mobsim_rThomas_rcpp`, n_points, n_mother_points, xmother, ymother, sigma, xmin, xmax, ymin, ymax)
 }
 

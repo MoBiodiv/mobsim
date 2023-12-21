@@ -1,0 +1,11 @@
+bibentry(
+  "Article",
+  title = "mobsim: An R package for the simulation and measurement of biodiversity across spatial scales",
+  author = "Felix May, Katharina Gerstner, DanMcGlinn, Xiao Xiao, Jonathan M. Chase",
+  year = 2018,
+  journal = "Methods in Ecology and Evolution",
+  volume = 9,
+  number = 6,
+  pages = 1401-1408,
+  doi = "https://doi.org/10.1111/2041-210X.12986",
+)
