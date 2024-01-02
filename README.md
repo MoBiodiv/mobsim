@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://CRAN.R-project.org/package=mobsim)
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
@@ -11,7 +13,8 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.rep
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
-[![R-CMD-check](https://github.com/MoBiodiv/mobsim/workflows/R-CMD-check/badge.svg)](https://github.com/MoBiodiv/mobsim/actions)
+[![R-CMD-check](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 ## Overview
 
@@ -67,16 +70,17 @@ abundance distribution and the same total number of individuals.
 ``` r
 library(mobsim)
 comm_rand <- sim_poisson_community(s_pool = 30, n_sim = 300)
-comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300, sigma = 0.05, mother_points = 1)
+comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300,
+                                 sigma = 0.05, mother_points = 1)
 ```
 
 ``` r
-par(mfrow = c(1,2))
+par(mfrow = c(1, 2))
 plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-plot_communities-1.png)<!-- -->
 
 ### Analysis of spatially-explicit community data
 
@@ -91,13 +95,13 @@ sar_agg <- divar(comm_agg)
 
 ``` r
 plot(m_species ~ prop_area, data = sar_rand, type = "b", log = "xy",
-     xlab = "Proportion of area sampled",ylab = "No. of species",
-     ylim = c(3,30))
+     xlab = "Proportion of area sampled", ylab = "No. of species",
+     ylim = c(3, 30))
 lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
-legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
+legend("bottomright", c("Random", "Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-plot_divar-1.png)<!-- -->
 
 ### Sampling of communities
 
@@ -106,9 +110,37 @@ whether biodiversity changes are correctly detected and revealed by any
 sampling design.
 
 ``` r
-par(mfrow = c(1,2))
+par(mfrow = c(1, 2))
 samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](README-unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/README-plot_sampling-1.png)<!-- -->
+
+### Dynamic communities
+
+This is a basic example which shows you how to make a community move in
+space:
+
+``` r
+simdat <- sim_thomas_community(s_pool = 5L,
+                               n_sim = 100L,
+                               mother_points = 1L)
+simdatJ <- jitter_species(simdat, sd = 0.05) |> 
+   drift_x_species(drift = 0.01) |> 
+   drift_y_species(drift = -0.02) |> 
+   torusify()
+par(mfrow = c(1L, 2L))
+plot(simdat, las = 1, main = "T0")
+plot(simdatJ, las = 1, main = "T1")
+```
+
+![](man/figures/README-dynamic-1.png)<!-- -->
+
+And now several steps with species movement in-between each step:
+
+<figure>
+<img src="./inst/LNFUA1284L_jittering.gif"
+alt="30 steps of Community" />
+<figcaption aria-hidden="true">30 steps of Community</figcaption>
+</figure>

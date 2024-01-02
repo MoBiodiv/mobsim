@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/README-"
 )
 ```
 <!-- badges: start -->
@@ -36,7 +36,7 @@ A detailed introduction of the package is available at
 
 ## Installation
 
-```{r, eval = FALSE}
+```{r installation, eval = FALSE}
 # The easiest way to get mobsim is to install from CRAN:
 install.packages("mobsim")
 
@@ -51,13 +51,13 @@ Please enter bug reports on [github](https://github.com/MoBiodiv/mobsim/issues).
 
 You can get an overview of the available functions in `mobsim`:
 
-```{r, eval = FALSE}
+```{r help, eval = FALSE}
 ?mobsim
 ```
 
 Or have a look at tutorials in the vignette:
 
-```{r, eval = FALSE}
+```{r vignette, eval = FALSE}
 browseVignettes("mobsim")
 ```
 
@@ -73,10 +73,11 @@ and the same total number of individuals.
 ```{r example}
 library(mobsim)
 comm_rand <- sim_poisson_community(s_pool = 30, n_sim = 300)
-comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300, sigma = 0.05, mother_points = 1)
+comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300,
+                                 sigma = 0.05, mother_points = 1)
 ```
-```{r, fig.width=8, fig.height=4.5, eval=T}
-par(mfrow = c(1,2))
+```{r plot_communities, fig.width=8, fig.height=4.5, eval=T}
+par(mfrow = c(1, 2))
 plot(comm_rand)
 plot(comm_agg)
 ```
@@ -86,17 +87,17 @@ plot(comm_agg)
 `mobsim` mobsim offer functions to analyse spatially-explicit community data.
 For example the species-area relationship of a community can be easily evaluated.
 
-```{r}
+```{r divar}
 sar_rand <- divar(comm_rand)
 sar_agg <- divar(comm_agg)
 ```
 
-```{r, fig.width=5, fig.height=5, eval = T}
+```{r plot_divar, fig.width=5, fig.height=5, eval = T}
 plot(m_species ~ prop_area, data = sar_rand, type = "b", log = "xy",
-     xlab = "Proportion of area sampled",ylab = "No. of species",
-     ylim = c(3,30))
+     xlab = "Proportion of area sampled", ylab = "No. of species",
+     ylim = c(3, 30))
 lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
-legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
+legend("bottomright", c("Random", "Aggregated"), col = 1:2, lwd = 2)
 ```
 
 ### Sampling of communities
@@ -105,12 +106,32 @@ Simulated or observed communities can be also sampled inorder to test whether
 biodiversity changes are correctly detected and revealed by any sampling
 design.
 
-```{r, fig.width=9, fig.height=5, eval = T}
-par(mfrow = c(1,2))
+```{r plot_sampling, fig.width=9, fig.height=5, eval = T}
+par(mfrow = c(1, 2))
 samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
+
+### Dynamic communities
+This is a basic example which shows you how to make a community move in space:
+
+```{r dynamic}
+simdat <- sim_thomas_community(s_pool = 5L,
+                               n_sim = 100L,
+                               mother_points = 1L)
+simdatJ <- jitter_species(simdat, sd = 0.05) |> 
+   drift_x_species(drift = 0.01) |> 
+   drift_y_species(drift = -0.02) |> 
+   torusify()
+par(mfrow = c(1L, 2L))
+plot(simdat, las = 1, main = "T0")
+plot(simdatJ, las = 1, main = "T1")
+```
+
+And now several steps with species movement in-between each step:
+
+![30 steps of Community](./inst/LNFUA1284L_jittering.gif)
 
 
 

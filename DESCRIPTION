@@ -10,7 +10,7 @@ Authors@R: c(
         role = "aut",
         comment = c(ORCID = "0000-0002-3827-1063"))
   )
-Date: 2023-12-12
+Date: 2024-01-01
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May et al. 2017) <doi:10.1101/209502>.
     In the simulation tools user define the numbers of
@@ -27,14 +27,14 @@ Imports:
     utils,
     graphics,
     stats,
-    methods
+    methods,
+    spatstat.geom, spatstat.explore
 LinkingTo:
     Rcpp
 Suggests:
-    rmarkdown,
-    spatstat.geom, spatstat.random,
-    testthat (>= 3.0.0), mockery,
-    knitr
+    rmarkdown,knitr,
+    spatstat.random,
+    testthat (>= 3.0.0), mockery
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr

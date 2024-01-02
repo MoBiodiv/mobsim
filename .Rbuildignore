@@ -13,3 +13,4 @@ codemeta.json
 ^doc$
 ^Meta$
 ^codemeta\.json$
+^CRAN-SUBMISSION$
