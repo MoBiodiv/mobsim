@@ -1,14 +1,21 @@
-inst/doc
-./Rproj.user
-mobsim.Rproj
+Rproj.user
+.Rproj.user
+.Rhistory
+
+# C++
 .o
 .dll
-/revdep/.cache.rds
-.Rhistory
-revdep/
-.Rproj.user
-mobsim_package.Rproj
 
-.DS_Store
+# Documentation
+inst/doc
 /doc/
 /Meta/
+vignettes/*.R
+vignettes/*.html
+
+# revdep
+/revdep/.cache.rds
+revdep/
+
+# Mac
+.DS_Store

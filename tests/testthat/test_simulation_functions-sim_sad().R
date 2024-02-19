@@ -28,7 +28,7 @@ test_that("sim_sad() - correct assertions", {
 })
 
 test_that("default argument values are as expected", {
-   expect_snapshot_output(sim_sad(s_pool = 3L, n_sim = 100L, seed = 42L))
+   expect_snapshot(sim_sad(s_pool = 3L, n_sim = 100L, seed = 42L))
 })
 
 test_that("sim_sad() - results are as expected", {
