@@ -1,9 +1,9 @@
 test_that("sim_poisson_community() - default argument values are as expected", {
-   expect_snapshot_output(sim_poisson_community(s_pool = 3L, n_sim = 100L, seed = 42L))
+   expect_snapshot(sim_poisson_community(s_pool = 3L, n_sim = 100L, seed = 42L))
 })
 
 test_that("sim_poisson_coords() - default argument values are as expected", {
-   expect_snapshot_output(sim_poisson_coords(abund_vec = 1:4, seed = 42L))
+   expect_snapshot(sim_poisson_coords(abund_vec = 1:4, seed = 42L))
 })
 
 test_that("sim_poisson_community() calls sim_sad() correctly", {
