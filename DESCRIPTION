@@ -33,8 +33,10 @@ LinkingTo:
     Rcpp
 Suggests:
     rmarkdown,
-    spatstat.geom, spatstat.random,
-    testthat (>= 3.0.0), mockery,
+    spatstat.geom,
+    spatstat.random,
+    testthat (>= 3.0.0),
+    mockery,
     knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
