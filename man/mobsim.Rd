@@ -2,6 +2,7 @@
 % Please edit documentation in R/mobsim.R
 \docType{package}
 \name{mobsim}
+\alias{mobsim-package}
 \alias{mobsim}
 \title{mobsim: A package for spatial analysis of scale-dependent biodiversity changes.}
 \description{
@@ -41,6 +42,14 @@ is described by its xy-coordinates and a species identity label.
 \code{\link{sample_quadrats}}
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/MoBiodiv/mobsim}
+  \item Report bugs at \url{https://github.com/MoBiodiv/mobsim}
+}
+
+}
 \author{
 Felix May
 }

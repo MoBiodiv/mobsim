@@ -42,7 +42,6 @@ DataFrame rThomas_rcpp(int n_points,
    NumericVector xpoints(n_points);
    NumericVector ypoints(n_points);
 
-
    RNGScope scope;
 
 	bool mother_points_specified = Rcpp::na_omit(xmother).size() > 0;
@@ -84,7 +83,7 @@ DataFrame rThomas_rcpp(int n_points,
    }
 
    DataFrame xydat = DataFrame::create(_["x"] = xpoints,
-                                        _["y"] = ypoints);
+                                       _["y"] = ypoints);
 
    return(xydat);
 }
