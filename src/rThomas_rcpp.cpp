@@ -46,9 +46,19 @@ DataFrame rThomas_rcpp(int n_points,
 
 	bool mother_points_specified = Rcpp::na_omit(xmother).size() > 0;
 
+   // Original version
+   // if (n_mother_points > 0 || mother_points_specified) {	// if clustering
+   //   if (!LogicalVector::is_na(n_mother_points) &&
+   //       all(is_na(xmother)) & all(is_na(ymother))) {
+
+   bool is_na_x_mother = all(is_na(xmother)).is_true();
+   bool is_na_y_mother = all(is_na(ymother)).is_true();
+
    if (n_mother_points > 0 || mother_points_specified) {	// if clustering
-      if (!LogicalVector::is_na(n_mother_points) &&
-          all(is_na(xmother)) & all(is_na(ymother))) {
+      // n_mother_points is an integer not a logical.
+      // When sim_thomas_coords is coded correctly, it should never be NA I guess.
+      // So I remove it here
+      if (is_na_x_mother && is_na_y_mother) {
 			xmother = runif(n_mother_points, xmin, xmax);
 			ymother = runif(n_mother_points, ymin, ymax);
       } else {
