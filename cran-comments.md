@@ -9,13 +9,15 @@ spatstat.geom instead.
 * Added features to major functions
 
 ## Test environments
+
 * local - Darwin, R 4.3.1
 * win-builder (release and devel)
 * r hub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * r hub - Fedora Linux, R-devel, clang, gfortran
 
 ## R CMD check results
-0 errors | 1 warnings | 0 notes
+
+0 errors | 0 warnings | 0 notes
 
 We ran revdepcheck::revdep_check() locally and no packages depend on mobsim
 any more.
