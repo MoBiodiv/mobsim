@@ -126,6 +126,12 @@
   "softwareRequirements": {
     "1": {
       "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 4.0.0"
+    },
+    "2": {
+      "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
       "provider": {
@@ -136,7 +142,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    "2": {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "vegan",
       "name": "vegan",
@@ -148,7 +154,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=vegan"
     },
-    "3": {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "sads",
       "name": "sads",
@@ -161,34 +167,34 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sads"
     },
-    "4": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "grDevices",
       "name": "grDevices"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "graphics",
       "name": "graphics"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "stats",
       "name": "stats"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
     "SystemRequirements": null
   },
-  "fileSize": "6348.428KB",
+  "fileSize": "6348.454KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

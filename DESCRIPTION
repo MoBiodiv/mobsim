@@ -20,6 +20,8 @@ Description: Tools for the simulation, analysis and sampling of spatial
     and accumulation curves, species-area relationships and the distance
     decay of similarity. 
 License: GPL (>= 3)
+Depends:
+    R (>= 4.0.0)
 Imports:
     Rcpp,
     vegan,
