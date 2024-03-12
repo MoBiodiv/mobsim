@@ -1,16 +1,16 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person("Felix", "May", email = "felix.may@fu-berlin.de",
-        role = c("aut", "cre"),
+        role = c("aut", "cre","cph"),
         comment = c(ORCID = "0000-0002-1106-8188")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de",
         role = "aut",
         comment = c(ORCID = "0000-0002-3827-1063"))
   )
-Date: 2023-12-12
+Date: 2024-03-11
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
     <doi:10.1101/209502>.
@@ -20,6 +20,8 @@ Description: Tools for the simulation, analysis and sampling of spatial
     and accumulation curves, species-area relationships and the distance
     decay of similarity. 
 License: GPL (>= 3)
+Depends:
+    R (>= 4.0.0)
 Imports:
     Rcpp,
     vegan,
@@ -45,4 +47,4 @@ RoxygenNote: 7.3.1
 Language: en-GB
 Encoding: UTF-8
 URL: https://github.com/MoBiodiv/mobsim
-BugReports: https://github.com/MoBiodiv/mobsim
+BugReports: https://github.com/MoBiodiv/mobsim/issues
