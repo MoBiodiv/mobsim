@@ -7,5 +7,5 @@ bibentry(
   volume = 9,
   number = 6,
   pages = 1401-1408,
-  doi = "https://doi.org/10.1111/2041-210X.12986",
+  doi = <doi:10.1111/2041-210X.12986>
 )

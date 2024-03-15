@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://cran.rstudio.com/web/packages/mobsim/index.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://CRAN.R-project.org/package=mobsim)
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
@@ -11,7 +13,8 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.rep
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
-[![R-CMD-check](https://github.com/MoBiodiv/mobsim/workflows/R-CMD-check/badge.svg)](https://github.com/MoBiodiv/mobsim/actions)
+[![R-CMD-check](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 ## Overview
 
