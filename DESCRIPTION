@@ -13,7 +13,7 @@ Authors@R: c(
 Date: 2024-03-11
 Description: Tools for the simulation, analysis and sampling of spatial
     biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
-    <doi:10.1111/2041-210X.12986>.
+    <doi:10.1111/2041-210x.12986>.
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
     aggregation. Functions for analysis include species rarefaction 
