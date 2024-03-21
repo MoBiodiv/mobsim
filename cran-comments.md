@@ -9,6 +9,8 @@ spatstat.geom instead.
 * Added features to major functions
 * Added Depends R >= 4.0.0 because mobsim depends on sads which itself depends on VGAM which depends on R 4.0.0.
 * Adjusted formatting of DOI and CRAN links
+* Adjusted the description text
+* Use TRUE/FALSE instead of T/F
 
 ## Test environments
 

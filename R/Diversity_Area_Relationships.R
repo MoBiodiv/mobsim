@@ -115,7 +115,7 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #' @export
 #'
 div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
-                          exclude_zeros = F)
+                          exclude_zeros = FALSE)
 {
    dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
    dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
@@ -144,7 +144,7 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
    div_plots <- mapply(div_rect, xpos, ypos,
                        MoreArgs = list(xsize = dx_rect, ysize = dy_rect,
                                      comm = comm))
-   if (exclude_zeros == T)
+   if (exclude_zeros == TRUE)
       div_plots <- div_plots[, div_plots["n_species",] > 0]
 
    return(c(m_species      = mean(div_plots["n_species",]),
@@ -155,10 +155,10 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
             sd_shannon     = stats::sd(div_plots["shannon",]),
             m_ens_shannon  = mean(div_plots["ens_shannon",]),
             sd_ens_shannon = stats::sd(div_plots["ens_shannon",]),
-            m_simpson      = mean(div_plots["simpson",], na.rm = T),
-            sd_simpson     = stats::sd(div_plots["simpson",], na.rm = T),
-            m_ens_simpson  = mean(div_plots["ens_simpson",], na.rm = T),
-            sd_ens_simpson = stats::sd(div_plots["ens_simpson",], na.rm = T)
+            m_simpson      = mean(div_plots["simpson",], na.rm = TRUE),
+            sd_simpson     = stats::sd(div_plots["simpson",], na.rm = TRUE),
+            m_ens_simpson  = mean(div_plots["ens_simpson",], na.rm = TRUE),
+            sd_ens_simpson = stats::sd(div_plots["ens_simpson",], na.rm = TRUE)
             )
    )
 }
@@ -197,7 +197,7 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #' @export
 #'
 divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-                  exclude_zeros = T)
+                  exclude_zeros = TRUE)
 {
    if (any(prop_area > 1))
       warning("Subplot areas larger than the community size are ignored!")
@@ -321,7 +321,7 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #'@export
 #'
 dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
-                       method = "bray", binary = F)
+                       method = "bray", binary = FALSE)
 {
    if (prop_area > 1)
       stop("prop_area cannot be larger than 1")
@@ -338,7 +338,7 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 
    samples1 <- sample_quadrats(comm, n_quadrats = n_samples,
                                quadrat_area = area,
-                               avoid_overlap = T, plot = F)
+                               avoid_overlap = TRUE, plot = FALSE)
    com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0,]
    d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0,])
 
@@ -374,14 +374,14 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 #' @examples
 #' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
 #' par(mfrow=c(1,2))
-#' samples <- sample_quadrats(sim_com1, avoid_overlap=TRUE, quadrat_area=.005,
-#'                            n_quadrats=50, plot=TRUE)
+#' samples <- sample_quadrats(sim_com1, avoid_overlap = TRUE, quadrat_area=.005,
+#'                            n_quadrats = 50, plot = TRUE)
 #' dd_quadrats <- dist_decay_quadrats(samples)
 #' plot(dd_quadrats)
 #'
 #'@export
 #'
-dist_decay_quadrats <- function(samples, method = "bray", binary = F)
+dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE)
 {
    com_mat <- samples$spec_dat[rowSums(samples$spec_dat) > 0,]
    d <- stats::dist(samples$xy_dat[rowSums(samples$spec_dat) > 0,])
