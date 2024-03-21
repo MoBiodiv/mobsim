@@ -9,7 +9,7 @@ dist_decay(
   prop_area = 0.005,
   n_samples = 20,
   method = "bray",
-  binary = F
+  binary = FALSE
 )
 }
 \arguments{

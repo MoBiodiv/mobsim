@@ -257,6 +257,8 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 #' @param object Community object of class \code{sad}
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
+#' 
+#' @return This function is called for its side effects and has no return value.
 #'
 #' @seealso \code{\link{sim_sad}}
 #'
@@ -296,6 +298,8 @@ summary.sad <- function(object, ...)
 #' With \code{method = "rank"} rank-abundance curve is generated with
 #' species abundance rank on the x-axis (descending) and species abundance on
 #' the y-axis (Hubbell 2001).
+#' 
+#' @return This function is called for its side effects and has no return value.
 #'
 #' @references
 #' Preston 1948. The Commonness, and rarity, of species. Ecology 29(3):254-283.
@@ -423,9 +427,10 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #' @param digits Integer. Number of digits to print
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
+#' 
+#' @return This function is called for its side effects and has no return value.
 #'
 #' @export
-#'
 summary.community <- function(object, digits = 2, ...)	# digits should be passed through ... instead.
 {
    cat("No. of individuals: ", nrow(object$census), "\n")
@@ -447,6 +452,8 @@ summary.community <- function(object, digits = 2, ...)	# digits should be passed
 #' @examples
 #' sim1 <- sim_thomas_community(30, 500)
 #' plot(sim1)
+#' 
+#' @return This function is called for its side effects and has no return value.
 #'
 #' @export
 #'
