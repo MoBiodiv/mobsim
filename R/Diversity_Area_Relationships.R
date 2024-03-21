@@ -375,11 +375,12 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 #'
 #' @examples
 #' sim_com1 <- sim_thomas_community(100, 10000, sigma = 0.1, mother_points = 2)
-#' par(mfrow=c(1,2))
+#' oldpar<- par(mfrow=c(1,2))
 #' samples <- sample_quadrats(sim_com1, avoid_overlap = TRUE, quadrat_area=.005,
 #'                            n_quadrats = 50, plot = TRUE)
 #' dd_quadrats <- dist_decay_quadrats(samples)
 #' plot(dd_quadrats)
+#' par(oldpar)
 #'
 #'@export
 #'

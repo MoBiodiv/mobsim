@@ -56,12 +56,12 @@ of the quadrats.
 
 ```{r, fig.width=4.4, fig.height=5}
 sample2 <- sample_quadrats(sim_com1, n_quadrats = 2, quadrat_area = 0.1,
-                           avoid_overlap = T)
+                           avoid_overlap = TRUE)
 ```
 
 ```{r, fig.width=4.4, fig.height=5}
 sample3 <- sample_quadrats(sim_com1, n_quadrats = 20, quadrat_area = 0.001,
-                           avoid_overlap = T)
+                           avoid_overlap = TRUE)
 ```
 
 # Transect sampling
@@ -102,7 +102,7 @@ can be also deactivated for more efficient computations:
 ```{r}
 sample7a <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0.05, y0 = 0.05, delta_x = 0.2,
-                           delta_y = 0.2, plot = F)
+                           delta_y = 0.2, plot = FALSE)
 head(sample7a$spec_dat[,1:10])
 ```
 

@@ -60,9 +60,10 @@ summary(sim_n_low)
 ```
 
 ```{r, fig.width=7.2, fig.height=4.1}
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 plot(sim_n_high)
 plot(sim_n_low)
+par(oldpar)
 ```
 
 ## Analysis of spatially-explicit community data
@@ -115,26 +116,28 @@ sampling designs. Here, we use a random distribution of the samples.
 First, we use many small samples:
 
 ```{r, fig.width=7.2, fig.height=4.1}
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 samples_S_n_high <- sample_quadrats(sim_n_high, n_quadrats = 100,
                                         quadrat_area = 0.001, method = "random",
-                                        avoid_overlap = T)
+                                        avoid_overlap = TRUE)
 samples_S_n_low <- sample_quadrats(sim_n_low, n_quadrats = 100,
                                        quadrat_area = 0.001, method = "random",
-                                       avoid_overlap = T)
+                                       avoid_overlap = TRUE)
+par(oldpar)
 ```
 
 Second, we use less, but larger samples, that in total cover the same area as
 the many small samples used before.
 
 ```{r, fig.width=7.2, fig.height=4.1}
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 samples_L_n_high <- sample_quadrats(sim_n_high, n_quadrats = 10,
                                   quadrat_area = 0.01, method = "random",
-                                  avoid_overlap = T)
+                                  avoid_overlap = TRUE)
 samples_L_n_low <- sample_quadrats(sim_n_low, n_quadrats = 10,
                                   quadrat_area = 0.01, method = "random",
-                                  avoid_overlap = T)
+                                  avoid_overlap = TRUE)
+par(oldpar)
 ```
 
 The function `sample_quadrats` return two objects: (i) a community matrix
@@ -187,10 +190,11 @@ div_dat_S <- data.frame(N = rep(c("N high","N low"), each = length(S_n_high)),
 ```
 
 ```{r, fig.width=7.2, fig.height=3.1}
-par(mfrow = c(1,3))
+oldpar <- par(mfrow = c(1,3))
 boxplot(S ~ N, data = div_dat_S, ylab = "Species richness")
 boxplot(Shannon ~ N, data = div_dat_S, ylab = "Shannon diversity")
 boxplot(Simpson ~ N, data = div_dat_S, ylab = "Simpson diversity")
+par(oldpar)
 ```
 
 We see that on average diversity is reduced for all indices, species richness, Shannon, and Simpson.
@@ -249,10 +253,11 @@ div_dat_L <- data.frame(N = rep(c("N high","N low"), each = length(S_n_high)),
 ```
 
 ```{r, fig.width=7.2, fig.height=3.1}
-par(mfrow = c(1,3))
+oldpar <- par(mfrow = c(1,3))
 boxplot(S ~ N, data = div_dat_L, ylab = "Species richness")
 boxplot(Shannon ~ N, data = div_dat_L, ylab = "Shannon diversity")
 boxplot(Simpson ~ N, data = div_dat_L, ylab = "Simpson diversity")
+par(oldpar)
 ```
 
 ```{r}

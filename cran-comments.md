@@ -11,10 +11,12 @@ spatstat.geom instead.
 * Adjusted formatting of DOI and CRAN links
 * Adjusted the description text
 * Use TRUE/FALSE instead of T/F
+* Add information on return value to all functions
+* Reset graphical parameters in function examples and vignettes
 
 ## Test environments
 
-* local - Darwin, R 4.3.1
+* local - R 4.3.3
 * win-builder (release and devel)
 * r hub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * r hub - Fedora Linux, R-devel, clang, gfortran
