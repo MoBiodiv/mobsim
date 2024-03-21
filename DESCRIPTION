@@ -11,7 +11,7 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-3827-1063"))
   )
 Date: 2024-03-11
-Description: Tools for the simulation, analysis and sampling of spatial
+Description: Simulation, analysis and sampling of spatial
     biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
     <doi:10.1111/2041-210x.12986>.
     In the simulation tools user define the numbers of
