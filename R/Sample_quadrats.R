@@ -180,7 +180,7 @@ sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, yma
                   w = spatstat.geom::owin(c(xmin, xmax), c(ymin, ymax)))
    hc_points <- spatstat.random::rmh(model = hc_mod, start = list(n.start = n_quadrats),
                                      control = list(p = 1, nrep = 1e6),
-                                     saveinfo = F, verbose = F)
+                                     saveinfo = FALSE, verbose = FALSE)
    xpos <- hc_points$x
    ypos <- hc_points$y
 

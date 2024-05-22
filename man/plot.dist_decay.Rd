@@ -11,6 +11,9 @@
 
 \item{...}{Additional graphical parameters used in \code{\link[graphics:plot.default]{praphics::plot}}.}
 }
+\value{
+This function is called for its side effects and has no return value.
+}
 \description{
 Plot distance decay of similarity
 }

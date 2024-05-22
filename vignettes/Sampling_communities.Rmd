@@ -7,7 +7,7 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Sampling communities}
+  %\VignetteIndexEntry{Sampling communities with mobsim}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -55,13 +55,13 @@ random sampling design, which is shown here in two examples with different numbe
 of the quadrats.
 
 ```{r, fig.width=4.4, fig.height=5}
-sample2 <- sample_quadrats(sim_com1, n_quadrats= 2, quadrat_area = 0.1,
-                           avoid_overlap = T)
+sample2 <- sample_quadrats(sim_com1, n_quadrats = 2, quadrat_area = 0.1,
+                           avoid_overlap = TRUE)
 ```
 
 ```{r, fig.width=4.4, fig.height=5}
-sample3 <- sample_quadrats(sim_com1, n_quadrats= 20, quadrat_area = 0.001,
-                           avoid_overlap = T)
+sample3 <- sample_quadrats(sim_com1, n_quadrats = 20, quadrat_area = 0.001,
+                           avoid_overlap = TRUE)
 ```
 
 # Transect sampling
@@ -71,11 +71,11 @@ specifying a position for the lower left quadrat as well as x and y distances
 between neighbouring quadrats.
 
 ```{r, fig.width=4.4, fig.height=5}
-sample4 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
+sample4 <- sample_quadrats(sim_com1, n_quadrats = 10, quadrat_area = 0.005,
                            method = "transect", x0 = 0, y0 = 0.5, delta_x = 0.1,
                            delta_y = 0)
 
-sample5 <- sample_quadrats(sim_com1, n_quadrats= 10, quadrat_area = 0.005,
+sample5 <- sample_quadrats(sim_com1, n_quadrats = 10, quadrat_area = 0.005,
                            method = "transect", x0 = 0, y0 = 0, delta_x = 0.1,
                            delta_y = 0.1)
 ```
@@ -87,11 +87,11 @@ users have to choose distances among the quadrats in x and y dimension as shown
 in the example.
 
 ```{r, fig.width=4.4, fig.height=5}
-sample6 <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
+sample6 <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0, y0 = 0, delta_x = 0.1,
                            delta_y = 0.1)
 
-sample7 <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
+sample7 <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0.05, y0 = 0.05, delta_x = 0.2,
                            delta_y = 0.2)
 ```
@@ -100,9 +100,9 @@ By default, `sample_quadrats()` plots the chosen design. However, the plotting
 can be also deactivated for more efficient computations:
 
 ```{r}
-sample7a <- sample_quadrats(sim_com1, n_quadrats= 25, quadrat_area = 0.005,
+sample7a <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0.05, y0 = 0.05, delta_x = 0.2,
-                           delta_y = 0.2, plot = F)
+                           delta_y = 0.2, plot = FALSE)
 head(sample7a$spec_dat[,1:10])
 ```
 

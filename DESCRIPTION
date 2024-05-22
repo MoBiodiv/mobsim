@@ -1,24 +1,27 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person("Felix", "May", email = "felix.may@fu-berlin.de",
-        role = c("aut", "cre"),
+        role = c("aut", "cre","cph"),
         comment = c(ORCID = "0000-0002-1106-8188")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de",
         role = "aut",
         comment = c(ORCID = "0000-0002-3827-1063"))
   )
-Date: 2024-01-01
-Description: Tools for the simulation, analysis and sampling of spatial
-    biodiversity data (May et al. 2017) <doi:10.1101/209502>.
+Date: 2024-03-11
+Description: Simulation, analysis and sampling of spatial
+    biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
+    <doi:10.1111/2041-210x.12986>.
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
     aggregation. Functions for analysis include species rarefaction 
     and accumulation curves, species-area relationships and the distance
     decay of similarity. 
 License: GPL (>= 3)
+Depends:
+    R (>= 4.0.0)
 Imports:
     Rcpp,
     vegan,
@@ -27,19 +30,21 @@ Imports:
     utils,
     graphics,
     stats,
-    methods,
-    spatstat.geom, spatstat.explore
+    methods
 LinkingTo:
     Rcpp
 Suggests:
-    rmarkdown,knitr,
+    rmarkdown,
+    spatstat.geom,
     spatstat.random,
-    testthat (>= 3.0.0), mockery
+    testthat (>= 3.0.0),
+    mockery,
+    knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Language: en-GB
 Encoding: UTF-8
 URL: https://github.com/MoBiodiv/mobsim
-BugReports: https://github.com/MoBiodiv/mobsim
+BugReports: https://github.com/MoBiodiv/mobsim/issues

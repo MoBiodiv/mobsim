@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments passed to \code{\link{print}}.}
 }
+\value{
+This function is called for its side effects and has no return value.
+}
 \description{
 Print summary of species abundance distribution object
 }

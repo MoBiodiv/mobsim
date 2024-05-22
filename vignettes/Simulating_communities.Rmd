@@ -7,7 +7,7 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Simulating communities}
+  %\VignetteIndexEntry{Simulating communities with mobsim}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -171,9 +171,10 @@ First, we change the size of the clusters using the argument `sigma`.
 
 ```{r, fig.width = 7, fig.height = 4}
 comm3a <- sim_thomas_coords(abund_vec = abund1, sigma = 0.05)
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3a)
+par(oldpar)
 ```
 
 Second, we change the number of clusters per species using the argument 
@@ -181,18 +182,20 @@ Second, we change the number of clusters per species using the argument
 
 ```{r, fig.width = 7, fig.height = 4}
 comm3b <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, mother_points = 1)
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3b)
+par(oldpar)
 ```
 Third, we change the average number of points (i.e. individuals) per cluster using
 the argument `cluster_points`.
 
 ```{r, fig.width = 7, fig.height = 4}
 comm3c <- sim_thomas_coords(abund_vec = abund1, sigma = 0.02, cluster_points = 5)
-par(mfrow = c(1,2))
+oldpar <- par(mfrow = c(1,2))
 plot(comm3)
 plot(comm3c)
+par(oldpar)
 ```
 
 Each of these parameters can be either set to the same equal value for all species
@@ -214,7 +217,7 @@ abundances and aggregated distributions at the same time.
 
 ```{r, fig.width = 3.5, fig.height = 4}
 comm5 <- sim_thomas_community(s_pool = 100, n_sim = 500, sad_type = "lnorm",
-                              sad_coef = list(cv_abund = 1),sigma = 0.05)
+                              sad_coef = list(cv_abund = 1), sigma = 0.05)
 plot(comm5)
 ```
 

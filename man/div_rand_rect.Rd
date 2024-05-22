@@ -4,7 +4,7 @@
 \alias{div_rand_rect}
 \title{Distribution of local diversity indices}
 \usage{
-div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = F)
+div_rand_rect(prop_area = 0.25, comm, n_rect = 100, exclude_zeros = FALSE)
 }
 \arguments{
 \item{prop_area}{Size of subplots as proportion of the total area}

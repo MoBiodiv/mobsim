@@ -8,7 +8,7 @@ divar(
   comm,
   prop_area = seq(0.1, 1, by = 0.1),
   n_samples = 100,
-  exclude_zeros = T
+  exclude_zeros = TRUE
 )
 }
 \arguments{
