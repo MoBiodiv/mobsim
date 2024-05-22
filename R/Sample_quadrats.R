@@ -194,7 +194,7 @@ sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, yma
 #' Creates coordinates (lower left corner of a quadrat) randomly distributed but without overlapping each
 #' other
 #'
-#' This function works without having the \code{spatstat.random} package install.
+#' This function works without having the \code{spatstat.random} package installed.
 #'
 #' @inheritParams sampling_random_spatstat
 #'
@@ -202,7 +202,9 @@ sampling_random_spatstat <- function(n_quadrats, min_dist, xmin, xmax, ymin, yma
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_random_bruteforce <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax, seed = NULL) {
+sampling_random_bruteforce <- function(n_quadrats, min_dist,
+                                       xmin, xmax, ymin, ymax,
+                                       seed = NULL) {
    if (!is.null(seed)) set.seed(seed)
    count <- 0L
    maxCount <- 10000L
@@ -237,7 +239,9 @@ Use less quadrats or smaller quadrat area, or set avoid_overlap to FALSE.")
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_random_overlap <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax, seed = NULL) {
+sampling_random_overlap <- function(n_quadrats, min_dist,
+                                    xmin, xmax, ymin, ymax,
+                                    seed = NULL) {
    if (!is.null(seed)) set.seed(seed)
    xpos <- stats::runif(n_quadrats, min = xmin, max = xmax)
    ypos <- stats::runif(n_quadrats, min = ymin, max = ymax)
@@ -259,7 +263,9 @@ sampling_random_overlap <- function(n_quadrats, min_dist, xmin, xmax, ymin, ymax
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
+sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax,
+                               x0, y0, delta_x, delta_y, 
+                               quadrat_size) {
    t_xmin <- x0
    t_ymin <- y0
 
@@ -292,7 +298,9 @@ sampling_transects <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta
 #' lower left corner of the square quadrats.
 #' @export
 #'
-sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax, x0, y0, delta_x, delta_y, quadrat_size) {
+sampling_grids <- function(n_quadrats, xmin, xmax, ymin, ymax,
+                           x0, y0, delta_x, delta_y,
+                           quadrat_size) {
    grid_dim <- sqrt(ceiling(sqrt(n_quadrats))^2)
 
    x1 <- seq(from = x0, by = delta_x, len = grid_dim)

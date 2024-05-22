@@ -21,7 +21,7 @@ Description: Simulation, analysis and sampling of spatial
     decay of similarity. 
 License: GPL (>= 3)
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.1.0)
 Imports:
     Rcpp,
     vegan,
