@@ -30,4 +30,4 @@ any more.
 
 Best wishes,
 
-Felix may and Alban Sagouis
+Felix May and Alban Sagouis

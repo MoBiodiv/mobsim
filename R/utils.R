@@ -181,6 +181,9 @@ torusify.numeric <- function(mpcoords, range, ...) {
 #' class \code{\link[spatstat.geom]{ppp}}.
 #'
 #' @param comm Community object
+#' 
+#' @importFrom spatstat.geom ppp
+#' @importFrom spatstat.geom owin
 #'
 #' @details For each species, the function first draws a random number of
 #' mother points in the given \code{n_motherpoints_range}. Then the function

@@ -2,6 +2,7 @@
 #' individual species identities based on the neighbours
 #'
 #' @param comm Community object
+#' @importFrom spatstat.explore marktable
 #' @inheritParams spatstat.explore::marktable
 #' @inheritParams create_motherpoints
 #'

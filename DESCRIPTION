@@ -30,12 +30,13 @@ Imports:
     utils,
     graphics,
     stats,
+    spatstat.geom,
+    spatstat.explore,
     methods
 LinkingTo:
     Rcpp
 Suggests:
     rmarkdown,
-    spatstat.geom,
     spatstat.random,
     testthat (>= 3.0.0),
     mockery,
