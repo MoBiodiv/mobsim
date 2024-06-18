@@ -574,8 +574,10 @@ sim_poisson_community <- function(s_pool,
                                   xrange= c(0,1),
                                   yrange = c(0,1),
                                   seed = NULL
-)
-{
+) {
+   base::stopifnot("n_sim has to be >= to s_pool" =
+                     n_sim >= s_pool)
+  
    abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
                         sad_type = sad_type,
                         sad_coef = sad_coef,
@@ -978,8 +980,9 @@ sim_thomas_community <- function(s_pool, n_sim,
                                  xrange = c(0,1),
                                  yrange = c(0,1),
                                  seed = NULL
-)
-{
+) {
+   base::stopifnot("n_sim has to be >= to s_pool" =
+                     n_sim >= s_pool)
    abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
                         sad_type = sad_type,
                         sad_coef = sad_coef,
