@@ -10,7 +10,7 @@
 \item{x}{Vector with species abundances (integer vector)}
 
 \item{...}{Additional graphical parameters used in \code{\link[graphics:plot.default]{graphics::plot}}
-or \code{\link[graphics]{barplot}}}
+or \code{\link[graphics:barplot]{barplot}}}
 
 \item{method}{Plotting method, partial match to \code{"octave"} or \code{"rank"}}
 }

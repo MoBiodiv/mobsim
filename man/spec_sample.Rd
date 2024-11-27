@@ -21,7 +21,7 @@ Expected species richness in a random sample of fixed size.
 The expected number of species is calculated after Hurlbert 1971, Equation 3.
 
 \code{spec_sample} is similar to the function \code{\link[vegan]{rarefy}}
-in the R package \code{\link{vegan}}.
+in the R package \code{\link[vegan]{vegan}}.
 }
 \examples{
 sad1 <- sim_sad(100, 1000)
