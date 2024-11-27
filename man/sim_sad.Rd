@@ -93,9 +93,9 @@ The function \code{sim_sad} was built using code of the function
    \strong{SAD function} \tab \strong{Distribution name} \tab \strong{coef #1} \tab \strong{coef #2} \tab \strong{coef #3} \cr
    \code{\link[sads:dbs]{sads::rbs}} \tab Mac-Arthur's brokenstick \tab N \tab S \tab \cr
    \code{\link[stats:GammaDist]{stats::rgamma}} \tab Gamma distribution \tab shape \tab rate \tab scale \cr
-   \code{\link[stats]{stats::rgeom}} \tab Geometric distribution \tab prob \tab \tab \cr
-   \code{\link[stats]{stats::rlnorm}} \tab	Log-normal distributions \tab	meanlog \tab sdlog \tab cv_abund \cr
-   \code{\link[sads]{sads::rls}} \tab Fisher's log-series distribution \tab N \tab alpha \tab \cr
+   \code{\link[stats:rgeom]{stats::rgeom}} \tab Geometric distribution \tab prob \tab \tab \cr
+   \code{\link[stats:rlnorm]{stats::rlnorm}} \tab	Log-normal distributions \tab	meanlog \tab sdlog \tab cv_abund \cr
+   \code{\link[sads:rls]{sads::rls}} \tab Fisher's log-series distribution \tab N \tab alpha \tab \cr
    \code{\link[sads:dmzsm]{sads::rmzsm}} \tab Metacommunity zero-sum multinomial \tab J \tab theta \tab \cr
    \code{\link[stats:Binomial]{stats::rnbinom}} \tab Negative binomial distribution \tab size \tab	prob \tab mu \cr
    \code{\link[sads:dpareto]{sads::rpareto}} \tab Pareto distribution \tab shape \tab scale \tab \cr
