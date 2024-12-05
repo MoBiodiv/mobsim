@@ -2,32 +2,35 @@
 
 This is a resubmission. In this version we have:
 
-* Fixed the problems that caused mobsim to be archived on CRAN: essentially by
-removing the dependency on spatstat.core and using spatstat.random and 
-spatstat.geom instead.
-* Fixed inst/CITATION and DESCRIPTION
-* Added features to major functions
-* Added Depends R >= 4.0.0 because mobsim depends on sads which itself depends on VGAM which depends on R 4.0.0.
-* Adjusted formatting of DOI and CRAN links
-* Adjusted the description text
-* Use TRUE/FALSE instead of T/F
-* Add information on return value to all functions
-* Reset graphical parameters in function examples and vignettes
+* Corrected links to other packages in the function documentation
+* Added a dependence on the package vctrs
+# Adjusted DESCRIPTION accordingly
 
 ## Test environments
 
-* local - R 4.3.3
+* local - R 4.4.2
 * win-builder (release and devel)
-* r hub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
-* r hub - Fedora Linux, R-devel, clang, gfortran
+* GitHub Actions: R CMD check
+    - macos-latest (release)
+    - ubuntu-latest (devel)
+    - ubuntu-latest (oldrel-1)
+    - ubuntu-latest (oldrel-2)
+    - ubuntu-latest (oldrel-3)
+    - ubuntu-latest (release)
+    - windows-latest (4.1)
+    - windows-latest (release)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-We ran revdepcheck::revdep_check() locally and no packages depend on mobsim
-any more.
+## revdepcheck results
+
+We checked 0 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
 
 Best wishes,
 
-Felix may and Alban Sagouis
+Felix May and Alban Sagouis
