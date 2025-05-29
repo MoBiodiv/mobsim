@@ -231,7 +231,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
    abund_local <- table(sample_vec)
 
    s_local <- sum(abund_local > 0L)
-   if (fix_s_sim == TRUE && s_local < s_pool) {
+   if (isTRUE(fix_s_sim) && s_local < s_pool) {
       s_diff <- s_pool - s_local
       abund_local[abund_local == 0L] <- 1L
       N <- sum(abund_local)
@@ -257,7 +257,7 @@ sim_sad <- function(s_pool = NULL, n_sim = NULL,
 #' @param object Community object of class \code{sad}
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
-#' 
+#'
 #' @return This function is called for its side effects and has no return value.
 #'
 #' @seealso \code{\link{sim_sad}}
@@ -298,7 +298,7 @@ summary.sad <- function(object, ...)
 #' With \code{method = "rank"} rank-abundance curve is generated with
 #' species abundance rank on the x-axis (descending) and species abundance on
 #' the y-axis (Hubbell 2001).
-#' 
+#'
 #' @return This function is called for its side effects and has no return value.
 #'
 #' @references
@@ -427,7 +427,7 @@ community <- function(x, y, spec_id, xrange = c(0,1), yrange = c(0,1))
 #' @param digits Integer. Number of digits to print
 #'
 #' @param ... Additional arguments passed to \code{\link{print}}.
-#' 
+#'
 #' @return This function is called for its side effects and has no return value.
 #'
 #' @export
@@ -452,7 +452,7 @@ summary.community <- function(object, digits = 2, ...)	# digits should be passed
 #' @examples
 #' sim1 <- sim_thomas_community(30, 500)
 #' plot(sim1)
-#' 
+#'
 #' @return This function is called for its side effects and has no return value.
 #'
 #' @export
@@ -577,7 +577,7 @@ sim_poisson_community <- function(s_pool,
 ) {
    base::stopifnot("n_sim has to be >= to s_pool" =
                      n_sim >= s_pool)
-  
+
    abund_vec <- sim_sad(s_pool = s_pool, n_sim = n_sim,
                         sad_type = sad_type,
                         sad_coef = sad_coef,
@@ -1105,7 +1105,3 @@ sim_thomas_community <- function(s_pool, n_sim,
 #    names(dat3) <- c("X","Y","spec_id")
 #    return(dat3)
 # }
-
-
-
-

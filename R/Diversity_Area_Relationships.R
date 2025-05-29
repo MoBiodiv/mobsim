@@ -117,8 +117,8 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
                           exclude_zeros = FALSE)
 {
-   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
 
    area <- dx_plot * dy_plot * prop_area
    square_size <- sqrt(area)
@@ -136,15 +136,15 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
       }
    }
 
-   xpos <- stats::runif(n_rect, min = comm$x_min_max[1],
-                                max = comm$x_min_max[2] - dx_rect)
-   ypos <- stats::runif(n_rect, min = comm$y_min_max[1],
-                                max = comm$y_min_max[2] - dy_rect)
+   xpos <- stats::runif(n_rect, min = comm$x_min_max[[1]],
+                                max = comm$x_min_max[[2]] - dx_rect)
+   ypos <- stats::runif(n_rect, min = comm$y_min_max[[1]],
+                                max = comm$y_min_max[[2]] - dy_rect)
 
    div_plots <- mapply(div_rect, xpos, ypos,
                        MoreArgs = list(xsize = dx_rect, ysize = dy_rect,
                                      comm = comm))
-   if (exclude_zeros == TRUE)
+   if (isTRUE(exclude_zeros))
       div_plots <- div_plots[, div_plots["n_species",] > 0]
 
    return(c(m_species      = mean(div_plots["n_species",]),
@@ -207,8 +207,8 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
       stop("DiVAR requires a community object as input. See ?community.")
 
    n_scales <- length(prop_area)
-   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
 
    div_area <- sapply(prop_area,
                       div_rand_rect,
@@ -334,8 +334,8 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
    if (!is(comm, "community"))
       stop("dist_decay requires a community object as input. See ?community.")
 
-   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
+   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
    area <- dx_plot * dy_plot * prop_area
 
    samples1 <- sample_quadrats(comm, n_quadrats = n_samples,
@@ -414,7 +414,7 @@ dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE)
 #' @details The function plots the similarity indices between all pairs of
 #' subplots as function of distance. To indicate the relationship a
 #' \code{\link[stats:loess]{stats::loess}} smoother is added to the plot.
-#' 
+#'
 #' @return This function is called for its side effects and has no return value.
 #'
 #' @examples
@@ -473,7 +473,3 @@ plot.dist_decay <- function(x, ...)
 #    return(abund.plots[,1])
 # }
 #
-
-
-
-
