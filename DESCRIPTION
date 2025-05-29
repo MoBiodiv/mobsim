@@ -1,7 +1,7 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(
     person("Felix", "May", email = "felix.may@fu-berlin.de",
         role = c("aut", "cre","cph"),
@@ -10,7 +10,7 @@ Authors@R: c(
         role = "aut",
         comment = c(ORCID = "0000-0002-3827-1063"))
   )
-Date: 2024-03-11
+Date: 2024-11-26
 Description: Simulation, analysis and sampling of spatial
     biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
     <doi:10.1111/2041-210x.12986>.
@@ -40,11 +40,12 @@ Suggests:
     spatstat.random,
     testthat (>= 3.0.0),
     mockery,
-    knitr
+    knitr,
+    vctrs
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Language: en-GB
 Encoding: UTF-8
 URL: https://github.com/MoBiodiv/mobsim

@@ -1,11 +1,8 @@
 mobsim 0.3.2
 ================================================================================
 
-### NEW FEATURES
-A new family of functions making mobsim more dynamic in "time":
-* drift_motherpoints and drift_species
-* jitter_motherpoints and jitter_species
-* reproduction
+### DEPENDENCE
+vctrs is suggested to run mobsim unit tests
 
 mobsim 0.3.1
 ================================================================================

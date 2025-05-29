@@ -4,7 +4,7 @@
 #' community. The output format are a sites x species abundance table and a
 #' sites x xy-coordinates table. The sites x species abundance is
 #' a classical data format used in community ecology. The table generated
-#' can be for instance be further analysed with the package \code{\link{vegan}}.
+#' can be for instance be further analysed with the package \code{\link[vegan]{vegan}}.
 #'
 #' @param comm Community object from which the samples are generated
 #' @param n_quadrats (integer) Number of sampling quadrats

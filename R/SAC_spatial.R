@@ -10,7 +10,7 @@
 #' @details The expected number of species is calculated after Hurlbert 1971, Equation 3.
 #'
 #' \code{spec_sample} is similar to the function \code{\link[vegan]{rarefy}}
-#' in the R package \code{\link{vegan}}.
+#' in the R package \code{\link[vegan]{vegan}}.
 #'
 #' @references
 #' Hurlbert, S.H. 1971. The nonconcept of species diversity: a critique and +
@@ -44,7 +44,7 @@ spec_sample <- function(abund_vec, n)
 #'
 #' @details This function essentially evaluates \code{\link{spec_sample}} for
 #' sample sizes from 1 to \code{sum(abund_vec)}. It is similar to the function
-#' \code{\link[vegan:rarefy]{vegan:rarecurve}} in the R package \code{\link{vegan}}.
+#' \code{\link[vegan]{rarecurve}} in the R package \code{\link[vegan]{vegan}}.
 #'
 #' @references
 #'
