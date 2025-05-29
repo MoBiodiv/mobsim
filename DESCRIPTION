@@ -8,7 +8,11 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-1106-8188")),
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de",
         role = "aut",
-        comment = c(ORCID = "0000-0002-3827-1063"))
+        comment = c(ORCID = "0000-0002-3827-1063")),
+    person("German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig",
+        role = "fnd", comment = c(ROR = "01jty7g66")),
+    person("Freie Universität Berlin",
+        role = "fnd", comment = c(ROR = "046ak2485"))
   )
 Date: 2024-11-26
 Description: Simulation, analysis and sampling of spatial
