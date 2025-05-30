@@ -46,7 +46,7 @@ Suggests:
     knitr,
     vctrs
 Config/testthat/edition: 3
-Config/testthat/parallel: true
+Config/testthat/parallel: false
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Language: en-GB
