@@ -22,16 +22,15 @@
 #'
 #' @export
 #'
-spec_sample <- function(abund_vec, n)
-{
-   abund_vec <- abund_vec[abund_vec > 0]
-   n_total <- sum(abund_vec)
-   ldiv <- lchoose(n_total, n)
-   p1 <- exp(lchoose(n_total - abund_vec, n) - ldiv)
-   out <- sum(1 - p1)
-   names(out) <- n
+spec_sample <- function(abund_vec, n) {
+  abund_vec <- abund_vec[abund_vec > 0]
+  n_total <- sum(abund_vec)
+  ldiv <- lchoose(n_total, n)
+  p1 <- exp(lchoose(n_total - abund_vec, n) - ldiv)
+  out <- sum(1 - p1)
+  names(out) <- n
 
-   return(out)
+  return(out)
 }
 
 #' Species rarefaction curve
@@ -59,15 +58,16 @@ spec_sample <- function(abund_vec, n)
 #'
 #' @export
 #'
-rare_curve <- function(abund_vec)
-{
-   abund_vec <- abund_vec[abund_vec > 0]
-   n_total <- sum(abund_vec)
-   n_vec <- 1:n_total
+rare_curve <- function(abund_vec) {
+  abund_vec <- abund_vec[abund_vec > 0]
+  n_total <- sum(abund_vec)
+  n_vec <- 1:n_total
 
-   rc <- sapply(n_vec, function(n_sample){spec_sample(abund_vec, n = n_sample)})
-   names(rc) <- n_vec
-   return(rc)
+  rc <- sapply(n_vec, function(n_sample) {
+    spec_sample(abund_vec, n = n_sample)
+  })
+  names(rc) <- n_vec
+  return(rc)
 }
 
 #' Non-spatial and spatially-explicit species sampling curves
@@ -110,29 +110,32 @@ rare_curve <- function(abund_vec)
 #' @export
 #' @importFrom methods is
 #'
-spec_sample_curve <- function(comm, method = c("accumulation" ,"rarefaction"))
-{
-   if (!is(comm, "community"))
-      stop("spec_sample_curve requires a community object as input. See ?community.")
+spec_sample_curve <- function(comm, method = c("accumulation", "rarefaction")) {
+  if (!is(comm, "community"))
+    stop(
+      "spec_sample_curve requires a community object as input. See ?community."
+    )
 
-   out_dat <- data.frame(n = 1:nrow(comm$census))
+  out_dat <- data.frame(n = 1:nrow(comm$census))
 
-   method <- match.arg(method, several.ok = TRUE)
+  method <- match.arg(method, several.ok = TRUE)
 
-   if ("accumulation" %in% method) {
-      out_dat$spec_accum <- sSAC1_C(comm$census$x, comm$census$y,
-                                    as.integer(comm$census$species))
-   }
+  if ("accumulation" %in% method) {
+    out_dat$spec_accum <- sSAC1_C(
+      comm$census$x,
+      comm$census$y,
+      as.integer(comm$census$species)
+    )
+  }
 
-   if ("rarefaction" %in% method) {
-      abund <- community_to_sad(comm)
-      out_dat$spec_rarefied <- rare_curve(abund)
+  if ("rarefaction" %in% method) {
+    abund <- community_to_sad(comm)
+    out_dat$spec_rarefied <- rare_curve(abund)
+  }
 
-   }
+  class(out_dat) <- c("spec_sample_curve", "data.frame")
 
-   class(out_dat) <- c("spec_sample_curve", "data.frame")
-
-   return(out_dat)
+  return(out_dat)
 }
 
 
@@ -152,31 +155,35 @@ spec_sample_curve <- function(comm, method = c("accumulation" ,"rarefaction"))
 #'
 #' @export
 #'
-plot.spec_sample_curve <- function(x, ...)
-{
-   graphics::plot(x[[1]], x[[2]], type = "n",
-                  xlab = "No. of individuals sampled",
-                  ylab = "Expected no.of species",
-                  main = "Species sampling curves", ...)
+plot.spec_sample_curve <- function(x, ...) {
+  graphics::plot(
+    x[[1]],
+    x[[2]],
+    type = "n",
+    xlab = "No. of individuals sampled",
+    ylab = "Expected no.of species",
+    main = "Species sampling curves",
+    ...
+  )
 
-   if (ncol(x) == 2) {
-      if (names(x)[2] == "spec_accum") {
-         legend_text <- c("Accumulation")
-         line_col <- "red"
-      }
-      if (names(x)[2] == "spec_rarefied") {
-         legend_text <- c("Rarefaction")
-         line_col <- "blue"
-      }
-      graphics::lines(x[[1]], x[[2]], col = line_col)
-   }
+  if (ncol(x) == 2) {
+    if (names(x)[2] == "spec_accum") {
+      legend_text <- c("Accumulation")
+      line_col <- "red"
+    }
+    if (names(x)[2] == "spec_rarefied") {
+      legend_text <- c("Rarefaction")
+      line_col <- "blue"
+    }
+    graphics::lines(x[[1]], x[[2]], col = line_col)
+  }
 
-   if (ncol(x) == 3) {
-      legend_text <- c("Accumulation","Rarefaction")
-      line_col <- c("red","blue")
-      graphics::lines(x[[1]], x[[2]], col = line_col[1])
-      graphics::lines(x[[1]], x[[3]], col = line_col[2])
-   }
+  if (ncol(x) == 3) {
+    legend_text <- c("Accumulation", "Rarefaction")
+    line_col <- c("red", "blue")
+    graphics::lines(x[[1]], x[[2]], col = line_col[1])
+    graphics::lines(x[[1]], x[[3]], col = line_col[2])
+  }
 
-   graphics::legend("bottomright", legend = legend_text, lty = 1, col = line_col)
+  graphics::legend("bottomright", legend = legend_text, lty = 1, col = line_col)
 }
