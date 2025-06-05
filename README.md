@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim.png)](https://cran.r-project.org/package=mobsim)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 
 [![](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
@@ -79,9 +79,9 @@ plot(comm_rand)
 plot(comm_agg)
 ```
 
-<div id="fig-sad">
+<div id="fig-map">
 
-<img src="README_files/figure-commonmark/fig-sad-1.png" id="fig-sad" />
+<img src="README_files/figure-commonmark/fig-map-1.png" id="fig-map" />
 
 Figure 1
 
@@ -100,15 +100,15 @@ sar_agg <- divar(comm_agg)
 
 ``` r
 plot(m_species ~ prop_area, data = sar_rand, type = "b", log = "xy",
-     xlab = "Proportion of area sampled",ylab = "No. of species",
+     xlab = "Proportion of area sampled", ylab = "No. of species",
      ylim = c(3,30))
 lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-<div id="fig-map">
+<div id="fig-sar">
 
-<img src="README_files/figure-commonmark/fig-map-1.png" id="fig-map" />
+<img src="README_files/figure-commonmark/fig-sar-1.png" id="fig-sar" />
 
 Figure 2
 
