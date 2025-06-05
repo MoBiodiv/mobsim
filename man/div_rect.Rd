@@ -20,14 +20,14 @@ div_rect(x0, y0, xsize, ysize, comm)
 \value{
 Named vector with six diversity indices
 \enumerate{
-   \item n_species: Number of species
-   \item n_endemics: Number of endemics
-   \item shannon: Shannon index index defined as \eqn{H = - \sum p_i * log(p_i)},
-   where \eqn{p_i} is the relative abundance of species i:
-   \item ens_shannon: Effective number of species (ENS) based on the Shannon index exp(H)
-   \item simpson: Simpson index index (= probability of interspecific encounter PIE)
-   defined as \eqn{D =  1 - \sum p_i^2}
-   \item ens_simpson: Effective number of species (ENS) based on the Simpson index \eqn{1/D}
+\item n_species: Number of species
+\item n_endemics: Number of endemics
+\item shannon: Shannon index index defined as \eqn{H = - \sum p_i * log(p_i)},
+where \eqn{p_i} is the relative abundance of species i:
+\item ens_shannon: Effective number of species (ENS) based on the Shannon index exp(H)
+\item simpson: Simpson index index (= probability of interspecific encounter PIE)
+defined as \eqn{D =  1 - \sum p_i^2}
+\item ens_simpson: Effective number of species (ENS) based on the Simpson index \eqn{1/D}
 
 }
 }

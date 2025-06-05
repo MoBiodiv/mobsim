@@ -18,10 +18,10 @@ community(x, y, spec_id, xrange = c(0, 1), yrange = c(0, 1))
 \value{
 Community object which includes three items:
 \enumerate{
-   \item census: data.frame with three columns: x, y, and species names for
-    each individual
-   \item x_min_max: extent of the community in x-direction
-   \item y_min_max: extent of the community in y-direction
+\item census: data.frame with three columns: x, y, and species names for
+each individual
+\item x_min_max: extent of the community in x-direction
+\item y_min_max: extent of the community in y-direction
 }
 }
 \description{

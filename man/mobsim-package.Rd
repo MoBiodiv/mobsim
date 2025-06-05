@@ -26,5 +26,11 @@ Authors:
   \item Alban Sagouis \email{alban.sagouis@idiv.de} (\href{https://orcid.org/0000-0002-3827-1063}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig (01jty7g66) [funder]
+  \item Freie Universität Berlin (046ak2485) [funder]
+}
+
 }
 \keyword{internal}
