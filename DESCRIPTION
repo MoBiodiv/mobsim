@@ -48,6 +48,7 @@ Suggests:
     vctrs
 Config/testthat/edition: 3
 Config/testthat/parallel: false
+Config/testthat/start-first: *utils*, *create_motherpoints*, *simulation*, *sampling*
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Language: en-GB

@@ -4,11 +4,16 @@
 \name{mobsim-package}
 \alias{mobsim}
 \alias{mobsim-package}
-\title{mobsim: A package for spatial analysis of scale-dependent biodiversity changes.}
+\title{mobsim: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes}
 \description{
 The package includes functions to simulate species distributions in space
 as well as for the analysis of spatially-explicit data, where each individual
 is described by its xy-coordinates and a species identity label.
+}
+\details{
+`r lifecycle::badge("stable")`
+
+mobsim: A package for spatial analysis of scale-dependent biodiversity changes.
 }
 \seealso{
 Useful links:
@@ -26,5 +31,10 @@ Authors:
   \item Alban Sagouis \email{alban.sagouis@idiv.de} (\href{https://orcid.org/0000-0002-3827-1063}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig (01jty7g66) [funder]
+  \item Freie Universität Berlin (046ak2485) [funder]
 }
-\keyword{internal}
+
+}
