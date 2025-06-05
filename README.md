@@ -1,17 +1,17 @@
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://CRAN.R-project.org/package=mobsim)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim.png)](https://cran.r-project.org/package=mobsim)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 
-[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+[![](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
 [![R-CMD-check](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
@@ -28,7 +28,7 @@ rarefaction and accumulation curves, species-area relationships,
 endemics-area relationships and the distance-decay of community
 similarity.
 
-A detailed introduction of the package is available at
+A detailed introduction of the package is available on
 [bioRxiv](https://www.biorxiv.org/content/10.1101/209502v1).
 
 ## Installation
@@ -39,10 +39,10 @@ install.packages("mobsim")
 
 # Or the development version from GitHub:
 # install.packages("devtools")
-devtools::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
+remotes::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
 ```
 
-Please enter bug reports on
+Please report bug reports on
 [github](https://github.com/MoBiodiv/mobsim/issues).
 
 ## Getting help
@@ -79,7 +79,13 @@ plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](README-unnamed-chunk-5-1.png)<!-- -->
+<div id="fig-sad">
+
+<img src="README_files/figure-commonmark/fig-sad-1.png" id="fig-sad" />
+
+Figure 1
+
+</div>
 
 ### Analysis of spatially-explicit community data
 
@@ -100,7 +106,13 @@ lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random","Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](README-unnamed-chunk-7-1.png)<!-- -->
+<div id="fig-map">
+
+<img src="README_files/figure-commonmark/fig-map-1.png" id="fig-map" />
+
+Figure 2
+
+</div>
 
 ### Sampling of communities
 
@@ -114,4 +126,11 @@ samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](README-unnamed-chunk-8-1.png)<!-- -->
+<div id="fig-sampling">
+
+<img src="README_files/figure-commonmark/fig-sampling-1.png"
+id="fig-sampling" />
+
+Figure 3
+
+</div>
