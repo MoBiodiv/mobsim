@@ -24,12 +24,12 @@ divar(
 Dataframe with the proportional area of the subplots and mean and
 standard deviation of the following diversity indices:
 \enumerate{
-   \item Number of species
-   \item Number of endemics
-   \item Shannon index
-   \item Effective number of species (ENS) based on Shannon index
-   \item Simpson index
-   \item Effective number of species (ENS) based on Simpson index
+\item Number of species
+\item Number of endemics
+\item Shannon index
+\item Effective number of species (ENS) based on Shannon index
+\item Simpson index
+\item Effective number of species (ENS) based on Simpson index
 }
 
 See the documentation of  \code{\link{div_rect}} for detailed information on the

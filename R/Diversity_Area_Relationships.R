@@ -46,40 +46,38 @@
 #'
 #' @export
 #'
-div_rect <- function(x0, y0, xsize, ysize, comm)
-{
-   x <- comm$census$x
-   y <- comm$census$y
+div_rect <- function(x0, y0, xsize, ysize, comm) {
+  x <- comm$census$x
+  y <- comm$census$y
 
-   # logical vector which trees are in the sampling rectangle
-   in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
+  # logical vector which trees are in the sampling rectangle
+  in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
 
-   spec_in <- unique(comm$census$species[in_rect])
-   spec_out <- unique(comm$census$species[!in_rect])
+  spec_in <- unique(comm$census$species[in_rect])
+  spec_out <- unique(comm$census$species[!in_rect])
 
-   n_species <- length(spec_in)
-   n_endemics <- length(spec_in[!spec_in %in% spec_out])
+  n_species <- length(spec_in)
+  n_endemics <- length(spec_in[!spec_in %in% spec_out])
 
-   abund <- table(comm$census$species[in_rect])
-   abund <- abund[abund > 0]
-   relabund <- abund/sum(abund)
+  abund <- table(comm$census$species[in_rect])
+  abund <- abund[abund > 0]
+  relabund <- abund / sum(abund)
 
-   shannon <- -sum(relabund * log(relabund))
+  shannon <- -sum(relabund * log(relabund))
 
-   n <- sum(abund)
-   if (n > 1)
-      #simpson <- (n/(n-1)) * (1 - sum(relabund^2))
-      simpson <- 1 - sum(relabund^2)
-   else
-      simpson <- NA
+  n <- sum(abund)
+  if (n > 1)
+    #simpson <- (n/(n-1)) * (1 - sum(relabund^2))
+    simpson <- 1 - sum(relabund^2) else simpson <- NA
 
-   return(c(n_species = n_species,
-            n_endemics = n_endemics,
-            shannon = shannon,
-            ens_shannon = exp(shannon),
-            simpson = simpson,
-            ens_simpson = 1/(1 - simpson)
-            ))
+  return(c(
+    n_species = n_species,
+    n_endemics = n_endemics,
+    shannon = shannon,
+    ens_shannon = exp(shannon),
+    simpson = simpson,
+    ens_simpson = 1 / (1 - simpson)
+  ))
 }
 
 #' Distribution of local diversity indices
@@ -114,53 +112,65 @@ div_rect <- function(x0, y0, xsize, ysize, comm)
 #'
 #' @export
 #'
-div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
-                          exclude_zeros = FALSE)
-{
-   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
-   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
+div_rand_rect <- function(
+  prop_area = 0.25,
+  comm,
+  n_rect = 100,
+  exclude_zeros = FALSE
+) {
+  dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+  dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
 
-   area <- dx_plot * dy_plot * prop_area
-   square_size <- sqrt(area)
+  area <- dx_plot * dy_plot * prop_area
+  square_size <- sqrt(area)
 
-   if (square_size <= min(c(dx_plot, dy_plot))) {
-      dx_rect <- square_size
-      dy_rect <- square_size
-   } else {
-      if (dx_plot >= dy_plot) {
-         dx_rect <- dx_plot*prop_area
-         dy_rect <- dy_plot
-      } else {
-         dx_rect <- dx_plot
-         dy_rect <- dy_plot*prop_area
-      }
-   }
+  if (square_size <= min(c(dx_plot, dy_plot))) {
+    dx_rect <- square_size
+    dy_rect <- square_size
+  } else {
+    if (dx_plot >= dy_plot) {
+      dx_rect <- dx_plot * prop_area
+      dy_rect <- dy_plot
+    } else {
+      dx_rect <- dx_plot
+      dy_rect <- dy_plot * prop_area
+    }
+  }
 
-   xpos <- stats::runif(n_rect, min = comm$x_min_max[[1]],
-                                max = comm$x_min_max[[2]] - dx_rect)
-   ypos <- stats::runif(n_rect, min = comm$y_min_max[[1]],
-                                max = comm$y_min_max[[2]] - dy_rect)
+  xpos <- stats::runif(
+    n_rect,
+    min = comm$x_min_max[[1]],
+    max = comm$x_min_max[[2]] - dx_rect
+  )
+  ypos <- stats::runif(
+    n_rect,
+    min = comm$y_min_max[[1]],
+    max = comm$y_min_max[[2]] - dy_rect
+  )
 
-   div_plots <- mapply(div_rect, xpos, ypos,
-                       MoreArgs = list(xsize = dx_rect, ysize = dy_rect,
-                                     comm = comm))
-   if (isTRUE(exclude_zeros))
-      div_plots <- div_plots[, div_plots["n_species",] > 0]
+  div_plots <- mapply(
+    div_rect,
+    xpos,
+    ypos,
+    MoreArgs = list(xsize = dx_rect, ysize = dy_rect, comm = comm)
+  )
+  if (isTRUE(exclude_zeros))
+    div_plots <- div_plots[, div_plots["n_species", ] > 0]
 
-   return(c(m_species      = mean(div_plots["n_species",]),
-            sd_species     = stats::sd(div_plots["n_species",]),
-            m_endemics     = mean(div_plots["n_endemics",]),
-            sd_endemics    = stats::sd(div_plots["n_endemics",]),
-            m_shannon      = mean(div_plots["shannon",]),
-            sd_shannon     = stats::sd(div_plots["shannon",]),
-            m_ens_shannon  = mean(div_plots["ens_shannon",]),
-            sd_ens_shannon = stats::sd(div_plots["ens_shannon",]),
-            m_simpson      = mean(div_plots["simpson",], na.rm = TRUE),
-            sd_simpson     = stats::sd(div_plots["simpson",], na.rm = TRUE),
-            m_ens_simpson  = mean(div_plots["ens_simpson",], na.rm = TRUE),
-            sd_ens_simpson = stats::sd(div_plots["ens_simpson",], na.rm = TRUE)
-            )
-   )
+  return(c(
+    m_species = mean(div_plots["n_species", ]),
+    sd_species = stats::sd(div_plots["n_species", ]),
+    m_endemics = mean(div_plots["n_endemics", ]),
+    sd_endemics = stats::sd(div_plots["n_endemics", ]),
+    m_shannon = mean(div_plots["shannon", ]),
+    sd_shannon = stats::sd(div_plots["shannon", ]),
+    m_ens_shannon = mean(div_plots["ens_shannon", ]),
+    sd_ens_shannon = stats::sd(div_plots["ens_shannon", ]),
+    m_simpson = mean(div_plots["simpson", ], na.rm = TRUE),
+    sd_simpson = stats::sd(div_plots["simpson", ], na.rm = TRUE),
+    m_ens_simpson = mean(div_plots["ens_simpson", ], na.rm = TRUE),
+    sd_ens_simpson = stats::sd(div_plots["ens_simpson", ], na.rm = TRUE)
+  ))
 }
 
 #' Diversity-area relationships
@@ -196,35 +206,40 @@ div_rand_rect <- function(prop_area = 0.25, comm, n_rect = 100,
 #'
 #' @export
 #'
-divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
-                  exclude_zeros = TRUE)
-{
-   if (any(prop_area > 1))
-      warning("Subplot areas larger than the community size are ignored!")
-   prop_area <- prop_area[prop_area <= 1]
+divar <- function(
+  comm,
+  prop_area = seq(0.1, 1, by = 0.1),
+  n_samples = 100,
+  exclude_zeros = TRUE
+) {
+  if (any(prop_area > 1))
+    warning("Subplot areas larger than the community size are ignored!")
+  prop_area <- prop_area[prop_area <= 1]
 
-   if (!is(comm, "community"))
-      stop("DiVAR requires a community object as input. See ?community.")
+  if (!is(comm, "community"))
+    stop("DiVAR requires a community object as input. See ?community.")
 
-   n_scales <- length(prop_area)
-   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
-   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
+  n_scales <- length(prop_area)
+  dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+  dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
 
-   div_area <- sapply(prop_area,
-                      div_rand_rect,
-                      comm = comm,
-                      n_rect = n_samples,
-                      exclude_zeros = exclude_zeros)
+  div_area <- sapply(
+    prop_area,
+    div_rand_rect,
+    comm = comm,
+    n_rect = n_samples,
+    exclude_zeros = exclude_zeros
+  )
 
-   div_dat <- as.data.frame(t(div_area))
-   div_dat <- cbind(prop_area = prop_area, div_dat)
+  div_dat <- as.data.frame(t(div_area))
+  div_dat <- cbind(prop_area = prop_area, div_dat)
 
-   class(div_dat) <- c("divar", "data.frame")
+  class(div_dat) <- c("divar", "data.frame")
 
-   return(div_dat)
+  return(div_dat)
 }
 
-#' -----------------------------------------------------------------------------
+
 #' Plot diversity-area relationships
 #'
 #' @param x Dataframe generated by the function \code{\link{divar}}.
@@ -235,44 +250,52 @@ divar <- function(comm, prop_area = seq(0.1, 1, by = 0.1), n_samples = 100,
 #'
 #'
 #' @export
-plot.divar <- function(x, ...)
-{
-   #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
+plot.divar <- function(x, ...) {
+  #http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot
 
-   # #Plot an empty graph and legend to get the size of the legend
-   max_spec <- max(x$m_species)
-   # plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
-   #      type = "n")
-   #
-   # my_legend_size <-legend("topright",
-   #                         legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
-   #                         lwd = 2, plot = FALSE)
-   # dev.off()
+  # #Plot an empty graph and legend to get the size of the legend
+  max_spec <- max(x$m_species)
+  # plot(m_species ~ prop_area, data = divar, ylim = c(0, max_spec),
+  #      type = "n")
+  #
+  # my_legend_size <-legend("topright",
+  #                         legend = c("Species","Endemics", "ENS Shannon ","ENS Simpson"),
+  #                         lwd = 2, plot = FALSE)
+  # dev.off()
 
-   #custom ylim. Add the height of legend to upper bound of the range
-   my_range <- c(0, max_spec)
-   #my_range[2] <- 1.05*(my_range[2] + my_legend_size$rect$h)
-   my_range[2] <- 1.3 * my_range[2]
+  #custom ylim. Add the height of legend to upper bound of the range
+  my_range <- c(0, max_spec)
+  #my_range[2] <- 1.05*(my_range[2] + my_legend_size$rect$h)
+  my_range[2] <- 1.3 * my_range[2]
 
+  #draw the plot with custom ylim
+  graphics::plot(
+    m_species ~ prop_area,
+    data = x,
+    ylim = my_range,
+    type = "n",
+    las = 1,
+    xlab = "Proportion of area sampled",
+    ylab = "No. of species",
+    main = "Diversity-area relationships",
+    ...
+  )
+  graphics::lines(m_species ~ prop_area, data = x, type = "b", col = 1)
+  graphics::lines(m_endemics ~ prop_area, data = x, type = "b", col = 2)
+  graphics::lines(m_ens_shannon ~ prop_area, data = x, type = "b", col = 3)
+  graphics::lines(m_ens_simpson ~ prop_area, data = x, type = "b", col = 4)
 
-   #draw the plot with custom ylim
-   graphics::plot(m_species ~ prop_area, data = x, ylim = my_range,
-                  type = "n", las = 1,
-                  xlab = "Proportion of area sampled", ylab = "No. of species",
-                  main = "Diversity-area relationships", ...)
-   graphics::lines(m_species ~ prop_area, data = x, type = "b", col = 1)
-   graphics::lines(m_endemics ~ prop_area, data = x, type = "b", col = 2)
-   graphics::lines(m_ens_shannon ~ prop_area, data = x, type = "b", col = 3)
-   graphics::lines(m_ens_simpson ~ prop_area, data = x, type = "b", col = 4)
-
-   graphics::legend("topleft",legend = c("Species","Endemics",
-                                         "ENS Shannon ",
-                                         "ENS Simpson"),
-   col = 1:4, lwd = 2, ncol = 2, cex = 0.9)
+  graphics::legend(
+    "topleft",
+    legend = c("Species", "Endemics", "ENS Shannon ", "ENS Simpson"),
+    col = 1:4,
+    lwd = 2,
+    ncol = 2,
+    cex = 0.9
+  )
 }
 
 
-#' -----------------------------------------------------------------------------
 #' Get local species abundance distribution
 #'
 #' Get local abundance distribution in rectangle bounded by x0, y0, x0 + xsize,
@@ -287,16 +310,15 @@ plot.divar <- function(x, ...)
 #' @return Integer vector with local species abundances
 #' @export
 #'
-abund_rect <- function(x0, y0, xsize, ysize, comm)
-{
-   x <- comm$census$x
-   y <- comm$census$y
+abund_rect <- function(x0, y0, xsize, ysize, comm) {
+  x <- comm$census$x
+  y <- comm$census$y
 
-   # logical vector which trees are in the sampling rectangle
-   in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
+  # logical vector which trees are in the sampling rectangle
+  in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
 
-   abund <- table(comm$census$species[in_rect])
-   return(abund)
+  abund <- table(comm$census$species[in_rect])
+  return(abund)
 }
 
 #' Distance decay of similarity
@@ -322,41 +344,47 @@ abund_rect <- function(x0, y0, xsize, ysize, comm)
 #' @importFrom methods is
 #'@export
 #'
-dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
-                       method = "bray", binary = FALSE)
-{
-   if (prop_area > 1)
-      stop("prop_area cannot be larger than 1")
+dist_decay <- function(
+  prop_area = 0.005,
+  n_samples = 20,
+  method = "bray",
+  binary = FALSE
+) {
+  if (prop_area > 1) stop("prop_area cannot be larger than 1")
 
-   if (length(prop_area) != 1L)
-      stop("prop_area has to be of length 1")
+  if (length(prop_area) != 1L) stop("prop_area has to be of length 1")
 
-   if (!is(comm, "community"))
-      stop("dist_decay requires a community object as input. See ?community.")
+  if (!is(comm, "community"))
+    stop("dist_decay requires a community object as input. See ?community.")
 
-   dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
-   dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
-   area <- dx_plot * dy_plot * prop_area
+  dx_plot <- comm$x_min_max[[2]] - comm$x_min_max[[1]]
+  dy_plot <- comm$y_min_max[[2]] - comm$y_min_max[[1]]
+  area <- dx_plot * dy_plot * prop_area
 
-   samples1 <- sample_quadrats(comm, n_quadrats = n_samples,
-                               quadrat_area = area,
-                               avoid_overlap = TRUE, plot = FALSE)
-   com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0,]
-   d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0,])
+  samples1 <- sample_quadrats(
+    comm,
+    n_quadrats = n_samples,
+    quadrat_area = area,
+    avoid_overlap = TRUE,
+    plot = FALSE
+  )
+  com_mat <- samples1$spec_dat[rowSums(samples1$spec_dat) > 0, ]
+  d <- stats::dist(samples1$xy_dat[rowSums(samples1$spec_dat) > 0, ])
 
-   similarity <- 1 - vegan::vegdist(com_mat, method = method,
-                                    binary = binary)
-   similarity[!is.finite(similarity)] <- NA
+  similarity <- 1 - vegan::vegdist(com_mat, method = method, binary = binary)
+  similarity[!is.finite(similarity)] <- NA
 
-   dat_out <- data.frame(distance = as.numeric(d),
-                         similarity = as.numeric(similarity))
+  dat_out <- data.frame(
+    distance = as.numeric(d),
+    similarity = as.numeric(similarity)
+  )
 
-   # order by increasing distance
-   dat_out <- dat_out[order(dat_out$distance), ]
+  # order by increasing distance
+  dat_out <- dat_out[order(dat_out$distance), ]
 
-   class(dat_out) <- c("dist_decay", "data.frame")
+  class(dat_out) <- c("dist_decay", "data.frame")
 
-   return(dat_out)
+  return(dat_out)
 }
 
 #' Distance decay of similarity with user-defined quadrats
@@ -384,24 +412,24 @@ dist_decay <- function(comm, prop_area = 0.005, n_samples = 20,
 #'
 #'@export
 #'
-dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE)
-{
-   com_mat <- samples$spec_dat[rowSums(samples$spec_dat) > 0,]
-   d <- stats::dist(samples$xy_dat[rowSums(samples$spec_dat) > 0,])
+dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE) {
+  com_mat <- samples$spec_dat[rowSums(samples$spec_dat) > 0, ]
+  d <- stats::dist(samples$xy_dat[rowSums(samples$spec_dat) > 0, ])
 
-   similarity <- 1 - vegan::vegdist(com_mat, method = method,
-                                    binary = binary)
-   similarity[!is.finite(similarity)] <- NA
+  similarity <- 1 - vegan::vegdist(com_mat, method = method, binary = binary)
+  similarity[!is.finite(similarity)] <- NA
 
-   dat_out <- data.frame(distance = as.numeric(d),
-                         similarity = as.numeric(similarity))
+  dat_out <- data.frame(
+    distance = as.numeric(d),
+    similarity = as.numeric(similarity)
+  )
 
-   # order by increasing distance
-   dat_out <- dat_out[order(dat_out$distance), ]
+  # order by increasing distance
+  dat_out <- dat_out[order(dat_out$distance), ]
 
-   class(dat_out) <- c("dist_decay", "data.frame")
+  class(dat_out) <- c("dist_decay", "data.frame")
 
-   return(dat_out)
+  return(dat_out)
 }
 
 
@@ -424,17 +452,20 @@ dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE)
 #'
 #' @export
 #'
-plot.dist_decay <- function(x, ...)
-{
-   graphics::plot(similarity ~ distance, data = x, las = 1,
-                  xlab = "Distance", ylab = "Similarity",
-                  main = "Distance decay", ...)
-   dd_loess <- stats::loess(similarity ~ distance, data = x)
-   pred_sim <- stats::predict(dd_loess)
-   graphics::lines(x$distance, pred_sim, col = "red", lwd = 2)
+plot.dist_decay <- function(x, ...) {
+  graphics::plot(
+    similarity ~ distance,
+    data = x,
+    las = 1,
+    xlab = "Distance",
+    ylab = "Similarity",
+    main = "Distance decay",
+    ...
+  )
+  dd_loess <- stats::loess(similarity ~ distance, data = x)
+  pred_sim <- stats::predict(dd_loess)
+  graphics::lines(x$distance, pred_sim, col = "red", lwd = 2)
 }
-
-
 
 # -----------------------------------------------------------
 # abund.rand.rect <- function(prop_area = 0.25, community,
@@ -472,4 +503,3 @@ plot.dist_decay <- function(x, ...)
 #
 #    return(abund.plots[,1])
 # }
-#

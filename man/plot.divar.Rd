@@ -2,8 +2,7 @@
 % Please edit documentation in R/Diversity_Area_Relationships.R
 \name{plot.divar}
 \alias{plot.divar}
-\title{-----------------------------------------------------------------------------
-Plot diversity-area relationships}
+\title{Plot diversity-area relationships}
 \usage{
 \method{plot}{divar}(x, ...)
 }
@@ -16,6 +15,5 @@ Plot diversity-area relationships}
 This function is called for its side effects and has no return value.
 }
 \description{
------------------------------------------------------------------------------
 Plot diversity-area relationships
 }

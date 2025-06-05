@@ -4,17 +4,9 @@
 \alias{dist_decay}
 \title{Distance decay of similarity}
 \usage{
-dist_decay(
-  comm,
-  prop_area = 0.005,
-  n_samples = 20,
-  method = "bray",
-  binary = FALSE
-)
+dist_decay(prop_area = 0.005, n_samples = 20, method = "bray", binary = FALSE)
 }
 \arguments{
-\item{comm}{\code{\link{community}} object}
-
 \item{prop_area}{Subplot size as proportion of the total area}
 
 \item{n_samples}{Number of randomly located subplots}
@@ -23,6 +15,8 @@ dist_decay(
 
 \item{binary}{Perform presence/absence standardization before analysis?
 See \code{\link[vegan]{vegdist}}}
+
+\item{comm}{\code{\link{community}} object}
 }
 \value{
 Object of class  \code{dist_decay}: a dataframe with distances between

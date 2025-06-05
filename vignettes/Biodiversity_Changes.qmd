@@ -3,12 +3,12 @@ title: "Changes of biodiversity components"
 author: "Felix May"
 date: "`r Sys.Date()`"
 output:
- rmarkdown::html_vignette:
-    number_sections: yes
-    toc: yes
+  html_document:
+    number_sections: true
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Changes of biodiversity components}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -22,52 +22,78 @@ Biodiversity in any sampled area depends on three components
 
 Changes of each component result in specific signatures with respect to the change
 of non-spatial and spatial biodiversity patterns (see vignette *Analysis of biodiversity patterns*).
-Therefore, biodiversity patterns can be assessed to investigate the scale-dependent 
-effects of biodiversity drivers, e.g. habitat loss, climate change etc. on the 
+Therefore, biodiversity patterns can be assessed to investigate the scale-dependent
+effects of biodiversity drivers, e.g. habitat loss, climate change etc. on the
 three biodiversity components.
 
 In this vignette we simulate independent variations of each of the three components
-and demonstrate how rarefaction and species-accumulation curves can be applied to 
+and demonstrate how rarefaction and species-accumulation curves can be applied to
 diagnose changes in biodiversity components.
 
 For this purpose we first simulate a reference community. We assume a random
 distribution of species in sapce, so we can use the function `sim_poisson_community`:
 
-```{r, fig.width = 5, fig.height = 5}
+```{r}
+#| label: "fig-1"
+#| fig-width: 5
+#| fig-height: 5
+
 library(mobsim)
 
 S0 <- 100
 N0 <- 1000
 cv0 <- 0.5
 
-sim_ref <- sim_poisson_community(s_pool = S0, n_sim = N0, sad_type = "lnorm",
-                                 sad_coef = list("cv_abund" = cv0), fix_s_sim = TRUE)
+sim_ref <- sim_poisson_community(
+  s_pool = S0,
+  n_sim = N0,
+  sad_type = "lnorm",
+  sad_coef = list("cv_abund" = cv0),
+  fix_s_sim = TRUE
+)
 plot(sim_ref)
 ```
 
 # Change in total number of individuals
 
-First we vary the total number of individuals. For this purpose we simulate a second 
+First we vary the total number of individuals. For this purpose we simulate a second
 community with just half of the individuals.
 
 ```{r}
+#| label: poisson_community
 sim_lower_N <-  sim_poisson_community(s_pool = S0, n_sim = N0/2, sad_type = "lnorm",
                                       sad_coef = list("cv_abund" = cv0))
 ```
 
 Then we evaluate the rarefaction and species-accumulation curve for both communities
 
-```{r,  fig.width = 7, fig.height = 3.5}
-curve_ref    <- spec_sample_curve(sim_ref)
+```{r}
+#| label: "fig-2"
+#| collapse: true
+#| fig-width: 7
+#| fig-height: 3.5
+curve_ref <- spec_sample_curve(sim_ref)
 curve_lower_N <- spec_sample_curve(sim_lower_N)
 
-oldpar <- par(mfrow = c(1,2))
-plot(spec_rarefied ~ n, data = curve_ref, type = "l", main = "Rarefaction curve",
-     xlab = "No. of individuals", ylab = "No. of species" )
+oldpar <- par(mfrow = c(1, 2))
+plot(
+  spec_rarefied ~ n,
+  data = curve_ref,
+  type = "l",
+  main = "Rarefaction curve",
+  xlab = "No. of individuals",
+  ylab = "No. of species"
+)
 lines(spec_rarefied ~ n, data = curve_lower_N, col = "red")
 
-plot(spec_accum ~ n, data = curve_ref, type = "l", main = "Species accumulation curve",
-     xlab = "No. of individuals", ylab = "No. of species" )
+plot(
+  spec_accum ~ n,
+  data = curve_ref,
+  type = "l",
+  main = "Species accumulation curve",
+  xlab = "No. of individuals",
+  ylab = "No. of species"
+)
 lines(spec_accum ~ n, data = curve_lower_N, col = "red")
 par(oldpar)
 ```
@@ -76,7 +102,7 @@ Due to the stochasticity of simulations the curves of the reference and the chan
 community slightly differ, but on average random losses of individuals are indicated
 by overlapping curves, which end at different numbers of individuals.
 
-# Change in the abundance distribution 
+# Change in the abundance distribution
 
 The second simulated change represents a reduction of the evenness of the species
 abundance distribution, i.e. there are more very rare and more very common
@@ -86,7 +112,11 @@ of species abundances. The higher the cv the lower the evenness and vice versa.
 We also use the argument `fix_s_local= TRUE` to simulate a community with exactly S0
 species.
 
-```{r, fig.width = 7, fig.height = 3.5}
+```{r}
+#| label: "fig-3"
+#| collapse: true
+#| fig-width: 7
+#| fig-height: 3.5
 sim_uneven <-  sim_poisson_community(s_pool = S0, n_sim = N0, sad_type = "lnorm",
                                      sad_coef = list("cv_abund" = cv0*4),
                                      fix_s_sim = TRUE)
@@ -109,10 +139,14 @@ richness are indicated by changing slopes and shapes of the curves.
 
 # Change in spatial distributions
 
-Finally we change the spatial patterns of species, by simulating clumping of 
+Finally we change the spatial patterns of species, by simulating clumping of
 conspecific individuals using a Thomas process model instead of a Poisson
 
-```{r, fig.width = 7, fig.height = 3.5}
+```{r}
+#| label: "fig-4"
+#| collapse: true
+#| fig-width: 7
+#| fig-height: 3.5
 sim_clumped <-  sim_thomas_community(s_pool = S0, n_sim = N0, sad_type = "lnorm",
                                      sad_coef = list("cv_abund" = cv0),
                                      fix_s_sim = TRUE,
@@ -126,7 +160,11 @@ par(oldpar)
 
 As before we compare the rarefaction and accumulation curves:
 
-```{r, fig.width = 7, fig.height = 3.5}
+```{r}
+#| label: "fig-5"
+#| collapse: true
+#| fig-width: 7
+#| fig-height: 3.5
 curve_clumped<- spec_sample_curve(sim_clumped)
 
 oldpar <- par(mfrow = c(1,2))
@@ -141,10 +179,8 @@ par(oldpar)
 
 ```
 
-When there is only a change in spatial distribution the rarefaction curve does not 
+When there is only a change in spatial distribution the rarefaction curve does not
 change, because it only depends on species abundances, but not on spatial distributions
 (see vignette *Analysis of biodiversity patterns*). In contrast, the species-accumulation
 curves indicates higher intraspecific clumping (also called aggregation) by a lower
 slope and lower expected species richness for the same number of sampled individuals.
-
-

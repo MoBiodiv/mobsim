@@ -62,10 +62,9 @@
 #' @export
 
 drift_x_motherpoints <- function(mpcoords, drift) {
+  mpcoords$xmother <- lapply(mpcoords$xmother, function(x) x + drift)
 
-   mpcoords$xmother <- lapply(mpcoords$xmother, function(x) x + drift)
-
-   return(mpcoords)
+  return(mpcoords)
 }
 
 #' Adds a fixed drift movement to mother points y coordinates
@@ -74,8 +73,7 @@ drift_x_motherpoints <- function(mpcoords, drift) {
 #' @export
 
 drift_y_motherpoints <- function(mpcoords, drift) {
+  mpcoords$ymother <- lapply(mpcoords$ymother, function(x) x + drift)
 
-   mpcoords$ymother <- lapply(mpcoords$ymother, function(x) x + drift)
-
-   return(mpcoords)
+  return(mpcoords)
 }

@@ -43,20 +43,19 @@
 # }
 
 replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
-   if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) set.seed(seed)
 
-   spatial_comm <- community2ppp(comm)
+  spatial_comm <- community2ppp(comm)
 
-   contingency_table <- spatstat.explore::marktable(spatial_comm, N = N, R = R)
-   S <- ncol(contingency_table)
-   comm$census$species <- factor(
-      apply(
-         X = contingency_table,
-         MARGIN = 1L,
-         FUN = function(ind) names(ind)[[sample.int(n = S,
-                                                    size = 1L,
-                                                    prob = ind/sum(ind))]]
-      )
-   )
-   return(comm)
+  contingency_table <- spatstat.explore::marktable(spatial_comm, N = N, R = R)
+  S <- ncol(contingency_table)
+  comm$census$species <- factor(
+    apply(
+      X = contingency_table,
+      MARGIN = 1L,
+      FUN = function(ind)
+        names(ind)[[sample.int(n = S, size = 1L, prob = ind / sum(ind))]]
+    )
+  )
+  return(comm)
 }

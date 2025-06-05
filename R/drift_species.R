@@ -29,10 +29,9 @@
 #'
 
 drift_x_species <- function(comm, drift = NULL) {
+  comm$census$x <- comm$census$x + drift
 
-   comm$census$x <- comm$census$x + drift
-
-   return(comm)
+  return(comm)
 }
 
 #' Adds the same fixed movement to all individuals of a species on y
@@ -42,8 +41,7 @@ drift_x_species <- function(comm, drift = NULL) {
 #'
 
 drift_y_species <- function(comm, drift = NULL) {
+  comm$census$y <- comm$census$y + drift
 
-   comm$census$y <- comm$census$y + drift
-
-   return(comm)
+  return(comm)
 }

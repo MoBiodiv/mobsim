@@ -26,7 +26,7 @@ Adds the same fixed movement to all individuals of a species on y
 \details{
 The function takes a \code{community} object and adds a fixed
 drift value to either x or y coordinate per species. In a 1 by 1 landscape, a
- drift of 0.5 means moving over half the map.
+drift of 0.5 means moving over half the map.
 }
 \examples{
 # Default behaviour

@@ -16,11 +16,11 @@ jitter_motherpoints(mpcoords, sd = 0.01, seed = NULL)
 \value{
 A named list of class \code{mother_map} with three elements:
 \enumerate{
-  \item \code{n_mother_points} a vector of integers giving the number of mother points per species
-  \item \code{xmother} List of length equal to the number of species. Each list element
+\item \code{n_mother_points} a vector of integers giving the number of mother points per species
+\item \code{xmother} List of length equal to the number of species. Each list element
 is a vector of x coordinates for every mother points. If one element is NA, the
 the corresponding species is not clustered.
-  \item \code{ymother} List of length equal to the number of species. Each list element
+\item \code{ymother} List of length equal to the number of species. Each list element
 is a vector of y coordinates for every mother points. If one element is NA, the
 the corresponding species is not clustered.
 }

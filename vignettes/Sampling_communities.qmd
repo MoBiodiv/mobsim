@@ -3,22 +3,20 @@ title: "Sampling communities with mobsim"
 author: "Felix May"
 date: "`r Sys.Date()`"
 output:
- rmarkdown::html_vignette:
-    number_sections: yes
-    toc: yes
+  html_document:
+    number_sections: true
+    toc: true
+    collapse: true
+    fig-width: 4.4
+    fig-height: 5
 vignette: >
   %\VignetteIndexEntry{Sampling communities with mobsim}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 5, fig.height = 5)
-```
-
 In addition to the simulation and analysis of spatially-explicit communities,
-`mobsim` provides a function to generate samples from simulated or observed communities. 
+`mobsim` provides a function to generate samples from simulated or observed communities.
 The combination of simulated data AND simulated sampling is a powerful approach
 to test the validity and power of empirical approaches.
 
@@ -29,37 +27,42 @@ Here, we simulate a community and then generate samples with the function
 number of quadrats with user-defined size in the landscape and provides the
 number of individuals for each species in each quadrat.
 
-The function returns two dataframes. The first includes the abundance of every 
+The function returns two dataframes. The first includes the abundance of every
 species in every sampling quadrat and the second the positions of the lower left
 corners of the quadrats.
 
-The community matrix of samples by species can then be analysed using additional 
+The community matrix of samples by species can then be analysed using additional
 software. For instance the R package [vegan](https://CRAN.R-project.org/package=vegan)
 is perfectly suited for the analysis of community data. See the vignette **Introduction
 to `mobsim`** for a worked example.
 
 ```{r}
+#| label: poisson_community
 library(mobsim)
 sim_com1 <- sim_poisson_community(s_pool = 100, n_sim = 20000)
 ```
 
-```{r, fig.width=4.4, fig.height=5}
+```{r}
+#| label: "fig-1"
+
 sample1 <- sample_quadrats(sim_com1)
 
 head(sample1$spec_dat[,1:6])
 head(sample1$xy_dat)
 ```
 
-In `sample_quadrats()` there is an option to exclude overlapping quadrats from the 
+In `sample_quadrats()` there is an option to exclude overlapping quadrats from the
 random sampling design, which is shown here in two examples with different numbers and sizes
 of the quadrats.
 
-```{r, fig.width=4.4, fig.height=5}
+```{r}
+#| label: "fig-2"
 sample2 <- sample_quadrats(sim_com1, n_quadrats = 2, quadrat_area = 0.1,
                            avoid_overlap = TRUE)
 ```
 
-```{r, fig.width=4.4, fig.height=5}
+```{r}
+#| label: "fig-3"
 sample3 <- sample_quadrats(sim_com1, n_quadrats = 20, quadrat_area = 0.001,
                            avoid_overlap = TRUE)
 ```
@@ -67,10 +70,11 @@ sample3 <- sample_quadrats(sim_com1, n_quadrats = 20, quadrat_area = 0.001,
 # Transect sampling
 
 In addition to random designs also transects can be sampled-. This requires
-specifying a position for the lower left quadrat as well as x and y distances 
+specifying a position for the lower left quadrat as well as x and y distances
 between neighbouring quadrats.
 
-```{r, fig.width=4.4, fig.height=5}
+```{r}
+#| label: "fig-4"
 sample4 <- sample_quadrats(sim_com1, n_quadrats = 10, quadrat_area = 0.005,
                            method = "transect", x0 = 0, y0 = 0.5, delta_x = 0.1,
                            delta_y = 0)
@@ -79,14 +83,15 @@ sample5 <- sample_quadrats(sim_com1, n_quadrats = 10, quadrat_area = 0.005,
                            method = "transect", x0 = 0, y0 = 0, delta_x = 0.1,
                            delta_y = 0.1)
 ```
-                      
+
 # Grid sampling
 
 Finally, sampling quadrats can be arranged in a regular lattice. For this design
 users have to choose distances among the quadrats in x and y dimension as shown
 in the example.
 
-```{r, fig.width=4.4, fig.height=5}
+```{r}
+#| label: "fig-5"
 sample6 <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0, y0 = 0, delta_x = 0.1,
                            delta_y = 0.1)
@@ -100,10 +105,9 @@ By default, `sample_quadrats()` plots the chosen design. However, the plotting
 can be also deactivated for more efficient computations:
 
 ```{r}
+#| label: no_plot_sampling
 sample7a <- sample_quadrats(sim_com1, n_quadrats = 25, quadrat_area = 0.005,
                            method = "grid", x0 = 0.05, y0 = 0.05, delta_x = 0.2,
                            delta_y = 0.2, plot = FALSE)
 head(sample7a$spec_dat[,1:10])
 ```
-
-

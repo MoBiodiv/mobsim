@@ -4,11 +4,13 @@ cran-comments.md
 CONTRIBUTING.md
 codemeta.json
 ^revdep$
+^README\.md$
 ^README\.Rmd$
+^README\.qmd$
 ^README-.*\.png$
+^README_files$
 ^LICENSE\.md$
 ^examples$
-^\.travis\.yml$
 ^\.github$
 ^doc$
 ^Meta$

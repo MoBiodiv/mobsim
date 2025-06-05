@@ -1,17 +1,18 @@
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim)](https://cran.r-project.org/package=mobsim)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim)](https://CRAN.R-project.org/package=mobsim)
+[![](http://www.r-pkg.org/badges/version/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 
-[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+[![](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
+[![](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.1170472.svg)](https://doi.org/10.5281/zenodo.1170472)
 
 [![R-CMD-check](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
@@ -28,8 +29,12 @@ rarefaction and accumulation curves, species-area relationships,
 endemics-area relationships and the distance-decay of community
 similarity.
 
-A detailed introduction of the package is available at
+A detailed introduction of the package is available on
 [bioRxiv](https://www.biorxiv.org/content/10.1101/209502v1).
+
+An interactive shiny app can also be found
+[here](https://github.com/albansagouis/mobsim_app). Please follow
+instructions in the README to run it on your computer.
 
 ## Installation
 
@@ -38,11 +43,10 @@ A detailed introduction of the package is available at
 install.packages("mobsim")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
+remotes::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
 ```
 
-Please enter bug reports on
+Please report bug reports on
 [github](https://github.com/MoBiodiv/mobsim/issues).
 
 ## Getting help
@@ -75,12 +79,20 @@ comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300,
 ```
 
 ``` r
-par(mfrow = c(1, 2))
+set.seed(42)
+
+par(mfrow = c(1,2))
 plot(comm_rand)
 plot(comm_agg)
 ```
 
-![](man/figures/README-plot_communities-1.png)<!-- -->
+<div id="fig-map">
+
+<img src="README_files/figure-commonmark/fig-map-1.png" id="fig-map" />
+
+Figure 1
+
+</div>
 
 ### Analysis of spatially-explicit community data
 
@@ -96,12 +108,18 @@ sar_agg <- divar(comm_agg)
 ``` r
 plot(m_species ~ prop_area, data = sar_rand, type = "b", log = "xy",
      xlab = "Proportion of area sampled", ylab = "No. of species",
-     ylim = c(3, 30))
+     ylim = c(3,30))
 lines(m_species ~ prop_area, data = sar_agg, type = "b", col = 2)
 legend("bottomright", c("Random", "Aggregated"), col = 1:2, lwd = 2)
 ```
 
-![](man/figures/README-plot_divar-1.png)<!-- -->
+<div id="fig-sar">
+
+<img src="README_files/figure-commonmark/fig-sar-1.png" id="fig-sar" />
+
+Figure 2
+
+</div>
 
 ### Sampling of communities
 
@@ -110,12 +128,19 @@ whether biodiversity changes are correctly detected and revealed by any
 sampling design.
 
 ``` r
-par(mfrow = c(1, 2))
+par(mfrow = c(1,2))
 samples_rand <- sample_quadrats(comm_rand, avoid_overlap = TRUE)
 samples_agg <- sample_quadrats(comm_agg, avoid_overlap = TRUE)
 ```
 
-![](man/figures/README-plot_sampling-1.png)<!-- -->
+<div id="fig-sampling">
+
+<img src="README_files/figure-commonmark/fig-sampling-1.png"
+id="fig-sampling" />
+
+Figure 3
+
+</div>
 
 ### Dynamic communities
 
@@ -123,24 +148,25 @@ This is a basic example which shows you how to make a community move in
 space:
 
 ``` r
-simdat <- sim_thomas_community(s_pool = 5L,
-                               n_sim = 100L,
-                               mother_points = 1L)
-simdatJ <- jitter_species(simdat, sd = 0.05) |> 
-   drift_x_species(drift = 0.01) |> 
-   drift_y_species(drift = -0.02) |> 
-   torusify()
+simdat <- sim_thomas_community(s_pool = 5L, n_sim = 100L, mother_points = 1L)
+simdatJ <- jitter_species(simdat, sd = 0.05) |>
+  drift_x_species(drift = 0.01) |>
+  drift_y_species(drift = -0.02) |>
+  torusify()
 par(mfrow = c(1L, 2L))
 plot(simdat, las = 1, main = "T0")
 plot(simdatJ, las = 1, main = "T1")
 ```
 
-![](man/figures/README-dynamic-1.png)<!-- -->
+<div id="fig-dynamic">
+
+<img src="README_files/figure-commonmark/fig-dynamic-1.png"
+id="fig-dynamic" />
+
+Figure 4
+
+</div>
 
 And now several steps with species movement in-between each step:
 
-<figure>
-<img src="./inst/LNFUA1284L_jittering.gif"
-alt="30 steps of Community" />
-<figcaption aria-hidden="true">30 steps of Community</figcaption>
-</figure>
+![30 steps of Community](./inst/LNFUA1284L_jittering.gif)

@@ -12,6 +12,8 @@ inst/doc
 /Meta/
 vignettes/*.R
 vignettes/*.html
+README_files/figure-html
+README_files/libs
 
 # revdep
 /revdep/.cache.rds
@@ -19,3 +21,4 @@ revdep/
 
 # Mac
 .DS_Store
+README.html

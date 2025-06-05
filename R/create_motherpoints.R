@@ -57,28 +57,43 @@
 #'
 #' @export
 
+create_motherpoints <- function(
+  s_local,
+  n_motherpoints_range = 1:4,
+  xrange = c(0, 1),
+  yrange = c(0, 1),
+  seed = NULL
+) {
+  if (!is.null(seed)) set.seed(seed)
 
-create_motherpoints <- function(s_local, n_motherpoints_range = 1:4,
-                                xrange = c(0, 1), yrange = c(0, 1),
-                                seed = NULL) {
-   if (!is.null(seed)) set.seed(seed)
+  n_mother_points <- sample(
+    x = n_motherpoints_range,
+    size = s_local,
+    replace = TRUE
+  )
+  xmother <- sapply(
+    n_mother_points,
+    stats::runif,
+    min = xrange[1L],
+    max = xrange[2L]
+  )
+  ymother <- sapply(
+    n_mother_points,
+    stats::runif,
+    min = yrange[1L],
+    max = yrange[2L]
+  )
 
-   n_mother_points <- sample(x = n_motherpoints_range,
-                             size = s_local,
-                             replace = TRUE)
-   xmother <- sapply(n_mother_points, stats::runif,
-                     min = xrange[1L], max = xrange[2L])
-   ymother <- sapply(n_mother_points, stats::runif,
-                     min = yrange[1L], max = yrange[2L])
+  mpcoords <- list(
+    n_mother_points = n_mother_points,
+    xmother = xmother,
+    ymother = ymother,
+    x_min_max = xrange,
+    y_min_max = yrange
+  )
+  class(mpcoords) <- c("mother_map", "list")
 
-   mpcoords <- list(
-      n_mother_points = n_mother_points,
-      xmother = xmother, ymother = ymother,
-      x_min_max = xrange, y_min_max = yrange
-   )
-   class(mpcoords) <- c("mother_map", "list")
-
-   return(mpcoords)
+  return(mpcoords)
 }
 
 
@@ -102,14 +117,21 @@ create_motherpoints <- function(s_local, n_motherpoints_range = 1:4,
 #' @export
 #'
 plot.mother_map <- function(x, col = NULL, pch = NULL, ...) {
-   nspec <- length(x$n_mother_points)
-   if (is.null(col))  col <- grDevices::rainbow(nspec, alpha = 1)
-   if (is.null(pch))  pch <- 16
+  nspec <- length(x$n_mother_points)
+  if (is.null(col)) col <- grDevices::rainbow(nspec, alpha = 1)
+  if (is.null(pch)) pch <- 16
 
-   graphics::plot(x = unlist(x$xmother), y = unlist(x$ymother),
-                  xlim = x$x_min_max, ylim = x$y_min_max,
-                  col = rep(x = seq_along(x$n_mother_points),
-                            times = x$n_mother_points),
-                  xlab = "X", ylab = "Y",
-                  pch = pch, las = 1, asp = 1, ...)
+  graphics::plot(
+    x = unlist(x$xmother),
+    y = unlist(x$ymother),
+    xlim = x$x_min_max,
+    ylim = x$y_min_max,
+    col = rep(x = seq_along(x$n_mother_points), times = x$n_mother_points),
+    xlab = "X",
+    ylab = "Y",
+    pch = pch,
+    las = 1,
+    asp = 1,
+    ...
+  )
 }

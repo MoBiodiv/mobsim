@@ -60,7 +60,7 @@ Rounds coordinates around like on a torus
 \details{
 \code{torusify()} is a generic function that calls functions adapted
 to the class of argument \code{mapcoords}. Classes \code{data.frame},
- \code{numeric} and \code{mother_map} are accepted at the moment.
+\code{numeric} and \code{mother_map} are accepted at the moment.
 
 \code{torusify()} takes coordinates and makes sure that all
 coordinates actually inside the window specified

@@ -29,9 +29,8 @@
 #' mcoordsT <- torusify(mpcoordsJ)
 #' @export
 
-
 torusify <- function(mpcoords, ...) {
-   UseMethod("torusify", mpcoords)
+  UseMethod("torusify", mpcoords)
 }
 
 
@@ -68,19 +67,19 @@ torusify <- function(mpcoords, ...) {
 #' @rdname torusify
 #' @export
 
-
-
 torusify.mother_map <- function(mpcoords, ...) {
-   mpcoords$xmother <- lapply(
-      X = mpcoords$xmother,
-      FUN = function(MPs)
-         (MPs %% diff(mpcoords$x_min_max)) + mpcoords$x_min_max[1L])
-   mpcoords$ymother <- lapply(
-      X = mpcoords$ymother,
-      FUN = function(MPs)
-         (MPs %% diff(mpcoords$y_min_max)) + mpcoords$y_min_max[1L])
+  mpcoords$xmother <- lapply(
+    X = mpcoords$xmother,
+    FUN = function(MPs)
+      (MPs %% diff(mpcoords$x_min_max)) + mpcoords$x_min_max[1L]
+  )
+  mpcoords$ymother <- lapply(
+    X = mpcoords$ymother,
+    FUN = function(MPs)
+      (MPs %% diff(mpcoords$y_min_max)) + mpcoords$y_min_max[1L]
+  )
 
-   return(mpcoords)
+  return(mpcoords)
 }
 
 
@@ -108,9 +107,13 @@ torusify.mother_map <- function(mpcoords, ...) {
 #' @export
 
 torusify.community <- function(mpcoords, ...) {
-   mpcoords$census$x <- mpcoords$census$x %% diff(mpcoords$x_min_max) + mpcoords$x_min_max[1L]
-   mpcoords$census$y <- mpcoords$census$y %% diff(mpcoords$y_min_max) + mpcoords$y_min_max[1L]
-   return(mpcoords)
+  mpcoords$census$x <- mpcoords$census$x %%
+    diff(mpcoords$x_min_max) +
+    mpcoords$x_min_max[1L]
+  mpcoords$census$y <- mpcoords$census$y %%
+    diff(mpcoords$y_min_max) +
+    mpcoords$y_min_max[1L]
+  return(mpcoords)
 }
 
 
@@ -140,13 +143,12 @@ torusify.community <- function(mpcoords, ...) {
 #' @export
 
 torusify.data.frame <- function(mpcoords, x_min_max, y_min_max, ...) {
-   if (!all(colnames(mpcoords) %in% c("xmother","ymother")))
-      stop("column names should be xmother and ymother")
-   mpcoords$xmother <- mpcoords$xmother %% diff(x_min_max) + x_min_max[1L]
-   mpcoords$ymother <- mpcoords$ymother %% diff(y_min_max) + y_min_max[1L]
-   return(mpcoords)
+  if (!all(colnames(mpcoords) %in% c("xmother", "ymother")))
+    stop("column names should be xmother and ymother")
+  mpcoords$xmother <- mpcoords$xmother %% diff(x_min_max) + x_min_max[1L]
+  mpcoords$ymother <- mpcoords$ymother %% diff(y_min_max) + y_min_max[1L]
+  return(mpcoords)
 }
-
 
 
 #' Rounds coordinates around like on a torus
@@ -171,9 +173,8 @@ torusify.data.frame <- function(mpcoords, x_min_max, y_min_max, ...) {
 #' @export
 
 torusify.numeric <- function(mpcoords, range, ...) {
-   return(mpcoords %% diff(range) + range[1L])
+  return(mpcoords %% diff(range) + range[1L])
 }
-
 
 
 ## community2ppp() ----
@@ -181,7 +182,7 @@ torusify.numeric <- function(mpcoords, range, ...) {
 #' class \code{\link[spatstat.geom]{ppp}}.
 #'
 #' @param comm Community object
-#' 
+#'
 #' @importFrom spatstat.geom ppp
 #' @importFrom spatstat.geom owin
 #'
@@ -200,15 +201,15 @@ torusify.numeric <- function(mpcoords, range, ...) {
 #' @export
 
 community2ppp <- function(comm) {
-   spatstat.geom::ppp(
-      x = comm$census$x,
-      y = comm$census$y,
-      marks = comm$census$species,
-      window = spatstat.geom::owin(
-         xrange = comm$x_min_max,
-         yrange = comm$y_min_max
-      )
-   )
+  spatstat.geom::ppp(
+    x = comm$census$x,
+    y = comm$census$y,
+    marks = comm$census$species,
+    window = spatstat.geom::owin(
+      xrange = comm$x_min_max,
+      yrange = comm$y_min_max
+    )
+  )
 }
 
 ## create_random_ID() ----
@@ -221,21 +222,25 @@ community2ppp <- function(comm) {
 #'
 
 create_random_ID <- function(n = 1L, seed = NULL) {
-   oldseed <- .Random.seed
-   on.exit({.Random.seed <<- oldseed})
-   if (!is.null(seed)) {
-      set.seed(seed)
-   } else {
-      set.seed(Sys.time())
-   }
+  oldseed <- .Random.seed
+  on.exit({
+    .Random.seed <<- oldseed
+  })
+  if (!is.null(seed)) {
+    set.seed(seed)
+  } else {
+    set.seed(Sys.time())
+  }
 
-   a <- do.call(paste0,
-                replicate(5L,
-                          sample(LETTERS, n, replace = TRUE),
-                          simplify = FALSE))
-   return(
-      paste0(a,
-             sprintf("%04d", sample(9999L, n, replace = TRUE)),
-             sample(LETTERS, n, replace = TRUE))
-   )
+  a <- do.call(
+    paste0,
+    replicate(5L, sample(LETTERS, n, replace = TRUE), simplify = FALSE)
+  )
+  return(
+    paste0(
+      a,
+      sprintf("%04d", sample(9999L, n, replace = TRUE)),
+      sample(LETTERS, n, replace = TRUE)
+    )
+  )
 }

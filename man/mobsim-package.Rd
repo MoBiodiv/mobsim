@@ -11,7 +11,7 @@ as well as for the analysis of spatially-explicit data, where each individual
 is described by its xy-coordinates and a species identity label.
 }
 \details{
-`r lifecycle::badge("stable")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 mobsim: A package for spatial analysis of scale-dependent biodiversity changes.
 }
