@@ -266,7 +266,7 @@ sim_sad <- function(
   abund_local <- table(sample_vec)
 
   s_local <- sum(abund_local > 0L)
-  if (fix_s_sim == TRUE && s_local < s_pool) {
+  if (isTRUE(fix_s_sim) && s_local < s_pool) {
     s_diff <- s_pool - s_local
     abund_local[abund_local == 0L] <- 1L
     N <- sum(abund_local)
@@ -332,6 +332,7 @@ summary.sad <- function(object, ...) {
 #' With \code{method = "rank"} rank-abundance curve is generated with
 #' species abundance rank on the x-axis (descending) and species abundance on
 #' the y-axis (Hubbell 2001).
+#'
 #'
 #' @return This function is called for its side effects and has no return value.
 #'
@@ -655,6 +656,8 @@ sim_poisson_community <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
+  base::stopifnot("n_sim has to be >= to s_pool" = n_sim >= s_pool)
+
   abund_vec <- sim_sad(
     s_pool = s_pool,
     n_sim = n_sim,
@@ -1144,6 +1147,7 @@ sim_thomas_community <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
+  base::stopifnot("n_sim has to be >= to s_pool" = n_sim >= s_pool)
   abund_vec <- sim_sad(
     s_pool = s_pool,
     n_sim = n_sim,

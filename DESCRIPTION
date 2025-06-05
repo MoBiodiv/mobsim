@@ -20,11 +20,12 @@ Description: Simulation, analysis and sampling of spatial
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
     aggregation. Functions for analysis include species rarefaction
+    aggregation. Functions for analysis include species rarefaction
     and accumulation curves, species-area relationships and the distance
     decay of similarity.
 License: GPL (>= 3)
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.1.0)
 Imports:
     Rcpp,
     vegan,
@@ -33,6 +34,8 @@ Imports:
     utils,
     graphics,
     stats,
+    spatstat.geom,
+    spatstat.explore,
     methods
 Suggests:
     quarto,
@@ -44,6 +47,7 @@ Suggests:
 LinkingTo: Rcpp
 Config/testthat/edition: 3
 Config/testthat/parallel: false
+Config/testthat/start-first: *utils*, *create_motherpoints*, *simulation*, *sampling*
 VignetteBuilder: quarto
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

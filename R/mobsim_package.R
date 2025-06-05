@@ -1,3 +1,12 @@
+## usethis namespace: start
+#' @importFrom Rcpp sourceCpp
+## usethis namespace: end
+NULL
+
+#' @useDynLib mobsim, .registration = TRUE
+#' @details
+#' `r lifecycle::badge("stable")`
+#'
 #' mobsim: A package for spatial analysis of scale-dependent biodiversity changes.
 #'
 #' @description
@@ -5,11 +14,4 @@
 #' as well as for the analysis of spatially-explicit data, where each individual
 #' is described by its xy-coordinates and a species identity label.
 #'
-#' @keywords internal
-#'
 "_PACKAGE"
-NULL
-
-#' @useDynLib mobsim, .registration = TRUE
-#' @importFrom Rcpp sourceCpp
-NULL

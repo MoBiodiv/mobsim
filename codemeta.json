@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "mobsim",
-  "description": "Simulation, analysis and sampling of spatial biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017) <doi:10.1111/2041-210x.12986>. In the simulation tools user define the numbers of species and individuals, the species abundance distribution and species aggregation. Functions for analysis include species rarefaction and accumulation curves, species-area relationships and the distance decay of similarity.",
+  "description": "Simulation, analysis and sampling of spatial biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017) <doi:10.1111/2041-210x.12986>. In the simulation tools user define the numbers of species and individuals, the species abundance distribution and species aggregation. Functions for analysis include species rarefaction aggregation. Functions for analysis include species rarefaction and accumulation curves, species-area relationships and the distance decay of similarity.",
   "name": "mobsim: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes",
   "codeRepository": "https://github.com/MoBiodiv/mobsim",
   "issueTracker": "https://github.com/MoBiodiv/mobsim/issues",
@@ -144,7 +144,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 4.0.0"
+      "version": ">= 4.1.0"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -205,12 +205,36 @@
     },
     "9": {
       "@type": "SoftwareApplication",
+      "identifier": "spatstat.geom",
+      "name": "spatstat.geom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.geom"
+    },
+    "10": {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat.explore",
+      "name": "spatstat.explore",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.explore"
+    },
+    "11": {
+      "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
     "SystemRequirements": null
   },
-  "fileSize": "2425.796KB",
+  "fileSize": "3756.624KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -262,6 +286,5 @@
   "readme": "https://github.com/MoBiodiv/mobsim/blob/master/README.md",
   "contIntegration": "https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml",
   "developmentStatus": "https://www.repostatus.org/",
-  "keywords": ["species", "simulation", "biodiversity", "macroecology", "rarefaction", "point-pattern-analysis", "species-abundance-distributions", "r", "r-package", "rstats"],
-  "relatedLink": "https://CRAN.R-project.org/package=mobsim"
+  "keywords": ["species", "simulation", "biodiversity", "macroecology", "rarefaction", "point-pattern-analysis", "species-abundance-distributions", "r", "r-package", "rstats"]
 }
