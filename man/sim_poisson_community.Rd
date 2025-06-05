@@ -21,27 +21,27 @@ sim_poisson_community(
 \item{n_sim}{Number of individuals in the simulated community (integer)}
 
 \item{sad_type}{Root name of the species abundance distribution model of the
-  species pool (character) - e.g., "lnorm" for the lognormal distribution
-  (\code{\link[stats]{rlnorm}}); "geom" for the geometric distribution
-  (\code{\link[stats]{rgeom}}), or "ls" for Fisher's log-series distribution
-  (\code{\link[sads]{rls}}).
+species pool (character) - e.g., "lnorm" for the lognormal distribution
+(\code{\link[stats]{rlnorm}}); "geom" for the geometric distribution
+(\code{\link[stats]{rgeom}}), or "ls" for Fisher's log-series distribution
+(\code{\link[sads]{rls}}).
 
-  See the table in \strong{Details} below, or \code{\link[sads]{rsad}}
-  for all SAD model options.}
+See the table in \strong{Details} below, or \code{\link[sads]{rsad}}
+for all SAD model options.}
 
 \item{sad_coef}{List with named arguments to be passed to the distribution
-  function defined by the argument \code{sad_type}. An overview of parameter
-  names is given in the table below.
+function defined by the argument \code{sad_type}. An overview of parameter
+names is given in the table below.
 
-  In \code{mobsim} the log-normal and the Poisson log-normal distributions
-  can alternatively be parameterized by the coefficient of variation (cv)
-  of the relative abundances in the species pool. Accordingly, \code{cv_abund}
-  is the standard deviation of abundances divided by the mean abundance
-  (no. of individuals / no. of species). \code{cv_abund} is thus negatively
-  correlated with the evenness of the species abundance distribution.
+In \code{mobsim} the log-normal and the Poisson log-normal distributions
+can alternatively be parameterized by the coefficient of variation (cv)
+of the relative abundances in the species pool. Accordingly, \code{cv_abund}
+is the standard deviation of abundances divided by the mean abundance
+(no. of individuals / no. of species). \code{cv_abund} is thus negatively
+correlated with the evenness of the species abundance distribution.
 
-  Please note that the parameters \emph{mu} and \emph{sigma} are not equal
-  to the mean and standard deviation of the log-normal distribution.}
+Please note that the parameters \emph{mu} and \emph{sigma} are not equal
+to the mean and standard deviation of the log-normal distribution.}
 
 \item{fix_s_sim}{Should the simulation constrain the number of
 species in the simulated local community? (logical)}

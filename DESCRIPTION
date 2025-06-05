@@ -14,15 +14,14 @@ Authors@R: c(
     person("Freie Universität Berlin",
         role = "fnd", comment = c(ROR = "046ak2485"))
   )
-Date: 2024-11-26
 Description: Simulation, analysis and sampling of spatial
     biodiversity data (May, Gerstner, McGlinn, Xiao & Chase 2017)
     <doi:10.1111/2041-210x.12986>.
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
-    aggregation. Functions for analysis include species rarefaction 
+    aggregation. Functions for analysis include species rarefaction
     and accumulation curves, species-area relationships and the distance
-    decay of similarity. 
+    decay of similarity.
 License: GPL (>= 3)
 Depends:
     R (>= 4.0.0)
@@ -35,19 +34,18 @@ Imports:
     graphics,
     stats,
     methods
-LinkingTo:
-    Rcpp
 Suggests:
-    rmarkdown,
+    quarto,
     spatstat.geom,
     spatstat.random,
     testthat (>= 3.0.0),
     mockery,
-    knitr,
     vctrs
+LinkingTo: Rcpp
 Config/testthat/edition: 3
-Config/testthat/parallel: true
-VignetteBuilder: knitr
+Config/testthat/parallel: false
+VignetteBuilder: quarto
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Language: en-GB
 Encoding: UTF-8

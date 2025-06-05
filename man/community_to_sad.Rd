@@ -11,7 +11,7 @@ community_to_sad(comm)
 }
 \value{
 Object of class \code{sad}, which contains a named integer vector
- with species abundances
+with species abundances
 }
 \description{
 Get species abundance distribution from community object
