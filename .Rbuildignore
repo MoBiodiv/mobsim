@@ -8,7 +8,6 @@ codemeta.json
 ^README-.*\.png$
 ^LICENSE\.md$
 ^examples$
-^\.travis\.yml$
 ^\.github$
 ^doc$
 ^Meta$
