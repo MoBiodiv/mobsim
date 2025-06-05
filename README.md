@@ -4,7 +4,8 @@
 
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
+[![](http://www.r-pkg.org/badges/version/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
+
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mobsim.png)](https://CRAN.R-project.org/package=mobsim)
 
 [![](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
@@ -31,6 +32,10 @@ similarity.
 A detailed introduction of the package is available on
 [bioRxiv](https://www.biorxiv.org/content/10.1101/209502v1).
 
+An interactive shiny app can also be found
+[here](https://github.com/albansagouis/mobsim_app). Please follow
+instructions in the README to run it on your computer.
+
 ## Installation
 
 ``` r
@@ -38,7 +43,6 @@ A detailed introduction of the package is available on
 install.packages("mobsim")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
 remotes::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
 ```
 
@@ -74,6 +78,8 @@ comm_agg <- sim_thomas_community(s_pool = 30, n_sim = 300, sigma = 0.05, mother_
 ```
 
 ``` r
+set.seed(42)
+
 par(mfrow = c(1,2))
 plot(comm_rand)
 plot(comm_agg)
