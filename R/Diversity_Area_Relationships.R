@@ -314,11 +314,11 @@ abund_rect <- function(x0, y0, xsize, ysize, comm) {
    x <- comm$census$x
    y <- comm$census$y
 
-   # logical vector which trees are in the sampling rectangle
-   in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
+  # logical vector which trees are in the sampling rectangle
+  in_rect <- (x >= x0 & x < (x0 + xsize) & y >= y0 & y < (y0 + ysize))
 
-   abund <- table(comm$census$species[in_rect])
-   return(abund)
+  abund <- table(comm$census$species[in_rect])
+  return(abund)
 }
 
 #' Distance decay of similarity
@@ -345,7 +345,6 @@ abund_rect <- function(x0, y0, xsize, ysize, comm) {
 #'@export
 #'
 dist_decay <- function(
-   comm,
    prop_area = 0.005,
    n_samples = 20,
    method = "bray",
@@ -355,12 +354,12 @@ dist_decay <- function(
 
    if (length(prop_area) != 1L) stop("prop_area has to be of length 1")
 
-   if (!is(comm, "community"))
-      stop("dist_decay requires a community object as input. See ?community.")
+  if (!is(comm, "community"))
+    stop("dist_decay requires a community object as input. See ?community.")
 
-   dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
-   dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
-   area <- dx_plot * dy_plot * prop_area
+  dx_plot <- comm$x_min_max[2] - comm$x_min_max[1]
+  dy_plot <- comm$y_min_max[2] - comm$y_min_max[1]
+  area <- dx_plot * dy_plot * prop_area
 
    samples1 <- sample_quadrats(
       comm,
@@ -380,12 +379,12 @@ dist_decay <- function(
       similarity = as.numeric(similarity)
    )
 
-   # order by increasing distance
-   dat_out <- dat_out[order(dat_out$distance), ]
+  # order by increasing distance
+  dat_out <- dat_out[order(dat_out$distance), ]
 
-   class(dat_out) <- c("dist_decay", "data.frame")
+  class(dat_out) <- c("dist_decay", "data.frame")
 
-   return(dat_out)
+  return(dat_out)
 }
 
 #' Distance decay of similarity with user-defined quadrats
@@ -425,12 +424,12 @@ dist_decay_quadrats <- function(samples, method = "bray", binary = FALSE) {
       similarity = as.numeric(similarity)
    )
 
-   # order by increasing distance
-   dat_out <- dat_out[order(dat_out$distance), ]
+  # order by increasing distance
+  dat_out <- dat_out[order(dat_out$distance), ]
 
-   class(dat_out) <- c("dist_decay", "data.frame")
+  class(dat_out) <- c("dist_decay", "data.frame")
 
-   return(dat_out)
+  return(dat_out)
 }
 
 
