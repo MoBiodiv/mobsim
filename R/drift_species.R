@@ -28,7 +28,7 @@
 #' @export
 #'
 
-drift_x_species <- function(comm, drift = NULL) {
+drift_x_species <- function(comm, drift) {
   comm$census$x <- comm$census$x + drift
 
   return(comm)
@@ -40,7 +40,7 @@ drift_x_species <- function(comm, drift = NULL) {
 #' @export
 #'
 
-drift_y_species <- function(comm, drift = NULL) {
+drift_y_species <- function(comm, drift) {
   comm$census$y <- comm$census$y + drift
 
   return(comm)

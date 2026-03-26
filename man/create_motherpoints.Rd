@@ -40,11 +40,11 @@ A named list of class \code{mother_map} with three elements:
 \enumerate{
 \item   \code{n_mother_points} a vector of integers giving the number of mother points per species
 \item   \code{xmother} List of length equal to the number of species. Each list element
-is a vector of x coordinates for every mother points. If one element is NA, the
-the corresponding species is not clustered.
+is a vector of x coordinates for every mother point. If one element is \code{numeric(0)}, the
+corresponding species has no mother point and is not clustered.
 \item   \code{ymother} List of length equal to the number of species. Each list element
-is a vector of y coordinates for every mother points. If one element is NA, the
-the corresponding species is not clustered.
+is a vector of y coordinates for every mother point. If one element is \code{numeric(0)}, the
+corresponding species has no mother point and is not clustered.
 }
 }
 \description{

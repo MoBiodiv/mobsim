@@ -34,16 +34,15 @@
 jitter_species <- function(comm, sd = 0.01, seed = NULL) {
   if (!is.null(seed)) set.seed(seed)
 
-  comm$census$x <- unlist(tapply(
-    X = comm$census$x,
-    INDEX = comm$census$species,
-    FUN = function(x) x + stats::rnorm(n = 1L, mean = 0, sd = sd)
-  ))
-  comm$census$y <- unlist(tapply(
-    X = comm$census$y,
-    INDEX = comm$census$species,
-    FUN = function(y) y + stats::rnorm(n = 1L, mean = 0, sd = sd)
-  ))
+  sp <- unique(comm$census$species)
+  x_shift <- stats::setNames(
+    stats::rnorm(n = length(sp), mean = 0L, sd = sd), nm = sp
+  )
+  y_shift <- stats::setNames(
+    stats::rnorm(n = length(sp), mean = 0L, sd = sd), nm = sp
+  )
+  comm$census$x <- comm$census$x + x_shift[comm$census$species]
+  comm$census$y <- comm$census$y + y_shift[comm$census$species]
 
   return(comm)
 }

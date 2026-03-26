@@ -1,7 +1,7 @@
 Package: mobsim
 Type: Package
 Title: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes
-Version: 0.3.2
+Version: 0.3.3
 Authors@R: c(
     person("Felix", "May", email = "felix.may@fu-berlin.de",
         role = c("aut", "cre","cph"),
@@ -9,7 +9,7 @@ Authors@R: c(
     person("Alban", "Sagouis", email = "alban.sagouis@idiv.de",
         role = "aut",
         comment = c(ORCID = "0000-0002-3827-1063")),
-    person("German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig",
+    person("German Centre for Integrative Biodiversity Research Halle-Jena-Leipzig",
         role = "fnd", comment = c(ROR = "01jty7g66")),
     person("Freie Universität Berlin",
         role = "fnd", comment = c(ROR = "046ak2485"))
@@ -19,7 +19,6 @@ Description: Simulation, analysis and sampling of spatial
     <doi:10.1111/2041-210x.12986>.
     In the simulation tools user define the numbers of
     species and individuals, the species abundance distribution and species
-    aggregation. Functions for analysis include species rarefaction
     aggregation. Functions for analysis include species rarefaction
     and accumulation curves, species-area relationships and the distance
     decay of similarity.
@@ -39,7 +38,6 @@ Imports:
     methods
 Suggests:
     quarto,
-    spatstat.geom,
     spatstat.random,
     testthat (>= 3.0.0),
     mockery,
@@ -50,7 +48,7 @@ Config/testthat/parallel: false
 Config/testthat/start-first: *utils*, *create_motherpoints*, *simulation*, *sampling*
 VignetteBuilder: quarto
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Language: en-GB
 Encoding: UTF-8
 URL: https://github.com/MoBiodiv/mobsim

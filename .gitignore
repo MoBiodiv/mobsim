@@ -1,6 +1,9 @@
 Rproj.user
 .Rproj.user
 .Rhistory
+README.html
+.claude/settings.local.json
+
 
 # C++
 .o
@@ -21,4 +24,3 @@ revdep/
 
 # Mac
 .DS_Store
-README.html

@@ -33,8 +33,8 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig (01jty7g66) [funder]
-  \item Freie Universität Berlin (046ak2485) [funder]
+  \item German Centre for Integrative Biodiversity Research Halle-Jena-Leipzig (\href{https://ror.org/01jty7g66}{ROR}) [funder]
+  \item Freie Universität Berlin (\href{https://ror.org/046ak2485}{ROR}) [funder]
 }
 
 }

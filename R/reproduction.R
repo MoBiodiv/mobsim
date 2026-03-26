@@ -24,25 +24,9 @@
 #'
 #' @export
 
-# replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
-#    if (!is.null(seed)) set.seed(seed)
-#
-#    spatial_comm <- community2ppp(comm)
-#
-#    contingency_table <- spatstat.explore::marktable(spatial_comm, N = N, R = R)
-#    comm$census$species <- factor(
-#       apply(
-#          X = contingency_table,
-#          MARGIN = 1L,
-#          FUN = function(ind) names(sample(x = ind,
-#                                           size = 1L,
-#                                           prob = ind/sum(ind)))
-#       )
-#    )
-#    return(comm)
-# }
-
 replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
+  if (is.null(N) && is.null(R))
+    stop("At least one of 'N' or 'R' must be specified.")
   if (!is.null(seed)) set.seed(seed)
 
   spatial_comm <- community2ppp(comm)

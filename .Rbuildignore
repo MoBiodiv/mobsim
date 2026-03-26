@@ -11,6 +11,7 @@ codemeta.json
 ^README_files$
 ^LICENSE\.md$
 ^examples$
+^\.claude$
 ^\.github$
 ^doc$
 ^Meta$

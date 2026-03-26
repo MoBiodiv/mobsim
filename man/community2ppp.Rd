@@ -15,10 +15,10 @@ Converts an object of class \code{\link[mobsim]{community}} into an object of
 class \code{\link[spatstat.geom]{ppp}}.
 }
 \details{
-For each species, the function first draws a random number of
-mother points in the given \code{n_motherpoints_range}. Then the function
-places as many mother points as needed in the window given by \code{xrange}
-and \code{yrange}.
+Extracts x and y coordinates and species marks from \code{comm} and
+builds a marked planar point pattern (\code{\link[spatstat.geom]{ppp}}) with
+an observation window derived from the \code{x_min_max} and \code{y_min_max}
+elements of the \code{community} object.
 }
 \examples{
 # Integrated between mobsim::sim_thomas_coords() and spatstat.explore::marktable()

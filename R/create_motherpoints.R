@@ -10,11 +10,11 @@
 #' \enumerate{
 #'   \item   \code{n_mother_points} a vector of integers giving the number of mother points per species
 #'   \item   \code{xmother} List of length equal to the number of species. Each list element
-#' is a vector of x coordinates for every mother points. If one element is NA, the
-#' the corresponding species is not clustered.
+#' is a vector of x coordinates for every mother point. If one element is \code{numeric(0)}, the
+#' corresponding species has no mother point and is not clustered.
 #'   \item   \code{ymother} List of length equal to the number of species. Each list element
-#' is a vector of y coordinates for every mother points. If one element is NA, the
-#' the corresponding species is not clustered.
+#' is a vector of y coordinates for every mother point. If one element is \code{numeric(0)}, the
+#' corresponding species has no mother point and is not clustered.
 #' }
 #'
 #' @details For each species, the function first draws a random number of
@@ -71,17 +71,17 @@ create_motherpoints <- function(
     size = s_local,
     replace = TRUE
   )
-  xmother <- sapply(
+  xmother <- lapply(
     n_mother_points,
     stats::runif,
-    min = xrange[1L],
-    max = xrange[2L]
+    min = xrange[[1L]],
+    max = xrange[[2L]]
   )
-  ymother <- sapply(
+  ymother <- lapply(
     n_mother_points,
     stats::runif,
-    min = yrange[1L],
-    max = yrange[2L]
+    min = yrange[[1L]],
+    max = yrange[[2L]]
   )
 
   mpcoords <- list(

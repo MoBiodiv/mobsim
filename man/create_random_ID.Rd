@@ -11,6 +11,11 @@ create_random_ID(n = 1L, seed = NULL)
 
 \item{seed}{(integer) Any integer passed to \code{\link[base]{set.seed}} for reproducibility.}
 }
+\value{
+A character vector of length \code{n}. Each string is composed of
+five uppercase letters, a zero-padded four-digit integer, and one uppercase
+letter (e.g. \code{"QEAYJ1252R"}).
+}
 \description{
 Creates a random string.
 }

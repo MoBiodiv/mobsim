@@ -143,8 +143,8 @@ torusify.community <- function(mpcoords, ...) {
 #' @export
 
 torusify.data.frame <- function(mpcoords, x_min_max, y_min_max, ...) {
-  if (!all(colnames(mpcoords) %in% c("xmother", "ymother")))
-    stop("column names should be xmother and ymother")
+  if (!all(is.element(c("xmother", "ymother"), colnames(mpcoords))))
+    stop("mpcoords must have columns named 'xmother' and 'ymother'")
   mpcoords$xmother <- mpcoords$xmother %% diff(x_min_max) + x_min_max[1L]
   mpcoords$ymother <- mpcoords$ymother %% diff(y_min_max) + y_min_max[1L]
   return(mpcoords)
@@ -186,10 +186,10 @@ torusify.numeric <- function(mpcoords, range, ...) {
 #' @importFrom spatstat.geom ppp
 #' @importFrom spatstat.geom owin
 #'
-#' @details For each species, the function first draws a random number of
-#' mother points in the given \code{n_motherpoints_range}. Then the function
-#' places as many mother points as needed in the window given by \code{xrange}
-#' and \code{yrange}.
+#' @details Extracts x and y coordinates and species marks from \code{comm} and
+#' builds a marked planar point pattern (\code{\link[spatstat.geom]{ppp}}) with
+#' an observation window derived from the \code{x_min_max} and \code{y_min_max}
+#' elements of the \code{community} object.
 #' @author Alban Sagouis
 #'
 #' @examples
@@ -218,19 +218,22 @@ community2ppp <- function(comm) {
 #' @param n (integer) number of random strings to create. Default is 1.
 #' @inheritParams jitter_motherpoints
 #'
+#' @returns A character vector of length \code{n}. Each string is composed of
+#' five uppercase letters, a zero-padded four-digit integer, and one uppercase
+#' letter (e.g. \code{"QEAYJ1252R"}).
+#'
 #' @export
 #'
 
 create_random_ID <- function(n = 1L, seed = NULL) {
-  oldseed <- .Random.seed
-  on.exit({
-    .Random.seed <<- oldseed
-  })
-  if (!is.null(seed)) {
-    set.seed(seed)
-  } else {
-    set.seed(Sys.time())
+  if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+    oldseed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+    on.exit(
+      assign(".Random.seed", oldseed, envir = .GlobalEnv),
+      add = TRUE
+    )
   }
+  if (!is.null(seed)) set.seed(seed) else set.seed(Sys.time())
 
   a <- do.call(
     paste0,
@@ -239,7 +242,7 @@ create_random_ID <- function(n = 1L, seed = NULL) {
   return(
     paste0(
       a,
-      sprintf("%04d", sample(9999L, n, replace = TRUE)),
+      sprintf(fmt = "%04d", sample(9999L, n, replace = TRUE)),
       sample(LETTERS, n, replace = TRUE)
     )
   )

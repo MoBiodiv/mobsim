@@ -5,9 +5,9 @@
 \alias{drift_y_species}
 \title{Adds the same fixed movement to all individuals of a species on x}
 \usage{
-drift_x_species(comm, drift = NULL)
+drift_x_species(comm, drift)
 
-drift_y_species(comm, drift = NULL)
+drift_y_species(comm, drift)
 }
 \arguments{
 \item{comm}{(community) List of class \code{community}.}
