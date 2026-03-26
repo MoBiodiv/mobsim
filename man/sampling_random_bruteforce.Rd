@@ -36,5 +36,5 @@ a data.frame with 2 columns x and y giving  the coordinates of the
 lower left corner of the square quadrats.
 }
 \description{
-This function works without having the \code{spatstat.random} package install.
+This function works without having the \code{spatstat.random} package installed.
 }

@@ -7,13 +7,13 @@
   "codeRepository": "https://github.com/MoBiodiv/mobsim",
   "issueTracker": "https://github.com/MoBiodiv/mobsim/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.0 (2025-04-11)",
+  "runtimePlatform": "R version 4.5.2 (2025-10-31)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -48,7 +48,7 @@
   "funder": [
     {
       "@type": "Organization",
-      "name": "German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig"
+      "name": "German Centre for Integrative Biodiversity Research Halle-Jena-Leipzig"
     },
     {
       "@type": "Organization",
@@ -76,18 +76,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=quarto"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "spatstat.geom",
-      "name": "spatstat.geom",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=spatstat.geom"
     },
     {
       "@type": "SoftwareApplication",
@@ -144,7 +132,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 4.0.0"
+      "version": ">= 4.1.0"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -205,12 +193,36 @@
     },
     "9": {
       "@type": "SoftwareApplication",
+      "identifier": "spatstat.geom",
+      "name": "spatstat.geom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.geom"
+    },
+    "10": {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat.explore",
+      "name": "spatstat.explore",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat.explore"
+    },
+    "11": {
+      "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
     "SystemRequirements": null
   },
-  "fileSize": "2425.796KB",
+  "fileSize": "3781.327KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -262,6 +274,5 @@
   "readme": "https://github.com/MoBiodiv/mobsim/blob/master/README.md",
   "contIntegration": "https://github.com/MoBiodiv/mobsim/actions/workflows/R-CMD-check.yaml",
   "developmentStatus": "https://www.repostatus.org/",
-  "keywords": ["species", "simulation", "biodiversity", "macroecology", "rarefaction", "point-pattern-analysis", "species-abundance-distributions", "r", "r-package", "rstats"],
-  "relatedLink": "https://CRAN.R-project.org/package=mobsim"
+  "keywords": ["species", "simulation", "biodiversity", "macroecology", "rarefaction", "point-pattern-analysis", "species-abundance-distributions", "r", "r-package", "rstats"]
 }

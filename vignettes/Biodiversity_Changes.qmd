@@ -6,6 +6,10 @@ output:
   html_document:
     number_sections: true
     toc: true
+knitr:
+  opts_chunk:
+    dpi: 72
+    fig.retina: 1
 vignette: >
   %\VignetteIndexEntry{Changes of biodiversity components}
   %\VignetteEngine{quarto::html}

@@ -9,6 +9,10 @@ output:
     collapse: true
     fig-width: 5
     fig-height: 5
+knitr:
+  opts_chunk:
+    dpi: 72
+    fig.retina: 1
 vignette: >
   %\VignetteIndexEntry{Introduction to mobsim}
   %\VignetteEngine{quarto::html}

@@ -4,11 +4,16 @@
 \name{mobsim-package}
 \alias{mobsim}
 \alias{mobsim-package}
-\title{mobsim: A package for spatial analysis of scale-dependent biodiversity changes.}
+\title{mobsim: Spatial Simulation and Scale-Dependent Analysis of Biodiversity Changes}
 \description{
 The package includes functions to simulate species distributions in space
 as well as for the analysis of spatially-explicit data, where each individual
 is described by its xy-coordinates and a species identity label.
+}
+\details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+mobsim: A package for spatial analysis of scale-dependent biodiversity changes.
 }
 \seealso{
 Useful links:
@@ -28,9 +33,8 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig (01jty7g66) [funder]
-  \item Freie Universität Berlin (046ak2485) [funder]
+  \item German Centre for Integrative Biodiversity Research Halle-Jena-Leipzig (\href{https://ror.org/01jty7g66}{ROR}) [funder]
+  \item Freie Universität Berlin (\href{https://ror.org/046ak2485}{ROR}) [funder]
 }
 
 }
-\keyword{internal}
