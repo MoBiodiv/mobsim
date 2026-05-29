@@ -43,7 +43,7 @@ instructions in the README to run it on your computer.
 install.packages("mobsim")
 
 # Or the development version from GitHub:
-remotes::install_github("MoBiodiv/mobsim", build_vignettes = TRUE)
+pak::pkg_install("MoBiodiv/mobsim")
 ```
 
 Please report bug reports on
