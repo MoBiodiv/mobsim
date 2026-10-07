@@ -61,7 +61,7 @@
 #' @export
 
 jitter_motherpoints <- function(mpcoords, sd = 0.01, seed = NULL) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   mpcoords$xmother <- lapply(
     mpcoords$xmother,

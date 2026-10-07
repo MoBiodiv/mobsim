@@ -64,7 +64,7 @@ create_motherpoints <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   n_mother_points <- sample(
     x = n_motherpoints_range,

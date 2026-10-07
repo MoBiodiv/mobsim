@@ -249,7 +249,7 @@ test_that("calls the correct subfunction if edge case where n_quadrats == 1", {
 })
 
 test_that("plotting works", {
-  sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L)
+  sim_com1 <- sim_poisson_community(s_pool = 5L, n_sim = 50L, seed = 1L)
   expect_snapshot_output(
     sample_quadrats(
       comm = sim_com1,

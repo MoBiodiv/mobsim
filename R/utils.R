@@ -226,14 +226,7 @@ community2ppp <- function(comm) {
 #'
 
 create_random_ID <- function(n = 1L, seed = NULL) {
-  if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-    oldseed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
-    on.exit(
-      assign(".Random.seed", oldseed, envir = .GlobalEnv),
-      add = TRUE
-    )
-  }
-  if (!is.null(seed)) set.seed(seed) else set.seed(Sys.time())
+  local_seed(seed = if (is.null(seed)) Sys.time() else seed)
 
   a <- do.call(
     paste0,
@@ -246,4 +239,38 @@ create_random_ID <- function(n = 1L, seed = NULL) {
       sample(LETTERS, n, replace = TRUE)
     )
   )
+}
+
+## local_seed() ----
+#' Set the random seed until the calling function exits
+#'
+#' Base R equivalent of `withr::local_seed()`: calls [base::set.seed()] and
+#' registers an exit handler in `envir` that restores the caller's random
+#' number stream, or removes `.Random.seed` if there was none. Calling
+#' `set.seed()` directly inside a function would reset the user's stream.
+#'
+#' @param seed (integer) passed to [base::set.seed()].
+#' @param envir the frame whose exit restores the stream. Default is the
+#' calling function.
+#'
+#' @returns `NULL`, invisibly.
+#' @noRd
+local_seed <- function(seed, envir = parent.frame()) {
+  global_env <- globalenv()
+  old_seed <- get0(x = ".Random.seed", envir = global_env, inherits = FALSE)
+  restore_seed <- function() {
+    if (is.null(old_seed)) {
+      if (exists(x = ".Random.seed", envir = global_env, inherits = FALSE)) {
+        rm(list = ".Random.seed", envir = global_env)
+      }
+    } else {
+      assign(x = ".Random.seed", value = old_seed, envir = global_env)
+    }
+  }
+  do.call(
+    what = on.exit,
+    args = list(expr = as.call(list(restore_seed)), add = TRUE),
+    envir = envir
+  )
+  set.seed(seed = seed)
 }

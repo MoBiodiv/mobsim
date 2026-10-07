@@ -32,7 +32,7 @@
 #' @export
 
 jitter_species <- function(comm, sd = 0.01, seed = NULL) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   sp <- unique(comm$census$species)
   x_shift <- stats::setNames(

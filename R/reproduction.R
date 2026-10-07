@@ -27,7 +27,7 @@
 replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
   if (is.null(N) && is.null(R))
     stop("At least one of 'N' or 'R' must be specified.")
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   spatial_comm <- community2ppp(comm)
 

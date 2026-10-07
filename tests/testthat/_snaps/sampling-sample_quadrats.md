@@ -73,7 +73,7 @@
     $spec_dat
            species_1 species_2 species_3 species_4 species_5
     site1          0         0         0         0         0
-    site2          1         0         0         0         0
+    site2          0         0         0         0         0
     site3          0         0         0         0         0
     site4          0         0         0         0         0
     site5          0         0         0         0         0
@@ -81,7 +81,7 @@
     site7          0         0         0         0         0
     site8          0         0         0         0         0
     site9          0         0         0         0         0
-    site10         0         0         0         0         1
+    site10         0         0         0         0         0
     site11         0         0         0         0         0
     site12         0         0         0         0         0
     site13         0         0         0         0         0
@@ -117,7 +117,7 @@
     site4          0         0         0         0         0
     site5          0         0         0         0         0
     site6          0         0         0         0         0
-    site7          0         0         0         0         0
+    site7          0         0         1         0         0
     site8          0         0         0         0         0
     site9          0         0         0         0         0
     site10         0         0         0         0         0
@@ -128,7 +128,7 @@
     site15         0         0         0         0         0
     site16         0         0         0         0         0
     site17         0         0         0         0         0
-    site18         0         0         0         0         1
+    site18         0         0         0         0         0
     site19         0         0         0         0         0
     site20         0         0         0         0         0
     site21         0         0         0         0         0
