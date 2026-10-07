@@ -215,7 +215,7 @@ sampling_random_spatstat <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
   hc_mod <- list(
     cif = "hardcore",
     par = list(beta = n_quadrats, hc = min_dist),
@@ -260,7 +260,7 @@ sampling_random_bruteforce <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
   count <- 0L
   maxCount <- 10000L
 
@@ -306,7 +306,7 @@ sampling_random_overlap <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
   xpos <- stats::runif(n_quadrats, min = xmin, max = xmax)
   ypos <- stats::runif(n_quadrats, min = ymin, max = ymax)
 
@@ -411,7 +411,7 @@ sampling_grids <- function(
 #' @export
 #'
 sampling_one_quadrat <- function(xmin, xmax, ymin, ymax, seed = NULL) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
   data.frame(
     x = stats::runif(1L, min = xmin, max = xmax),
     y = stats::runif(1L, min = ymin, max = ymax)

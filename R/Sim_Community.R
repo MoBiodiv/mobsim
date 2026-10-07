@@ -161,7 +161,7 @@ sim_sad <- function(
 ) {
   sad_type <- match.arg(sad_type)
 
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   # Handles parameters that give the community size + assertions ----
   if (sad_type %in% c("bs", "ls", "mzsm")) {
@@ -597,7 +597,7 @@ sim_poisson_coords <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   abund_vec <- trunc(abund_vec)
   if (length(names(abund_vec)) < length(abund_vec))
@@ -825,7 +825,7 @@ sim_thomas_coords <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) local_seed(seed = seed)
 
   # mother_points
   if (

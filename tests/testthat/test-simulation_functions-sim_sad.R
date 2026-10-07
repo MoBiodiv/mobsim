@@ -85,7 +85,8 @@ test_that("sim_sad() - results are as expected", {
     n_sim = n_sim,
     sad_type = "geom",
     sad_coef = list(prob = 0.5),
-    fix_s_sim = TRUE
+    fix_s_sim = TRUE,
+    seed = 1L
   )
   expect_equal(sum(sadGeom), n_sim)
   expect_equal(length(sadGeom), s_pool)
