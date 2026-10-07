@@ -31,7 +31,7 @@ s_chao_sim <- function(comm, n_samples, area_total) {
   sample_sad1 <- colSums(sample1$spec_dat)
   s_estimate <- estimateR(sample_sad1)
 
-  s_chao1 = s_estimate["S.chao1"]
+  s_chao1 <- s_estimate["S.chao1"]
 
   return(s_chao1)
 }

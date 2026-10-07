@@ -21,7 +21,7 @@ test_that("classes are as expected", {
 })
 
 test_that("dimensions are as expected", {
-  S = 5L
+  S <- 5L
   sim_com1 <- sim_poisson_community(
     s_pool = S,
     n_sim = 50L,

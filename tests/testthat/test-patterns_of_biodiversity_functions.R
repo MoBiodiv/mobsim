@@ -26,7 +26,7 @@ test_that("rare_curve() - handles 0 and NA values as expected", {
 
 
 test_that("div_rect() & div_rand_rect() - return expected value classes and length", {
-  S = 5L
+  S <- 5L
   comm1 <- sim_thomas_coords(sim_sad(S, 50L))
   div1 <- div_rect(x0 = 0, y0 = 0, xsize = 1, ysize = 1, comm = comm1)
   divRand <- div_rand_rect(
@@ -41,7 +41,7 @@ test_that("div_rect() & div_rand_rect() - return expected value classes and leng
 })
 
 test_that("div_rect() - produces results comparable to vegan", {
-  S = 5L
+  S <- 5L
   comm1 <- sim_thomas_coords(sim_sad(S, 50L, fix_s_sim = TRUE))
   div1 <- div_rect(x0 = 0, y0 = 0, xsize = 1, ysize = 1, comm = comm1)
 
@@ -67,7 +67,7 @@ test_that("div_rect() - produces results comparable to vegan", {
 
 
 test_that("div_rand_rect() - produces results comparable to vegan", {
-  S = 5L
+  S <- 5L
   comm1 <- sim_thomas_coords(sim_sad(S, 50L, fix_s_sim = TRUE))
   divRand <- div_rand_rect(
     prop_area = 1,

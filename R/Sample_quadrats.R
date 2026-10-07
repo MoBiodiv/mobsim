@@ -49,9 +49,12 @@ sample_quadrats <- function(
   delta_y = 0.1,
   seed = NULL
 ) {
-  if (!is(comm, "community")) stop("comm has to be a community object")
-  if (round(n_quadrats, 0) != n_quadrats)
+  if (!is(comm, "community")) {
+    stop("comm has to be a community object")
+  }
+  if (round(n_quadrats, 0) != n_quadrats) {
     stop("n_quadrats has to be an integer")
+  }
 
   method <- match.arg(method, c("random", "transect", "grid"))
 
@@ -149,7 +152,7 @@ sample_quadrats <- function(
       MoreArgs = list(xsize = quadrat_size, ysize = quadrat_size, comm = comm)
     )
     spec_dat <- as.data.frame(t(comm_tab))
-    rownames(spec_dat) <- paste("site", 1L:nrow(spec_dat), sep = "")
+    rownames(spec_dat) <- paste("site", seq_len(nrow(spec_dat)), sep = "")
 
     rownames(xy_dat) <- rownames(spec_dat)
   } else {
@@ -215,7 +218,9 @@ sampling_random_spatstat <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   hc_mod <- list(
     cif = "hardcore",
     par = list(beta = n_quadrats, hc = min_dist),
@@ -232,10 +237,11 @@ sampling_random_spatstat <- function(
   ypos <- hc_points$y
 
   coords <- data.frame(x = xpos, y = ypos)
-  if (min(stats::dist(coords)) < min_dist)
+  if (min(stats::dist(coords)) < min_dist) {
     warning(
       "There are overlapping sampling squares in the design. Use less quadrats or smaller quadrat area."
     )
+  }
   return(coords)
 }
 
@@ -260,7 +266,9 @@ sampling_random_bruteforce <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   count <- 0L
   maxCount <- 10000L
 
@@ -276,12 +284,13 @@ sampling_random_bruteforce <- function(
     count <- count + 1L
   }
 
-  if (count > maxCount)
+  if (count > maxCount) {
     warning(
       "Cannot find a sampling layout with no overlap.
 Install the package spatstat for an improved method for non-overlapping squares,
 Use less quadrats or smaller quadrat area, or set avoid_overlap to FALSE."
     )
+  }
   colnames(coords) <- c("x", "y")
 
   return(as.data.frame(coords))
@@ -306,13 +315,16 @@ sampling_random_overlap <- function(
   ymax,
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   xpos <- stats::runif(n_quadrats, min = xmin, max = xmax)
   ypos <- stats::runif(n_quadrats, min = ymin, max = ymax)
 
   coords <- data.frame(x = xpos, y = ypos)
-  if (min(stats::dist(coords)) < min_dist)
+  if (min(stats::dist(coords)) < min_dist) {
     warning("There are overlapping sampling squares in the design")
+  }
 
   return(coords)
 }
@@ -345,18 +357,21 @@ sampling_transects <- function(
   t_xmax <- x0 + (n_quadrats - 1) * delta_x + quadrat_size
   t_ymax <- y0 + (n_quadrats - 1) * delta_y + quadrat_size
 
-  if (t_xmin < xmin || t_xmax > xmax)
+  if (t_xmin < xmin || t_xmax > xmax) {
     stop("x-extent of sampling design is larger than landscape")
+  }
 
-  if (t_ymin < ymin || t_ymax > ymax)
+  if (t_ymin < ymin || t_ymax > ymax) {
     stop("y-extent of sampling design is larger than landscape")
+  }
 
   xpos <- seq(from = x0, by = delta_x, len = n_quadrats)
   ypos <- seq(from = y0, by = delta_y, len = n_quadrats)
 
   coords <- data.frame(x = xpos, y = ypos)
-  if (min(stats::dist(coords)) < 0.9999 * quadrat_size)
+  if (min(stats::dist(coords)) < 0.9999 * quadrat_size) {
     warning("There are overlapping sampling squares in the design")
+  }
   return(coords)
 }
 
@@ -388,16 +403,19 @@ sampling_grids <- function(
   x1 <- seq(from = x0, by = delta_x, len = grid_dim)
   y1 <- seq(from = y0, by = delta_y, len = grid_dim)
 
-  if (min(x1) < xmin || max(x1) > xmax)
+  if (min(x1) < xmin || max(x1) > xmax) {
     stop("x-extent of sampling design is larger than landscape")
+  }
 
-  if (min(y1) < ymin || max(y1) > ymax)
+  if (min(y1) < ymin || max(y1) > ymax) {
     stop("y-extent of sampling design is larger than landscape")
+  }
 
   coords <- expand.grid(x = x1, y = y1)[1L:n_quadrats, ]
 
-  if (min(stats::dist(coords)) < 0.9999 * quadrat_size)
+  if (min(stats::dist(coords)) < 0.9999 * quadrat_size) {
     warning("There are overlapping sampling squares in the design")
+  }
 
   return(coords)
 }
@@ -411,7 +429,9 @@ sampling_grids <- function(
 #' @export
 #'
 sampling_one_quadrat <- function(xmin, xmax, ymin, ymax, seed = NULL) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   data.frame(
     x = stats::runif(1L, min = xmin, max = xmax),
     y = stats::runif(1L, min = ymin, max = ymax)

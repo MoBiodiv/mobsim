@@ -17,14 +17,20 @@ test_that("drift_x_species() does not change y coordinates or species", {
   simdat <- sim_thomas_community(5L, 20L, seed = 42L)
   result <- drift_x_species(simdat, drift = 0.1)
   expect_equal(result$census$y, simdat$census$y)
-  expect_equal(as.character(result$census$species), as.character(simdat$census$species))
+  expect_equal(
+    as.character(result$census$species),
+    as.character(simdat$census$species)
+  )
 })
 
 test_that("drift_y_species() does not change x coordinates or species", {
   simdat <- sim_thomas_community(5L, 20L, seed = 42L)
   result <- drift_y_species(simdat, drift = 0.1)
   expect_equal(result$census$x, simdat$census$x)
-  expect_equal(as.character(result$census$species), as.character(simdat$census$species))
+  expect_equal(
+    as.character(result$census$species),
+    as.character(simdat$census$species)
+  )
 })
 
 test_that("drift_x_species() preserves community class", {

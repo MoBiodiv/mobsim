@@ -79,7 +79,7 @@ test_that("classes are correct", {
 })
 
 test_that("dimensions are correct", {
-  n_quadrats = 5L
+  n_quadrats <- 5L
   xy_dat <- sampling_grids(
     n_quadrats = n_quadrats,
     xmin = 0,
@@ -97,11 +97,11 @@ test_that("dimensions are correct", {
 })
 
 test_that("samples are within range", {
-  xmin = 0
-  xmax = 1
-  ymin = 0
-  ymax = 1
-  quadrat_size = 0.01
+  xmin <- 0
+  xmax <- 1
+  ymin <- 0
+  ymax <- 1
+  quadrat_size <- 0.01
 
   xy_dat <- sampling_grids(
     n_quadrats = 81L,

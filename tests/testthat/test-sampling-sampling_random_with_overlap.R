@@ -37,7 +37,7 @@ test_that("classes are correct", {
 })
 
 test_that("dimensions are correct", {
-  n_quadrats = 5L
+  n_quadrats <- 5L
   xy_dat <- sampling_random_overlap(
     n_quadrats = n_quadrats,
     xmin = 0,
@@ -52,11 +52,11 @@ test_that("dimensions are correct", {
 
 test_that("samples are within range", {
   skip("sample_quadrats() ensures that this does not happen")
-  xmin = 0
-  xmax = 1
-  ymin = 0
-  ymax = 1
-  quadrat_size = 2
+  xmin <- 0
+  xmax <- 1
+  ymin <- 0
+  ymax <- 1
+  quadrat_size <- 2
 
   xy_dat <- sampling_random_overlap(
     n_quadrats = 2L,

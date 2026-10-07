@@ -3,7 +3,11 @@
 ## edge cases ----
 test_that("replace_individuals() errors when both N and R are NULL", {
   simdat <- sim_thomas_coords(11L:30L, seed = 42L)
-  expect_error(replace_individuals(simdat), regexp = "N.*R|R.*N", ignore.case = TRUE)
+  expect_error(
+    replace_individuals(simdat),
+    regexp = "N.*R|R.*N",
+    ignore.case = TRUE
+  )
 })
 
 ## structure ----

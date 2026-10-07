@@ -3,8 +3,8 @@ test_that("classes are correct", {
   expect_s3_class(sad1, "sad")
   expect_s3_class(sad1, "integer")
 
-  xmother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
-  ymother <- lapply(1:length(sad1), function(x) runif(1, 0, 1))
+  xmother <- lapply(seq_along(sad1), function(x) runif(1, 0, 1))
+  ymother <- lapply(seq_along(sad1), function(x) runif(1, 0, 1))
 
   expect_s3_class(sim_poisson_coords(sad1), "community")
   expect_s3_class(sim_poisson_community(3L, 10L), "community")

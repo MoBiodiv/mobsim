@@ -61,28 +61,32 @@
 #' @export
 
 jitter_motherpoints <- function(mpcoords, sd = 0.01, seed = NULL) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
 
   mpcoords$xmother <- lapply(
     mpcoords$xmother,
-    function(x)
+    function(x) {
       x +
         stats::rnorm(
           n = length(x),
           mean = 0,
           sd = sd
         )
+    }
   )
 
   mpcoords$ymother <- lapply(
     mpcoords$ymother,
-    function(y)
+    function(y) {
       y +
         stats::rnorm(
           n = length(y),
           mean = 0,
           sd = sd
         )
+    }
   )
 
   return(mpcoords)

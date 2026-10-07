@@ -52,16 +52,16 @@ for (i in 1:nsim) {
   com_ref <- sim_poisson_coords(sad_ref)
 
   spec_curves_ref <- spec_sample_curve(com_ref)
-  src_ref_mat[i, 1:nrow(spec_curves_ref)] <- spec_curves_ref$spec_rarefied
-  sac_ref_mat[i, 1:nrow(spec_curves_ref)] <- spec_curves_ref$spec_accum
+  src_ref_mat[i, seq_len(nrow(spec_curves_ref))] <- spec_curves_ref$spec_rarefied
+  sac_ref_mat[i, seq_len(nrow(spec_curves_ref))] <- spec_curves_ref$spec_accum
 
   #simulate community with lower number of individuals
   com_low_n <- com_ref
   com_low_n$census <- com_low_n$census[sample(1:N0, N0 / 2), ]
 
   spec_curves_low_n <- spec_sample_curve(com_low_n)
-  src_low_n_mat[i, 1:nrow(spec_curves_low_n)] <- spec_curves_low_n$spec_rarefied
-  sac_low_n_mat[i, 1:nrow(spec_curves_low_n)] <- spec_curves_low_n$spec_accum
+  src_low_n_mat[i, seq_len(nrow(spec_curves_low_n))] <- spec_curves_low_n$spec_rarefied
+  sac_low_n_mat[i, seq_len(nrow(spec_curves_low_n))] <- spec_curves_low_n$spec_accum
 
   #simulate more uneven community
   com_uneven <- sim_poisson_community(
@@ -74,16 +74,16 @@ for (i in 1:nsim) {
   spec_curves_uneven <- spec_sample_curve(com_uneven)
   src_uneven_mat[
     i,
-    1:nrow(spec_curves_uneven)
+    seq_len(nrow(spec_curves_uneven))
   ] <- spec_curves_uneven$spec_rarefied
-  sac_uneven_mat[i, 1:nrow(spec_curves_uneven)] <- spec_curves_uneven$spec_accum
+  sac_uneven_mat[i, seq_len(nrow(spec_curves_uneven))] <- spec_curves_uneven$spec_accum
 
   #simulate more aggregated community
   com_agg <- sim_thomas_coords(sad_ref, sigma = 0.02)
   spec_curves_agg <- spec_sample_curve(com_agg)
 
-  src_agg_mat[i, 1:nrow(spec_curves_agg)] <- spec_curves_agg$spec_rarefied
-  sac_agg_mat[i, 1:nrow(spec_curves_agg)] <- spec_curves_agg$spec_accum
+  src_agg_mat[i, seq_len(nrow(spec_curves_agg))] <- spec_curves_agg$spec_rarefied
+  sac_agg_mat[i, seq_len(nrow(spec_curves_agg))] <- spec_curves_agg$spec_accum
 }
 
 # calculate means and 95% confidence intervals from rarefaction and aggregation
