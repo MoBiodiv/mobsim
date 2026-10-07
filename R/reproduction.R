@@ -25,9 +25,12 @@
 #' @export
 
 replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
-  if (is.null(N) && is.null(R))
+  if (is.null(N) && is.null(R)) {
     stop("At least one of 'N' or 'R' must be specified.")
-  if (!is.null(seed)) set.seed(seed)
+  }
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
 
   spatial_comm <- community2ppp(comm)
 
@@ -37,8 +40,9 @@ replace_individuals <- function(comm, N = NULL, R = NULL, seed = NULL) {
     apply(
       X = contingency_table,
       MARGIN = 1L,
-      FUN = function(ind)
+      FUN = function(ind) {
         names(ind)[[sample.int(n = S, size = 1L, prob = ind / sum(ind))]]
+      }
     )
   )
   return(comm)

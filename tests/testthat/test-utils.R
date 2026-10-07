@@ -6,8 +6,12 @@ test_that("torusify.mother_map() output stays within x_min_max and y_min_max", {
   result <- torusify(mpcoordsJ)
   all_x <- unlist(result$xmother)
   all_y <- unlist(result$ymother)
-  expect_true(all(all_x >= result$x_min_max[[1L]] & all_x < result$x_min_max[[2L]]))
-  expect_true(all(all_y >= result$y_min_max[[1L]] & all_y < result$y_min_max[[2L]]))
+  expect_true(all(
+    all_x >= result$x_min_max[[1L]] & all_x < result$x_min_max[[2L]]
+  ))
+  expect_true(all(
+    all_y >= result$y_min_max[[1L]] & all_y < result$y_min_max[[2L]]
+  ))
 })
 
 test_that("torusify.community() output stays within x_min_max and y_min_max", {
@@ -16,11 +20,11 @@ test_that("torusify.community() output stays within x_min_max and y_min_max", {
   result <- torusify(simdatJ)
   expect_true(all(
     result$census$x >= result$x_min_max[[1L]] &
-    result$census$x < result$x_min_max[[2L]]
+      result$census$x < result$x_min_max[[2L]]
   ))
   expect_true(all(
     result$census$y >= result$y_min_max[[1L]] &
-    result$census$y < result$y_min_max[[2L]]
+      result$census$y < result$y_min_max[[2L]]
   ))
 })
 
@@ -40,8 +44,12 @@ test_that("torusify.data.frame() output stays within x_min_max and y_min_max", {
     ymother = stats::runif(30L, min = -1, max = 2)
   )
   result <- torusify(df, x_min_max = x_min_max, y_min_max = y_min_max)
-  expect_true(all(result$xmother >= x_min_max[[1L]] & result$xmother < x_min_max[[2L]]))
-  expect_true(all(result$ymother >= y_min_max[[1L]] & result$ymother < y_min_max[[2L]]))
+  expect_true(all(
+    result$xmother >= x_min_max[[1L]] & result$xmother < x_min_max[[2L]]
+  ))
+  expect_true(all(
+    result$ymother >= y_min_max[[1L]] & result$ymother < y_min_max[[2L]]
+  ))
 })
 
 ## torusify.data.frame() — edge cases ----

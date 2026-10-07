@@ -64,7 +64,9 @@ create_motherpoints <- function(
   yrange = c(0, 1),
   seed = NULL
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
 
   n_mother_points <- sample(
     x = n_motherpoints_range,
@@ -118,8 +120,12 @@ create_motherpoints <- function(
 #'
 plot.mother_map <- function(x, col = NULL, pch = NULL, ...) {
   nspec <- length(x$n_mother_points)
-  if (is.null(col)) col <- grDevices::rainbow(nspec, alpha = 1)
-  if (is.null(pch)) pch <- 16
+  if (is.null(col)) {
+    col <- grDevices::rainbow(nspec, alpha = 1)
+  }
+  if (is.null(pch)) {
+    pch <- 16
+  }
 
   graphics::plot(
     x = unlist(x$xmother),

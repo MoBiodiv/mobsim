@@ -4,7 +4,11 @@ test_that("drift_x_motherpoints() shifts all x by exactly drift", {
   d <- 0.15
   result <- drift_x_motherpoints(mpcoords, drift = d)
   expect_equal(
-    mapply(FUN = function(r, o) all(r == o + d), result$xmother, mpcoords$xmother),
+    mapply(
+      FUN = function(r, o) all(r == o + d),
+      result$xmother,
+      mpcoords$xmother
+    ),
     rep(TRUE, length(mpcoords$xmother))
   )
 })
@@ -14,7 +18,11 @@ test_that("drift_y_motherpoints() shifts all y by exactly drift", {
   d <- -0.3
   result <- drift_y_motherpoints(mpcoords, drift = d)
   expect_equal(
-    mapply(FUN = function(r, o) all(r == o + d), result$ymother, mpcoords$ymother),
+    mapply(
+      FUN = function(r, o) all(r == o + d),
+      result$ymother,
+      mpcoords$ymother
+    ),
     rep(TRUE, length(mpcoords$ymother))
   )
 })

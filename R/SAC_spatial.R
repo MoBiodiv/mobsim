@@ -111,10 +111,11 @@ rare_curve <- function(abund_vec) {
 #' @importFrom methods is
 #'
 spec_sample_curve <- function(comm, method = c("accumulation", "rarefaction")) {
-  if (!is(comm, "community"))
+  if (!is(comm, "community")) {
     stop(
       "spec_sample_curve requires a community object as input. See ?community."
     )
+  }
 
   out_dat <- data.frame(n = 1:nrow(comm$census))
 

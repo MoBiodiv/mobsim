@@ -28,7 +28,10 @@ test_that("jitter_motherpoints() preserves n_mother_points", {
 test_that("jitter_motherpoints() coordinates actually change", {
   mpcoords <- create_motherpoints(s_local = 10L, seed = 42L)
   result <- jitter_motherpoints(mpcoords, sd = 0.1, seed = 1L)
-  expect_false(isTRUE(all.equal(unlist(result$xmother), unlist(mpcoords$xmother))))
+  expect_false(isTRUE(all.equal(
+    unlist(result$xmother),
+    unlist(mpcoords$xmother)
+  )))
 })
 
 test_that("jitter_motherpoints() species with 0 mother points are unaffected", {

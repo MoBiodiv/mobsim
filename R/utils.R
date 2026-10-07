@@ -70,13 +70,15 @@ torusify <- function(mpcoords, ...) {
 torusify.mother_map <- function(mpcoords, ...) {
   mpcoords$xmother <- lapply(
     X = mpcoords$xmother,
-    FUN = function(MPs)
+    FUN = function(MPs) {
       (MPs %% diff(mpcoords$x_min_max)) + mpcoords$x_min_max[1L]
+    }
   )
   mpcoords$ymother <- lapply(
     X = mpcoords$ymother,
-    FUN = function(MPs)
+    FUN = function(MPs) {
       (MPs %% diff(mpcoords$y_min_max)) + mpcoords$y_min_max[1L]
+    }
   )
 
   return(mpcoords)
@@ -143,8 +145,9 @@ torusify.community <- function(mpcoords, ...) {
 #' @export
 
 torusify.data.frame <- function(mpcoords, x_min_max, y_min_max, ...) {
-  if (!all(is.element(c("xmother", "ymother"), colnames(mpcoords))))
+  if (!all(is.element(c("xmother", "ymother"), colnames(mpcoords)))) {
     stop("mpcoords must have columns named 'xmother' and 'ymother'")
+  }
   mpcoords$xmother <- mpcoords$xmother %% diff(x_min_max) + x_min_max[1L]
   mpcoords$ymother <- mpcoords$ymother %% diff(y_min_max) + y_min_max[1L]
   return(mpcoords)
@@ -233,7 +236,11 @@ create_random_ID <- function(n = 1L, seed = NULL) {
       add = TRUE
     )
   }
-  if (!is.null(seed)) set.seed(seed) else set.seed(Sys.time())
+  if (!is.null(seed)) {
+    set.seed(seed)
+  } else {
+    set.seed(Sys.time())
+  }
 
   a <- do.call(
     paste0,

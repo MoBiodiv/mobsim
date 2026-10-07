@@ -3,12 +3,18 @@ test_that("jitter_species() returns a community object", {
   simdat <- sim_thomas_community(5L, 20L, seed = 42L)
   result <- jitter_species(simdat, seed = 1L)
   expect_s3_class(result, "community")
-  expect_true(all(is.element(c("census", "x_min_max", "y_min_max"), names(result))))
+  expect_true(all(is.element(
+    c("census", "x_min_max", "y_min_max"),
+    names(result)
+  )))
 })
 
 test_that("jitter_species() preserves row count", {
   simdat <- sim_thomas_community(5L, 20L, seed = 42L)
-  expect_equal(nrow(jitter_species(simdat, seed = 1L)$census), nrow(simdat$census))
+  expect_equal(
+    nrow(jitter_species(simdat, seed = 1L)$census),
+    nrow(simdat$census)
+  )
 })
 
 ## invariants ----
@@ -34,13 +40,19 @@ test_that("jitter_species() applies the same x/y shift to all individuals of a s
 
   for (sp in levels(simdat$census$species)) {
     idx <- simdat$census$species == sp
-    if (sum(idx) < 2L) next
+    if (sum(idx) < 2L) {
+      next
+    }
     x_diffs <- result$census$x[idx] - simdat$census$x[idx]
     y_diffs <- result$census$y[idx] - simdat$census$y[idx]
-    expect_true(all(abs(x_diffs - x_diffs[[1L]]) < 1e-12),
-      label = paste0("x shift uniform within species ", sp))
-    expect_true(all(abs(y_diffs - y_diffs[[1L]]) < 1e-12),
-      label = paste0("y shift uniform within species ", sp))
+    expect_true(
+      all(abs(x_diffs - x_diffs[[1L]]) < 1e-12),
+      label = paste0("x shift uniform within species ", sp)
+    )
+    expect_true(
+      all(abs(y_diffs - y_diffs[[1L]]) < 1e-12),
+      label = paste0("y shift uniform within species ", sp)
+    )
   }
 })
 

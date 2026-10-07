@@ -51,7 +51,11 @@ test_that("create_motherpoints() coordinates stay within xrange/yrange", {
 
 test_that("create_motherpoints() n_mother_points values are within n_motherpoints_range", {
   rng <- 1L:5L
-  result <- create_motherpoints(s_local = 50L, n_motherpoints_range = rng, seed = 1L)
+  result <- create_motherpoints(
+    s_local = 50L,
+    n_motherpoints_range = rng,
+    seed = 1L
+  )
   expect_true(all(is.element(result$n_mother_points, rng)))
 })
 
@@ -67,7 +71,12 @@ test_that("create_motherpoints() seed produces identical results", {
 test_that("create_motherpoints() stores xrange and yrange correctly", {
   xr <- c(2, 5)
   yr <- c(-1, 3)
-  result <- create_motherpoints(s_local = 5L, xrange = xr, yrange = yr, seed = 1L)
+  result <- create_motherpoints(
+    s_local = 5L,
+    xrange = xr,
+    yrange = yr,
+    seed = 1L
+  )
   expect_equal(result$x_min_max, xr)
   expect_equal(result$y_min_max, yr)
 })
