@@ -287,3 +287,18 @@ test_that("sim_sad() - respects seed argument", {
     )
   )
 })
+
+test_that("sim_sad() - errors informatively when all drawn abundances are zero", {
+  # seed 4 draws rgeom(3, 0.5) = c(0, 0, 0)
+  expect_error(
+    sim_sad(
+      s_pool = 3L,
+      n_sim = 10L,
+      sad_type = "geom",
+      sad_coef = list(prob = 0.5),
+      fix_s_sim = TRUE,
+      seed = 4L
+    ),
+    "zero abundance"
+  )
+})

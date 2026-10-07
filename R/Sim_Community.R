@@ -242,6 +242,15 @@ sim_sad <- function(
   }
   abund_pool <- do.call(sadr, c(list(n = s_pool), sad_coef))
 
+  if (isTRUE(sum(abund_pool) == 0)) {
+    stop(
+      "All ",
+      s_pool,
+      " species drawn from the SAD have zero abundance. ",
+      "Use a larger s_pool or different sad_coef (e.g. a smaller prob for geom), or change the seed."
+    )
+  }
+
   rel_abund_pool <- abund_pool / sum(abund_pool)
   rel_abund_pool <- sort(rel_abund_pool, decreasing = TRUE)
   names(rel_abund_pool) <- paste(
