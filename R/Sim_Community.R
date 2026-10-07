@@ -863,7 +863,7 @@ sim_thomas_coords <- function(
 
   # mother_points
   if (
-    (any(!is.na(xmother)) | any(!is.na(ymother))) & any(!is.na(mother_points))
+    (!all(is.na(xmother)) | !all(is.na(ymother))) & !all(is.na(mother_points))
   ) {
     mother_points <- NA
     warning(
@@ -871,14 +871,14 @@ sim_thomas_coords <- function(
     )
   }
   if (
-    (!is.na(cluster_points) & any(!is.na(mother_points))) |
-      (!is.na(cluster_points) & any(!is.na(xmother)))
+    (!is.na(cluster_points) & !all(is.na(mother_points))) |
+      (!is.na(cluster_points) & !all(is.na(xmother)))
   ) {
     warning("Parametre cluster_points overidden by other parametre.")
   } # cluster_points is overridden if mother_points or xmother and ymother are given.
 
   if (
-    (length(mother_points) > 1 & any(is.na(mother_points))) |
+    (length(mother_points) > 1 & anyNA(mother_points)) |
       any(stats::na.omit(mother_points) < 0)
   ) {
     stop(
@@ -906,8 +906,8 @@ sim_thomas_coords <- function(
   }
 
   if (
-    any(sapply(xmother, function(x) any(is.na(x)) & any(!is.na(x)))) ||
-      any(sapply(ymother, function(y) any(is.na(y)) & any(!is.na(y))))
+    any(sapply(xmother, function(x) anyNA(x) & !all(is.na(x)))) ||
+      any(sapply(ymother, function(y) anyNA(y) & !all(is.na(y))))
   ) {
     stop(
       "xmother or ymother countains NA values where coordinates are expected.\nFor a given species, c(0.2), c(0.2, 0.6) or NA are correct entries but c(0.2, NA) is not."
@@ -953,7 +953,7 @@ sim_thomas_coords <- function(
       )
     }
     if (
-      (any(!is.na(xmother)) && any(!is.na(ymother))) &&
+      (!all(is.na(xmother)) && !all(is.na(ymother))) &&
         any(c(
           sapply(
             seq_along(xmother),
@@ -1025,7 +1025,7 @@ sim_thomas_coords <- function(
   }
 
   method <- "default"
-  if (any(!is.na(xmother)) || any(!is.na(ymother))) {
+  if (!all(is.na(xmother)) || !all(is.na(ymother))) {
     method <- "coordinates_for_mother_points"
     stopifnot(length(xmother) == length(ymother))
     #stopifnot(all(!is.na(unlist(xmother)) & !is.na(unlist(ymother))))	# error message is not meaningful
@@ -1042,14 +1042,14 @@ sim_thomas_coords <- function(
     #ymother <- rep(ymother, s_local)
     mother_points <- sapply(
       xmother,
-      function(x) ifelse(any(is.na(x)), 0, length(x))
+      function(x) ifelse(anyNA(x), 0, length(x))
     )
     n_mothers <- mother_points
   }
 
   # determine the number of points per cluster and the number of mother points
   if (method == 'default') {
-    if (all(!is.na(mother_points))) {
+    if (!anyNA(mother_points)) {
       method <- "random_mother_points"
       if (length(mother_points) == s_local) {
         n_mothers <- mother_points
@@ -1057,7 +1057,7 @@ sim_thomas_coords <- function(
         n_mothers <- rep(mother_points[1], s_local)
       }
     } else {
-      if (all(!is.na(cluster_points))) {
+      if (!anyNA(cluster_points)) {
         method <- "cluster_points"
         if (length(cluster_points) == s_local) {
           cluster_points <- cluster_points
@@ -1080,11 +1080,8 @@ sim_thomas_coords <- function(
 
   # All species with random distributions are dealt with first, together, if they have the same range. Random distribution if sigma is high, only one individual or 0 mother point/0 point per cluster
   if (oneRangeForAll) {
-    directToRunif <- ifelse(
-      sigma_vec > 2 * max_dim | n_mothers == 0 | abund_vec == 1,
-      TRUE,
-      FALSE
-    )
+    directToRunif <- 
+      sigma_vec > 2 * max_dim | n_mothers == 0 | abund_vec == 1
 
     x[spec_id %in% names(directToRunif)[directToRunif]] <- stats::runif(
       sum(abund_vec[directToRunif]),

@@ -117,7 +117,7 @@ spec_sample_curve <- function(comm, method = c("accumulation", "rarefaction")) {
     )
   }
 
-  out_dat <- data.frame(n = 1:nrow(comm$census))
+  out_dat <- data.frame(n = seq_len(nrow(comm$census)))
 
   method <- match.arg(method, several.ok = TRUE)
 

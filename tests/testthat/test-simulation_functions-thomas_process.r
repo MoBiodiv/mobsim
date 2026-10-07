@@ -74,7 +74,7 @@ test_that("sim_thomas_coords() - handles wrong mother_points parametres", {
 
 test_that("sim_thomas_coords() - handles wrong xmother and ymother parametres", {
   sad2 <- sim_sad(s_pool = 2, n_sim = 100)
-  xmother <- lapply(1:length(sad2), function(x) runif(2, 0, 1))
+  xmother <- lapply(seq_along(sad2), function(x) runif(2, 0, 1))
 
   expect_error(sim_thomas_coords(
     sad2,
@@ -124,8 +124,8 @@ test_that("sim_thomas_coords() - handles wrong xrange and yrange parametres", {
 
 test_that("sim_thomas_coords() - throws warnings when expected", {
   sad1 <- sim_sad(s_pool = 3L, n_sim = 10L)
-  xmother <- lapply(1L:length(sad1), function(x) runif(1, 0, 1))
-  ymother <- lapply(1L:length(sad1), function(x) runif(1, 0, 1))
+  xmother <- lapply(seq_along(sad1), function(x) runif(1, 0, 1))
+  ymother <- lapply(seq_along(sad1), function(x) runif(1, 0, 1))
   expect_warning(sim_thomas_coords(
     sad1,
     mother_points = 1,
@@ -140,8 +140,8 @@ test_that("rThomas_rcpp() - behaves as expected", {
     rThomas_rcpp(
       20,
       n_mother_points = 1,
-      xmother = .5,
-      ymother = .5,
+      xmother = 0.5,
+      ymother = 0.5,
       sigma = 0.2
     ),
     "data.frame"
@@ -150,8 +150,8 @@ test_that("rThomas_rcpp() - behaves as expected", {
     nrow(rThomas_rcpp(
       20,
       n_mother_points = 1,
-      xmother = .5,
-      ymother = .5,
+      xmother = 0.5,
+      ymother = 0.5,
       sigma = 0.2
     )),
     20

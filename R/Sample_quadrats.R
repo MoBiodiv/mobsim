@@ -152,7 +152,7 @@ sample_quadrats <- function(
       MoreArgs = list(xsize = quadrat_size, ysize = quadrat_size, comm = comm)
     )
     spec_dat <- as.data.frame(t(comm_tab))
-    rownames(spec_dat) <- paste("site", 1L:nrow(spec_dat), sep = "")
+    rownames(spec_dat) <- paste("site", seq_len(nrow(spec_dat)), sep = "")
 
     rownames(xy_dat) <- rownames(spec_dat)
   } else {
