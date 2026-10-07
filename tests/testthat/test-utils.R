@@ -192,3 +192,16 @@ test_that("seeded functions do not create .Random.seed", {
   jitter_species(sim_poisson_coords(abund_vec = 1L:5L, seed = 1L), sd = 0.1, seed = 2L)
   expect_false(exists(x = ".Random.seed", envir = .GlobalEnv, inherits = FALSE))
 })
+
+test_that("local_seed() called twice still restores the original stream", {
+  draw_twice_seeded <- function() {
+    local_seed(seed = 1L)
+    local_seed(seed = 2L)
+    stats::runif(n = 1L)
+  }
+  set.seed(seed = 3L)
+  expected <- stats::runif(n = 3L)
+  set.seed(seed = 3L)
+  draw_twice_seeded()
+  expect_identical(stats::runif(n = 3L), expected)
+})

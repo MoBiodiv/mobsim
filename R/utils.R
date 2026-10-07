@@ -269,7 +269,7 @@ local_seed <- function(seed, envir = parent.frame()) {
   }
   do.call(
     what = on.exit,
-    args = list(expr = as.call(list(restore_seed)), add = TRUE),
+    args = list(expr = as.call(list(restore_seed)), add = TRUE, after = FALSE),
     envir = envir
   )
   set.seed(seed = seed)
